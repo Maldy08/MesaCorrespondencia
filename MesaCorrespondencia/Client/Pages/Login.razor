@@ -9,7 +9,23 @@
 
 <EditForm Model="user" OnValidSubmit="@HandleLogin">
     <DataAnnotationsValidator />
-    <section class="py-5">
+    <MudGrid  Justify="Justify.Center">
+        <MudItem lg="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Usuario" @bind-Value="user.Usuario"
+                        For="@(() => user.Usuario)"/>
+                    <MudTextField InputType="InputType.Password" Label="Password" @bind-Value="user.Password"
+                        For="@(() => user.Password)"/>
+                </MudCardContent>
+                <MudCardActions >
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled"
+                         Color="Color.Primary" Class="ml-auto">Ingresar</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+    @*<section class="py-5">
         <div class="p-5 text-center">
             <img src="images/logoLoginBC.png" alt="" width="378" height="164" class="d-inline-block align-text-bottom">
         </div>
@@ -33,7 +49,7 @@
         <div class=text-danger>
             <span> @errorMessage</span>
         </div>
-    </section>
+    </section>*@
 </EditForm>
 
 @code {
