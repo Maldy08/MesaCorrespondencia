@@ -14,7 +14,7 @@ namespace MesaCorrespondencia.Server.Controllers
             _authRepository = authRepository;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(UserLogin request)
         {
             var response = await _authRepository.Login(request.Usuario,request.Password);

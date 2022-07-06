@@ -15,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IDeptoueRepository, DeptoueRepository>();
+builder.Services.AddScoped<IOficiosRepository, OficiosRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 

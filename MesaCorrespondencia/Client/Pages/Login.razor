@@ -5,12 +5,14 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
-<h3>Login</h3>
+<MudItem lg="12" Class="d-flex align-center justify-center mud-width-full py-8">
+    <MudImage Src="images/logoLoginBC.png" Height="164" Width="378" />
+</MudItem>
 
 <EditForm Model="user" OnValidSubmit="@HandleLogin">
     <DataAnnotationsValidator />
-    <MudGrid  Justify="Justify.Center">
-        <MudItem lg="4">
+    <MudGrid Justify="Justify.Center">
+        <MudItem lg="4" xs="8" md="6">
             <MudCard>
                 <MudCardContent>
                     <MudTextField Label="Usuario" @bind-Value="user.Usuario"
@@ -19,8 +21,8 @@
                         For="@(() => user.Password)"/>
                 </MudCardContent>
                 <MudCardActions >
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled"
-                         Color="Color.Primary" Class="ml-auto">Ingresar</MudButton>
+                    <MudButton FullWidth ButtonType="ButtonType.Submit" Variant="Variant.Filled"
+                        Style="background-color: #6a1b31; color:white;"  Class="ml-auto">Ingresar</MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>

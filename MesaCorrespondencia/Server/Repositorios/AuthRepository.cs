@@ -9,7 +9,6 @@ namespace MesaCorrespondencia.Server.Repositorios
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-
         public AuthRepository(DataContext context, IConfiguration configuration)
         {
             _context = context;
@@ -33,9 +32,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             }
 
             return response;
-            
         }
-
 
         private string CreateToken(VsUsuario user)
         {
@@ -43,25 +40,19 @@ namespace MesaCorrespondencia.Server.Repositorios
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Usuario.ToString()),
                 new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Role,user.OficiosNivel == 9 ? "Usuario": "MC"),
-                new Claim("deptoId",user.Depto.ToString()),
-                new Claim("empleadoId",user.NoEmpleado.ToString())
+                new Claim(ClaimTypes.Role,user.OficiosNivel == 9 ? "MC": "Usuario")
+                //new Claim("deptoId",user.Depto.ToString()),
+                //new Claim("empleadoId",user.NoEmpleado.ToString())
             };
-
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
                 .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddDays(1),
+                    expires: DateTime.Now.AddHours(1),
                     signingCredentials: creds);
-
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
             return jwt;
         }
-
     }
 }

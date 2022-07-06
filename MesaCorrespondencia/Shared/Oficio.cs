@@ -33,7 +33,8 @@ namespace MesaCorrespondencia.Shared
 
         //Necesita una dependencia de OficiosBitacora
         //Se relaciona con ejercicio,folio,eor,fechacaptura
-        //public List<OficiosBitacora> OficiosBitacoras { get; set; };
+        public List<OficiosBitacora> OficiosBitacoras { get; set; } = null;
+        public List<OficiosResponsable> OficiosResponsables { get; set; } = null;
 
        
     }

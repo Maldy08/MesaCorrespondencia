@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inherits LayoutComponentBase
 
         <MudThemeProvider />
         <MudDialogProvider />
@@ -6,15 +10,19 @@
 <AuthorizeView>
     <Authorized>
             <MudLayout>
-                <MudAppBar Elevation="0">
+                <MudAppBar Style="background-color: #51152E" Elevation="0">
                     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
                     <MudSpacer />
-                    <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
-                    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
+                    <MudText Align="Align.Center" Typo="Typo.h5">Sistema de Control de Oficios</MudText>
+                    <MudSpacer />
+
+                    <MudButton Color="Color.Inherit" StartIcon="@Icons.Filled.Person">@context.User.Identity.Name</MudButton>
+                  @*  <MudButton Color="Color.Inherit" StartIcon="@Icons.Filled.Logout" ></MudButton>*@
+                    <MudIconButton Icon="@Icons.Filled.Logout" Color="Color.Inherit" OnClick="@Logout"></MudIconButton>
                 </MudAppBar>
-                <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+                <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Dark">
                     <MudDrawerHeader>
-                        <MudText Typo="Typo.h6">MesaCorrespondencia</MudText>
+                        <MudImage Src="images/logoBC.png" Width="179" Height="72"></MudImage>
                     </MudDrawerHeader>
                     <NavMenu />
                 </MudDrawer>
@@ -35,5 +43,13 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+        private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("login");
+
     }
 }
