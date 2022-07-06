@@ -9,7 +9,6 @@ namespace MesaCorrespondencia.Server.Data
 
         public DbSet<DeptosUe> DeptosUe { get; set; }
         public  DbSet<VsEmpleadosSisco> EmpleadosSisco { get; set; }
-        public  DbSet<Usuario> Usuarios { get; set; }
         public  DbSet<VsUsuario> VsUsuarios { get; set; }
         public  DbSet<Oficio> Oficios { get; set; }
         public  DbSet<OficiosBitacora> OficiosBitacoras { get; set; }
