@@ -4,8 +4,12 @@
     {
         //Task<ServiceResponse<List<Oficio>>> GetAllOficios();
         //Task<ServiceResponse<Oficio>> GetOficioById(int ejercicio, int folio, int eor);
-        Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio);
-      //  Task<Oficio> UpdateOficio(Oficio oficio);
-       
+        Task<ServiceResponse<OficioDTO>> CreateOficio(OficioDTO oficio);
+        Task<ServiceResponse<List<VwOficiosLista>>> GetAllOficios();
+        Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaMc(int eor);
+        Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaUser(int ejercicio, int eor, int idEmpleado, int iddepto);
+
+        //  Task<Oficio> UpdateOficio(Oficio oficio);
+
     }
 }

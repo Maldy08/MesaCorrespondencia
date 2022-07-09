@@ -13,7 +13,7 @@ namespace MesaCorrespondencia.Shared
         public int Eor { get; set; }
         public int Tipo { get; set; }
         public string NoOficio { get; set; } = string.Empty;
-        public string Pdfpath { get; set; } = string.Empty;
+        public string? Pdfpath { get; set; } = String.Empty;
         public DateTime Fecha { get; set; }
         public DateTime FechaCaptura { get; set; }
         public DateTime FechaAcuse { get; set; }
@@ -29,7 +29,7 @@ namespace MesaCorrespondencia.Shared
         public string Tema { get; set; } = string.Empty;
         public int Estatus { get; set; }
         public int? Empqentrega { get; set; }
-        public string Relacionoficio { get; set; } = string.Empty;
+        public string? Relacionoficio { get; set; } = string.Empty;
         public int Depto { get; set; }
         public int DeptoRespon { get; set; }
         public int IdEmpleado { get; set; }

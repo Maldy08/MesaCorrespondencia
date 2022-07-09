@@ -11,26 +11,61 @@ namespace MesaCorrespondencia.Server.Repositorios
             _context = context;
         }
 
-        public async Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio)
+        public async Task<ServiceResponse<OficioDTO>> CreateOficio(OficioDTO oficio)
         {
-            _context.Oficios.Add(oficio);
-            if(oficio.OficiosBitacoras!=null && oficio.OficiosBitacoras.Count > 0)
+            var oficioAdd = new Oficio
             {
-                foreach (var bitacora in oficio.OficiosBitacoras)
-                {
-                    _context.OficiosBitacoras.Add(bitacora);
-                }
-            }
+                Ejercicio = oficio.Ejercicio,
+                Folio = oficio.Folio,
+                Eor = oficio.Eor,
+                Tipo = oficio.Tipo,
+                NoOficio = oficio.NoOficio,
+                Pdfpath = oficio.Pdfpath,
+                Fecha = oficio.Fecha,
+                FechaCaptura = oficio.FechaCaptura,
+                FechaAcuse = oficio.FechaAcuse,
+                FechaLimite = oficio.FechaLimite,
+                RemDepen = oficio.RemDepen,
+                RemSiglas = oficio.RemSiglas,
+                RemNombre = oficio.RemNombre,
+                RemCargo = oficio.RemCargo,
+                DestDepen = oficio.DestDepen,
+                DestSiglas = oficio.DestSiglas,
+                DestNombre = oficio.DestNombre,
+                DestCargo = oficio.DestCargo,
+                Tema = oficio.Tema,
+                Estatus = oficio.Estatus,
+                Empqentrega = oficio.Empqentrega,
+                Relacionoficio = oficio.Relacionoficio,
+                Depto = oficio.Depto,
+                DeptoRespon = oficio.DeptoRespon,
 
-            if(oficio.OficiosResponsables!= null && oficio.OficiosResponsables.Count > 0)
+            };
+
+            _context.Oficios.Add(oficioAdd);
+            if (oficio.OficioBitacora != null)
+                  _context.OficiosBitacoras.Add(oficio.OficioBitacora);
+
+            if (oficio.OficiosResponsables != null && oficio.OficiosResponsables.Count > 0)
+                    oficio.OficiosResponsables.ForEach(of => _context.OficiosResponsables.Add(of));
+            try
             {
-                foreach (var responsable in oficio.OficiosResponsables)
-                {
-                    _context.OficiosResponsables.Add(responsable);
-                }
+              await _context.SaveChangesAsync();
+                //if(id == 3)
+                //{
+
+                //}
             }
-            await _context.SaveChangesAsync();
-            return new ServiceResponse<Oficio>
+            catch 
+            {
+                return new ServiceResponse<OficioDTO>
+                {
+                    Data = null,
+                    Message = "Ocurrio un error al guardar el oficio.",
+                    Success = false
+                };
+            }
+            return new ServiceResponse<OficioDTO>
             {
                 Data = oficio,
                 Message = "Oficio registrdo exitosamente!"
@@ -38,23 +73,38 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         }
 
-        //public async Task<ServiceResponse<List<Oficio>>> GetAllOficios()
-        //{
-        //    var response = new ServiceResponse<List<Oficio>>
-        //    {
-        //        Data = await _context.Oficios.ToListAsync()
-        //    };
-        //    return response;
-        //}
+        public async Task<ServiceResponse<List<VwOficiosLista>>> GetAllOficios()
+        {
+            var response = new ServiceResponse<List<VwOficiosLista>>
+            {
+                Data = await _context.VwOficiosListas.ToListAsync()
+            };
+            return response;
+        }
 
-        //public async Task<ServiceResponse<Oficio>> GetOficioById(int ejercicio, int folio, int eor)
-        //{
-        //    var response = new ServiceResponse<Oficio>
-        //    {
-        //        Data = await _context.Oficios.FirstOrDefaultAsync(o  => o.Ejercicio == ejercicio
-        //          && o.Folio == folio && o.Eor == eor)
-        //    };
-        //    return response;
-        //}
+        public async Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaMc(int eor)
+        {
+            var response = new ServiceResponse<List<VwOficiosLista>>
+            {
+                Data = await _context.VwOficiosListas
+                         .Where(of => of.Rol == 1 && of.Eor == eor)
+                         .OrderByDescending(of => of.Folio)
+                         .ToListAsync()
+            };
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaUser(int ejercicio, int eor, int idEmpleado, int iddepto)
+        {
+            var response = new ServiceResponse<List<VwOficiosLista>>
+            {
+                Data = await _context.VwOficiosListas
+                        .Where(of => of.Ejercicio == ejercicio && of.Eor == eor 
+                            && (of.Depto == iddepto && of.Rol == 1 || of.IdEmpleado == iddepto && of.Rol == 2))
+                        .OrderByDescending(of => of.Folio)
+                        .ToListAsync()
+            };
+            return response;
+        }
     }
 }

@@ -189,7 +189,7 @@ namespace MesaCorrespondencia.Server.Data
             {
                 entity.HasKey(e => new { e.Ejercicio, e.Folio, e.Eor })
                     .HasName("OFICIOS_PK");
-
+     
                 entity.ToTable("OFICIOS");
 
                 entity.Property(e => e.Ejercicio)

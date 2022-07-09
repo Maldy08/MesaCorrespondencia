@@ -7,7 +7,7 @@ namespace MesaCorrespondencia.Shared
     {
         public int Ejercicio { get; set; }
         public int Folio { get; set; }
-        public bool Eor { get; set; }
+        public int Eor { get; set; }
         public int IdEmpleado { get; set; }
         public int Rol { get; set; }
     }
