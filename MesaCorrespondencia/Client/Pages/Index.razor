@@ -1,4 +1,7 @@
 ﻿@page "/"
+@inject IAuthService _authService
+@inject ILocalStorageService LocalStorage
+@attribute [Authorize]
 
 
 <PageTitle>Index</PageTitle>
@@ -6,3 +9,14 @@
 <MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-8"></MudText>
 <MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+
+@code{
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (await _authService.IsUserAuthenticated())
+            Console.WriteLine("authenticado");
+        else
+            Console.WriteLine("no authenticado");
+    }
+}

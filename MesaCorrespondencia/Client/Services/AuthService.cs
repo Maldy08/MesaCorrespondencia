@@ -1,16 +1,19 @@
 ﻿using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MesaCorrespondencia.Client.Services
 {
     public class AuthService : IAuthService
     {
         private readonly HttpClient _http;
+        private readonly AuthenticationStateProvider _authStateProvider;
 
         public VsUsuario usuario { get; set; } = new();
 
-        public AuthService(HttpClient http)
+        public AuthService(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
+            _authStateProvider = authStateProvider;
         }
 
 
@@ -26,5 +29,7 @@ namespace MesaCorrespondencia.Client.Services
             if (response != null && response.Data != null)
                 usuario = response.Data;
         }
+
+        public async Task<bool> IsUserAuthenticated() => (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
     }
 }
