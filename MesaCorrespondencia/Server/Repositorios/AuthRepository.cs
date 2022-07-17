@@ -15,6 +15,22 @@ namespace MesaCorrespondencia.Server.Repositorios
             _configuration = configuration;
         }
 
+        public async Task<ServiceResponse<VsUsuario>> GetUserInfo(int id)
+        {
+            var response = new ServiceResponse<VsUsuario>();
+            var usuario = await _context.VsUsuarios.
+                FirstOrDefaultAsync(u => u.Usuario == id);
+            if (usuario == null)
+            {
+                response.Success = false;
+                response.Message = "Usuario no encontrado";
+            }
+            else
+                response.Data = usuario;
+            return response;
+
+        }
+
         public async Task<ServiceResponse<string>> Login(string user, string password)
         {
             var response = new ServiceResponse<string>();

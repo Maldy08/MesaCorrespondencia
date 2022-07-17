@@ -20,13 +20,13 @@ namespace MesaCorrespondencia.Server.Data
 
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseOracle("name=OracleConnection", b => b.UseOracleSQLCompatibility("11"));
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        optionsBuilder.UseOracle("name=OracleConnection", b => b.UseOracleSQLCompatibility("11"));
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

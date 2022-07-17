@@ -4,6 +4,7 @@ global using MesaCorrespondencia.Server.Repositorios;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>();
+builder.Services.AddDbContext<DataContext>(
+        opt => opt.UseOracle(builder.Configuration.GetConnectionString("OracleConnection"),
+            b => b.UseOracleSQLCompatibility("11")));
 builder.Services.AddScoped<IDeptoueRepository, DeptoueRepository>();
 builder.Services.AddScoped<IOficiosRepository, OficiosRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();

@@ -19,9 +19,15 @@ namespace MesaCorrespondencia.Server.Controllers
         {
             var response = await _authRepository.Login(request.Usuario,request.Password);
             if (!response.Success)
-            {
                 return BadRequest(response);
-            }
+            return Ok(response);
+        }
+        [HttpGet("get-user-info")]
+        public async Task<ActionResult<ServiceResponse<VsUsuario>>> GetUserInfo(int id)
+        {
+            var response = await _authRepository.GetUserInfo(id);
+            if (!response.Success)
+                return BadRequest(response);
             return Ok(response);
         }
     }
