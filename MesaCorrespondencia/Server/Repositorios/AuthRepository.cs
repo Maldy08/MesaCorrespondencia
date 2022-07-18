@@ -9,17 +9,22 @@ namespace MesaCorrespondencia.Server.Repositorios
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
-        public AuthRepository(DataContext context, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthRepository(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ServiceResponse<VsUsuario>> GetUserInfo(int id)
+        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public async Task<ServiceResponse<VsUsuario>> GetUserInfo()
         {
             var response = new ServiceResponse<VsUsuario>();
+            
             var usuario = await _context.VsUsuarios.
-                FirstOrDefaultAsync(u => u.Usuario == id);
+                FirstOrDefaultAsync(u => u.Usuario == GetUserId());
             if (usuario == null)
             {
                 response.Success = false;

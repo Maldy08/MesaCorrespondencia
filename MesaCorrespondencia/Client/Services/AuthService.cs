@@ -23,7 +23,7 @@ namespace MesaCorrespondencia.Client.Services
             return await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
 
-        public async Task GetUserInfo(int id)
+        public async Task GetUserInfo()
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<VsUsuario>>("api/auth/get-user-info");
             if (response != null && response.Data != null)

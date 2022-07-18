@@ -55,25 +55,35 @@
 </EditForm>
 
 @code {
-        private UserLogin user = new();
-        private string errorMessage = string.Empty;
+    private UserLogin user = new();
+    private string errorMessage = string.Empty;
 
-
-        private async Task HandleLogin()
+    private async Task HandleLogin()
+    {
+        var result = await AuthService.Login(user);
+        if (result.Success)
         {
-            var result = await AuthService.Login(user);
-            if (result.Success)
-            {
-                errorMessage = string.Empty;
-                await LocalStorage.SetItemAsync("authToken", result.Data);
-                await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                NavigationManager.NavigateTo("/");
-            }
-
-            else
-            {
-                errorMessage = result.Message;
-            }
+            errorMessage = string.Empty;
+            await LocalStorage.SetItemAsync("authToken", result.Data);
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            await SetUserInfo();
+            NavigationManager.NavigateTo("/");
         }
+        else
+        {
+            errorMessage = result.Message;
+        }
+    }
+
+    private async Task SetUserInfo()
+    {
+        await AuthService.GetUserInfo();
+        await LocalStorage.SetItemAsync("depto", AuthService.usuario.Depto.ToString());
+        await LocalStorage.SetItemAsync("depto-descripcion", AuthService.usuario.DeptoDescripcion);
+        await LocalStorage.SetItemAsync("puesto", AuthService.usuario.IdPue);
+        await LocalStorage.SetItemAsync("puesto-descripcion", AuthService.usuario.Descripcion);
+        await LocalStorage.SetItemAsync("empleado", AuthService.usuario.NoEmpleado);
+
+    }
 
 }

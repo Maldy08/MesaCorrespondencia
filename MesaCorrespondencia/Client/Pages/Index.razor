@@ -1,8 +1,8 @@
 ﻿@page "/"
-@inject IAuthService _authService
+@*@inject IAuthService _authService
 @inject ILocalStorageService LocalStorage
 @attribute [Authorize]
-
+*@
 
 <PageTitle>Index</PageTitle>
 
@@ -14,9 +14,12 @@
 
     protected async override Task OnInitializedAsync()
     {
-        if (await _authService.IsUserAuthenticated())
-            Console.WriteLine("authenticado");
-        else
-            Console.WriteLine("no authenticado");
+        //if (await _authService.IsUserAuthenticated())
+        //{
+        //    await _authService.GetUserInfo();
+        //    var usuario = _authService.usuario;
+        //}
+        //else
+        //    Console.WriteLine("no authenticado");
     }
 }

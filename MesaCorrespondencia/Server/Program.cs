@@ -1,7 +1,6 @@
 ﻿global using MesaCorrespondencia.Shared;
 global using MesaCorrespondencia.Server.Data;
 global using MesaCorrespondencia.Server.Repositorios;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
         }
     );
-
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.

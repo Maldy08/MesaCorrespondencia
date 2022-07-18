@@ -45,11 +45,21 @@
         _drawerOpen = !_drawerOpen;
     }
 
-        private async Task Logout()
+    private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        await ClearUserInfo();
         NavigationManager.NavigateTo("login");
 
+    }
+
+    private async Task ClearUserInfo()
+    {
+        await LocalStorage.RemoveItemAsync("depto");
+        await LocalStorage.RemoveItemAsync("depto-descripcion");
+        await LocalStorage.RemoveItemAsync("puesto");
+        await LocalStorage.RemoveItemAsync("puesto-descripcion");
+        await LocalStorage.RemoveItemAsync("empleado");
     }
 }
