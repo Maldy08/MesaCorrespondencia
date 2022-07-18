@@ -15,13 +15,34 @@ namespace MesaCorrespondencia.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<OficioDTO>>> Create(OficioDTO oficio)
+        public async Task<ActionResult<ServiceResponse<Oficio>>> Create(Oficio oficio)
         {
             var result = await _oficiosRepository.CreateOficio(oficio);
             return Ok(result);
         }
 
-        [HttpGet("MC/{eor}")]
+        [HttpPost("add-bitacora")]
+        public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> CreateBitacora(OficiosBitacora oficiosBitacora)
+        {
+            var result = await _oficiosRepository.CreateBitacora(oficiosBitacora);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<Oficio>>> UpdateOficio(Oficio oficio)
+        {
+            var result = await _oficiosRepository.UpdateOficio(oficio);
+            return Ok(result);
+        }
+
+        [HttpPut("update-bitacora")]
+        public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> UpdateBitacora(OficiosBitacora oficiosBitacora)
+        {
+            var result = await _oficiosRepository.UpdateBitacora(oficiosBitacora);
+            return Ok(result);
+        }
+
+        [HttpGet("mc/{eor}")]
         public async Task<ActionResult<ServiceResponse<List<VwOficiosLista>>>> GetOficiosMC(int eor)
         {
             var result = await _oficiosRepository.GetOficiosListaMc(eor);

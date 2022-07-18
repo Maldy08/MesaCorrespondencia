@@ -17,6 +17,7 @@ namespace MesaCorrespondencia.Server.Data
         public  DbSet<OficiosUsuext> OficiosUsuexts { get; set; }
         public  DbSet<OficiosXexpedir> OficiosXexpedirs { get; set; }
         public  DbSet<VwOficiosLista> VwOficiosListas { get; set; }
+        public  DbSet<OficiosParametro> OficiosParametros { get; set; }
 
 
 
@@ -780,7 +781,25 @@ namespace MesaCorrespondencia.Server.Data
                     .HasColumnName("TIPO");
             });
 
-           
+            modelBuilder.Entity<OficiosParametro>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("OFICIOS_PARAMETROS");
+
+                entity.Property(e => e.Ejercicio)
+                    .HasPrecision(4)
+                    .HasColumnName("EJERCICIO");
+
+                entity.Property(e => e.NextFEnv)
+                    .HasPrecision(6)
+                    .HasColumnName("NEXT_F_ENV");
+
+                entity.Property(e => e.NextFRec)
+                    .HasPrecision(6)
+                    .HasColumnName("NEXT_F_REC");
+            });
+
         }
     }
 }

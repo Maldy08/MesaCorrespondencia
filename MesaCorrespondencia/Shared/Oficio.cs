@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MesaCorrespondencia.Shared
 {
@@ -30,12 +31,16 @@ namespace MesaCorrespondencia.Shared
         public int Depto { get; set; }
         public int DeptoRespon { get; set; }
 
+        [NotMapped]
+        public OficiosBitacora OficioBitacora { get; set; } = new();
+        [NotMapped]
+        public List<OficiosResponsable> OficiosResponsables { get; set; } = new();
 
         //Necesita una dependencia de OficiosBitacora
         //Se relaciona con ejercicio,folio,eor,fechacaptura
-       // public OficiosBitacora OficioBitacora { get; set; } = null;
-      //  public List<OficiosResponsable> OficiosResponsables { get; set; } = null;
+        // public OficiosBitacora OficioBitacora { get; set; } = null;
+        //  public List<OficiosResponsable> OficiosResponsables { get; set; } = null;
 
-       
+
     }
 }

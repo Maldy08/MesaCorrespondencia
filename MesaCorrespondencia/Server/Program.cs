@@ -18,6 +18,8 @@ builder.Services.AddDbContext<DataContext>(
             b => b.UseOracleSQLCompatibility("11")));
 builder.Services.AddScoped<IDeptoueRepository, DeptoueRepository>();
 builder.Services.AddScoped<IOficiosRepository, OficiosRepository>();
+builder.Services.AddScoped<IEmpleadosRepository, EmpleadosRepository>();
+builder.Services.AddScoped<IOficiosParametroRepository, OficiosParametroRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 
