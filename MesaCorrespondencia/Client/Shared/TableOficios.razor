@@ -1,5 +1,31 @@
-﻿<h3>TableOficios</h3>
+﻿@inject IOficioService OficioService
+@inject ILocalStorageService LocalStorage
+@inject IAuthService AuthService
 
 @code {
+    private List<VwOficiosLista> vwOficiosListas;
+    [Parameter]
+    public int eor { get; set; }
+    [Parameter]
+    public int ejercicio { get; set; }
+    [Parameter]
+    public int empleado { get; set; }
+    [Parameter]
+    public int depto { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        eor = 2;
+        //var nivel = await LocalStorage.GetItemAsync<int>("nivel");
+        if(await AuthService.IsUserInRoleMc())
+            vwOficiosListas = await OficioService.OficiosLista(eor);
+        else
+            vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
+      
+    }
 
 }

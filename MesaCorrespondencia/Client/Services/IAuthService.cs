@@ -6,5 +6,6 @@
         Task<ServiceResponse<string>> Login(UserLogin request);
         Task GetUserInfo();
         Task<bool> IsUserAuthenticated();
+        Task<bool> IsUserInRoleMc();
     }
 }

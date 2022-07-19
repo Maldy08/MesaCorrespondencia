@@ -61,7 +61,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Usuario.ToString()),
                 new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Role,user.OficiosNivel == 9 ? "MC": "Usuario")
+                new Claim(ClaimTypes.Role,user.OficiosNivel == 9 ? "mc": "usuario")
                 //new Claim("deptoId",user.Depto.ToString()),
                 //new Claim("empleadoId",user.NoEmpleado.ToString())
             };

@@ -83,6 +83,7 @@
         await LocalStorage.SetItemAsync("puesto", AuthService.usuario.IdPue);
         await LocalStorage.SetItemAsync("puesto-descripcion", AuthService.usuario.Descripcion);
         await LocalStorage.SetItemAsync("empleado", AuthService.usuario.NoEmpleado);
+        await LocalStorage.SetItemAsync("nivel", AuthService.usuario.OficiosNivel);
 
     }
 

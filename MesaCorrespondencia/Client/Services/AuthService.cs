@@ -31,5 +31,8 @@ namespace MesaCorrespondencia.Client.Services
         }
 
         public async Task<bool> IsUserAuthenticated() => (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
+
+        public async Task<bool> IsUserInRoleMc() => (await _authStateProvider.GetAuthenticationStateAsync()).User.IsInRole("mc");
+        
     }
 }
