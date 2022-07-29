@@ -27,6 +27,9 @@ namespace MesaCorrespondencia.Client.Services
         }
 
 
+        
+
+
         //public async Task<List<VwOficiosLista>> OficiosListaMC(int eor)
         //{
         //    var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<VwOficiosLista>>>($"api/oficios/mc/{eor}");
@@ -39,7 +42,7 @@ namespace MesaCorrespondencia.Client.Services
         //        var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<VwOficiosLista>>>($"api/oficios/{ejercicio}/{eor}/{idEmpleado}/{idDepto}");
         //        return response.Data;
         //    }
-    
+
     }
 }
 

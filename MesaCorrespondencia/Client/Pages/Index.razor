@@ -1,20 +1,22 @@
 ﻿@page "/"
 @inject IAuthService _authService
-@*@inject ILocalStorageService LocalStorage*@
+@inject ILocalStorageService LocalStorage
 @attribute [Authorize]
-*@
+
 
 <PageTitle>Index</PageTitle>
-<TableOficios eor="2" ejercicio="2022" empleado="7197" depto="1"/>
+<TableOficios Title="Oficios Recibidos" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto"/>
 
 @*<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-8"></MudText>
 <MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
 *@
 @code{
-
+    private int empleado;
+    private int depto;
     protected async override Task OnInitializedAsync()
     {
+        await LoadData();
         //if (await _authService.IsUserAuthenticated())
         //{
         //    await _authService.GetUserInfo();
@@ -22,5 +24,11 @@
         //}
         //else
         //    Console.WriteLine("no authenticado");
+    }
+
+    private async Task LoadData()
+    {
+        empleado = await LocalStorage.GetItemAsync<int>("empleado");
+        depto = await LocalStorage.GetItemAsync<int>("depto");
     }
 }

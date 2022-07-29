@@ -1,6 +1,7 @@
 ﻿@inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthService AuthService
 
 @inherits LayoutComponentBase
 
@@ -49,18 +50,10 @@
     {
         await LocalStorage.RemoveItemAsync("authToken");
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        await ClearUserInfo();
+        await AuthService.ClearUserInfo();
         NavigationManager.NavigateTo("login");
 
     }
 
-    private async Task ClearUserInfo()
-    {
-        await LocalStorage.RemoveItemAsync("depto");
-        await LocalStorage.RemoveItemAsync("depto-descripcion");
-        await LocalStorage.RemoveItemAsync("puesto");
-        await LocalStorage.RemoveItemAsync("puesto-descripcion");
-        await LocalStorage.RemoveItemAsync("empleado");
-        await LocalStorage.RemoveItemAsync("nivel");
-    }
+
 }

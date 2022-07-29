@@ -4,8 +4,10 @@
     {
         VsUsuario usuario { get; set; }
         Task<ServiceResponse<string>> Login(UserLogin request);
-        Task GetUserInfo();
+        Task GetUserInfoDB();
         Task<bool> IsUserAuthenticated();
         Task<bool> IsUserInRoleMc();
+        Task SetUserInfoLocal();
+        Task ClearUserInfo();
     }
 }
