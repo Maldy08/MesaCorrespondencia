@@ -1,9 +1,20 @@
 ﻿@inject IOficioService OficioService
 @inject ILocalStorageService LocalStorage
 @inject IAuthService AuthService
+<style>
+    .selected {
+        background-color: #1E88E5 !important;
+    }
 
+        .selected > td {
+            color: white !important;
+        }
 
-<MudTable Items="@vwOficiosListas" Filter="new Func<VwOficiosLista, bool>(FilterFunc1)">
+            .selected > td .mud-input {
+                color: white !important;
+            }
+</style>
+<MudTable T="VwOficiosLista" Items="@vwOficiosListas" RowClassFunc="@SelectedRowClassFunc" @ref="mudTable"  Filter="new Func<VwOficiosLista, bool>(FilterFunc1)" OnRowClick="@RowClickEvent">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Title</MudText>
         <MudSpacer />
@@ -37,7 +48,7 @@
     </RowTemplate>
 
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{25,50, 100}" />
+        <MudTablePager PageSizeOptions="new int[]{25,50,100}" />
     </PagerContent>
 </MudTable>
 
@@ -56,6 +67,14 @@
 
     private string searchString1 = "";
 
+    [Parameter]
+    public EventCallback<VwOficiosLista> selectedEventCallback{ get; set; }
+
+    private VwOficiosLista? selectedOficio;
+    private MudTable<VwOficiosLista> mudTable;
+    private List<string> clickedEvents = new();
+    private int selectedRowNumber = -1;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
@@ -67,7 +86,7 @@
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
             vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
-      
+
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);
@@ -83,6 +102,39 @@
         if ($"{element.Folio} {element.Fecha} {element.RemDepen} {element.Tipo} {element.NoOficio} {element.RemNombre} {element.DestNombre} {element.Estatus}".Contains(searchString))
             return true;
         return false;
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<VwOficiosLista> tableRowClickEventArgs)
+    {
+        //clickedEvents.Add("Row has been clicked");
+        Console.WriteLine(tableRowClickEventArgs.Item.ToString());
+        OficioSelected(tableRowClickEventArgs.Item);
+    }
+
+    private string SelectedRowClassFunc(VwOficiosLista element, int rowNumber)
+    {
+        if(selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+             //
+            selectedRowNumber = rowNumber;
+           
+            return "selected";
+
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
+    private async void OficioSelected(VwOficiosLista element)
+    {
+        await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
 
 }

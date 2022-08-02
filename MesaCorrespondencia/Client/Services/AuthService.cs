@@ -40,7 +40,7 @@ namespace MesaCorrespondencia.Client.Services
 
         public async Task SetUserInfoLocal()
         {
-            await _localStorage.SetItemAsync("depto", usuario.Depto.ToString());
+            await _localStorage.SetItemAsync("depto", usuario.Depto);
             await _localStorage.SetItemAsync("depto-descripcion", usuario.DeptoDescripcion);
             await _localStorage.SetItemAsync("puesto", usuario.IdPue);
             await _localStorage.SetItemAsync("puesto-descripcion", usuario.Descripcion);

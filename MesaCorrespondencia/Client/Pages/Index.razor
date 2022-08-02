@@ -5,7 +5,7 @@
 
 
 <PageTitle>Index</PageTitle>
-<TableOficios Title="Oficios Recibidos" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto"/>
+<TableOficios selectedEventCallback="@selectedEmpleado" Title="Oficios Recibidos" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto"/>
 
 @*<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-8"></MudText>
@@ -14,6 +14,7 @@
 @code{
     private int empleado;
     private int depto;
+    private VwOficiosLista vwOficiosLista;
     protected async override Task OnInitializedAsync()
     {
         await LoadData();
@@ -30,5 +31,10 @@
     {
         empleado = await LocalStorage.GetItemAsync<int>("empleado");
         depto = await LocalStorage.GetItemAsync<int>("depto");
+    }
+
+    private void selectedEmpleado(VwOficiosLista element)
+    {
+        vwOficiosLista = element;
     }
 }
