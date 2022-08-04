@@ -12,5 +12,8 @@
         Task<ServiceResponse<OficiosBitacora>> CreateBitacora(OficiosBitacora oficiosBitacora);
         Task<ServiceResponse<OficiosBitacora>> UpdateBitacora(OficiosBitacora oficiosBitacora);
 
+        Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus();
+        Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
+
     }
 }

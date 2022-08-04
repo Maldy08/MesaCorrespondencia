@@ -3,57 +3,75 @@
 @inject IAuthService AuthService
 <style>
     .selected {
-        background-color: #1E88E5 !important;
-    }
+    background-color: #E1E1E0 !important;
+}
 
-        .selected > td {
-            color: white !important;
-        }
+.botones {
+    width: 120px;
+}
+.mud-table td{
+   font-size: 12px;
+}
 
-            .selected > td .mud-input {
-                color: white !important;
-            }
+.mud-table-head > .mud-table-row > .mud-table-cell {
+    
+}
+
+.color{
+     color: #6A1B32;
+}
+
 </style>
-<MudTable T="VwOficiosLista" Items="@vwOficiosListas" RowClassFunc="@SelectedRowClassFunc" @ref="mudTable"  Filter="new Func<VwOficiosLista, bool>(FilterFunc1)" OnRowClick="@RowClickEvent">
+<MudTable T="VwOficiosLista"
+    Loading="@_loading"  
+    Items="@vwOficiosListas.Take(5)" 
+    Hover="true" 
+    RowClassFunc="@SelectedRowClassFunc" 
+    @ref="mudTable"
+    Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
+    OnRowClick="@RowClickEvent">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Title</MudText>
+        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download"/>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>ACCIONES</MudTh>
-        <MudTh>NO. FOLIO</MudTh>
-        <MudTh>FECHA</MudTh>
-        <MudTh>DEPENDENCIA</MudTh>
-        <MudTh>TIPO</MudTh>
-        <MudTh>NO. DE OFICIO</MudTh>
-        <MudTh>REMITENTE</MudTh>
-        <MudTh>DESTINATARIO</MudTh>
-        <MudTh>ESTATUS</MudTh>
+       
+            <MudTh>ACCIONES</MudTh>
+            <MudTh>NO.FOLIO</MudTh>
+            <MudTh>FECHA</MudTh>
+            <MudTh>DEPENDENCIA</MudTh>
+            <MudTh>TIPO</MudTh>
+            <MudTh>NO.DE OFICIO</MudTh>
+            <MudTh>REMITENTE</MudTh>
+            <MudTh>DESTINATARIO</MudTh>
+            <MudTh>ESTATUS</MudTh>
+      
     </HeaderContent>
+    
     <RowTemplate>
-        <MudTd DataLabel="ACCIONES">ACCIONES</MudTd>
-        <MudTd DataLabel="NO. FOLIO">       
-            <p class="fs-6">@context.Folio</p>
-            </MudTd>
+        <MudTd Class="botones" DataLabel="ACCIONES">
+             <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="@ViewClick"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="@ViewClick"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="@ViewClick"></MudIconButton>
+        </MudTd>
+        <MudTd DataLabel="NO.FOLIO">@context.Folio</MudTd>
         <MudTd DataLabel="FECHA">@context.Fecha</MudTd>
-        <MudTd DataLabel="DEPENDENCIA">
-            <p class="fs-10">@context.RemDepen</p>
-            </MudTd>
+        <MudTd DataLabel="DEPENDENCIA">@context.RemDepen</MudTd>
         <MudTd DataLabel="TIPO">@context.Tipo</MudTd>
-        <MudTd DataLabel="NO. DE OFICIO">@context.NoOficio</MudTd>
+        <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
         <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
         <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
-        <MudTd DataLabel="ESTATUS">@context.Estatus</MudTd>
+        <MudTd DataLabel="ESTATUS" >
+           <TableOficiosEstatus Eor="@context.Eor" Estatus="@context.Estatus"/>
+        </MudTd>
     </RowTemplate>
-
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[]{25,50,100}" />
     </PagerContent>
 </MudTable>
 
 @code {
-    private List<VwOficiosLista> vwOficiosListas = new();
     [Parameter]
     public int eor { get; set; }
     [Parameter]
@@ -64,29 +82,29 @@
     public int depto { get; set; }
     [Parameter]
     public string Title { get; set; } = string.Empty;
-
-    private string searchString1 = "";
-
     [Parameter]
     public EventCallback<VwOficiosLista> selectedEventCallback{ get; set; }
 
+    private List<VwOficiosLista> vwOficiosListas = new();
+    private string searchString1 = "";
     private VwOficiosLista? selectedOficio;
     private MudTable<VwOficiosLista> mudTable;
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
+    private bool _loading = false;
 
     protected override async Task OnInitializedAsync()
     {
+        _loading = true;
         await LoadData();
+        _loading = false;
     }
     private async Task LoadData()
     {
-        //var nivel = await LocalStorage.GetItemAsync<int>("nivel");
         if(await AuthService.IsUserInRoleMc())
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
             vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
-
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);
@@ -106,8 +124,7 @@
 
     private void RowClickEvent(TableRowClickEventArgs<VwOficiosLista> tableRowClickEventArgs)
     {
-        //clickedEvents.Add("Row has been clicked");
-        Console.WriteLine(tableRowClickEventArgs.Item.ToString());
+       // Console.WriteLine(tableRowClickEventArgs.Item.ToString());
         OficioSelected(tableRowClickEventArgs.Item);
     }
 
@@ -120,11 +137,9 @@
         }
         else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
         {
-             //
             selectedRowNumber = rowNumber;
-           
-            return "selected";
 
+            return "selected";
         }
         else
         {
@@ -135,6 +150,11 @@
     private async void OficioSelected(VwOficiosLista element)
     {
         await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
+    }
+
+    private void ViewClick()
+    {
+        Console.WriteLine("has dado click");
     }
 
 }

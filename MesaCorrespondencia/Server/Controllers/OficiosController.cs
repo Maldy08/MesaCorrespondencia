@@ -62,5 +62,20 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = await _oficiosRepository.GetAllOficios();
             return Ok(result);
         }
+
+        [HttpGet("get-estatus")]
+        public async Task<ActionResult<ServiceResponse<List<OficiosEstatus>>>> GetAllOficiosEstatus()
+        {
+            var result = await _oficiosRepository.GetEstatus();
+            return Ok(result);
+        }
+
+        [HttpGet("get-estatus/{id}/{eor}")]
+
+        public async Task<ActionResult<ServiceResponse<OficiosEstatus>>> GetOficioEstatusById(int id, int eor)
+        {
+            var result = await _oficiosRepository.GetEstatusById(id, eor);
+            return Ok(result);
+        }
     }
 }

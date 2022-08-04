@@ -12,6 +12,18 @@ namespace MesaCorrespondencia.Client.Services
             _authService = authService;
         }
 
+        public async Task<OficiosEstatus> GetOficioEstatus(int id, int eor)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<OficiosEstatus>>($"api/oficios/get-estatus/{id}/{eor}");
+            return response.Data;
+        }
+
+        public async Task<List<OficiosEstatus>> GetOficioEstatusAll()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosEstatus>>>("api/oficios/get-estatus");
+            return response.Data;
+        }
+
         public async Task<List<VwOficiosLista>> OficiosLista(int eor,int? ejercicio, int? idEmpleado, int? idDepto)
         {
             if (await _authService.IsUserInRoleMc())

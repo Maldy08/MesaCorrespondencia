@@ -104,6 +104,27 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus()
+        {
+            var response = new ServiceResponse<List<OficiosEstatus>>
+            {
+                Data = await _context.OficiosEstatuses
+                 .ToListAsync()
+            };
+            return response;
+        }
+
+        public async Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor)
+        {
+            var response = new ServiceResponse<OficiosEstatus>
+            {
+                Data = await _context.OficiosEstatuses
+             .FirstOrDefaultAsync(o => o.IdEstatus == id && o.Eor == eor)
+
+            };
+            return response;
+        }
+
         public async Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaMc(int eor)
         {
             var response = new ServiceResponse<List<VwOficiosLista>>

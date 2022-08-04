@@ -1,0 +1,21 @@
+﻿@inject IOficioService OficioService
+@if(oficiosEstatus!= null){
+   <p style=@_style> @oficiosEstatus.Nombre</p>
+}
+
+@code {
+    [Parameter]
+    public int Estatus { get; set; }
+    [Parameter]
+    public int Eor{ get; set; }
+
+    private string? _estatus;
+    private OficiosEstatus oficiosEstatus = new();
+    private string _style;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        oficiosEstatus = await OficioService.GetOficioEstatus(Estatus, Eor);
+        _style = "background-color:red; "
+    }
+}
