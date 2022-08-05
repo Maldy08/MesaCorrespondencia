@@ -11,11 +11,11 @@
 
     private string? _estatus;
     private OficiosEstatus oficiosEstatus = new();
-    private string _style;
+    private string _style= string.Empty;
 
     protected override async Task OnParametersSetAsync()
     {
         oficiosEstatus = await OficioService.GetOficioEstatus(Estatus, Eor);
-        _style = "background-color:red; "
+        //_style = "background-color:red; "
     }
 }

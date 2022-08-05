@@ -1,6 +1,7 @@
 ﻿@inject IOficioService OficioService
 @inject ILocalStorageService LocalStorage
 @inject IAuthService AuthService
+@inject IDialogService DialogService
 <style>
     .selected {
     background-color: #E1E1E0 !important;
@@ -20,23 +21,23 @@
 .color{
      color: #6A1B32;
 }
-
 </style>
+
 <MudTable T="VwOficiosLista"
     Loading="@_loading"  
     Items="@vwOficiosListas.Take(5)" 
     Hover="true" 
-    RowClassFunc="@SelectedRowClassFunc" 
+    Striped="true"
     @ref="mudTable"
     Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
-    OnRowClick="@RowClickEvent">
+    OnRowClick="@RowClickEvent"
+      >
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download"/>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-       
             <MudTh>ACCIONES</MudTh>
             <MudTh>NO.FOLIO</MudTh>
             <MudTh>FECHA</MudTh>
@@ -46,13 +47,12 @@
             <MudTh>REMITENTE</MudTh>
             <MudTh>DESTINATARIO</MudTh>
             <MudTh>ESTATUS</MudTh>
-      
     </HeaderContent>
     
     <RowTemplate>
         <MudTd Class="botones" DataLabel="ACCIONES">
              <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="@ViewClick"></MudIconButton>
-             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="@ViewClick"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="@ViewClick"></MudIconButton>
         </MudTd>
         <MudTd DataLabel="NO.FOLIO">@context.Folio</MudTd>
@@ -87,7 +87,7 @@
 
     private List<VwOficiosLista> vwOficiosListas = new();
     private string searchString1 = "";
-    private VwOficiosLista? selectedOficio;
+    private VwOficiosLista selectedOficio = new();
     private MudTable<VwOficiosLista> mudTable;
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
@@ -124,30 +124,10 @@
 
     private void RowClickEvent(TableRowClickEventArgs<VwOficiosLista> tableRowClickEventArgs)
     {
-       // Console.WriteLine(tableRowClickEventArgs.Item.ToString());
         OficioSelected(tableRowClickEventArgs.Item);
     }
 
-    private string SelectedRowClassFunc(VwOficiosLista element, int rowNumber)
-    {
-        if(selectedRowNumber == rowNumber)
-        {
-            selectedRowNumber = -1;
-            return string.Empty;
-        }
-        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
-        {
-            selectedRowNumber = rowNumber;
-
-            return "selected";
-        }
-        else
-        {
-            return string.Empty;
-        }
-    }
-
-    private async void OficioSelected(VwOficiosLista element)
+        private async void OficioSelected(VwOficiosLista element)
     {
         await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
@@ -156,5 +136,30 @@
     {
         Console.WriteLine("has dado click");
     }
+
+    private void Edit(VwOficiosLista element)
+    {
+        var parameters = new DialogParameters { ["oficioEdit"] = element };
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large, FullWidth = true};
+        DialogService.Show<ModalOficioRecibido>("", parameters,options);
+        Console.WriteLine(element);
+    }
+    //private string SelectedRowClassFunc(VwOficiosLista element, int rowNumber)
+    //{
+    //    if(selectedRowNumber == rowNumber)
+    //    {
+    //        selectedRowNumber = -1;
+    //        return string.Empty;
+    //    }
+    //    else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+    //    {
+    //        selectedRowNumber = rowNumber;
+    //        return "selected";
+    //    }
+    //    else
+    //    {
+    //        return string.Empty;
+    //    }
+    //}
 
 }

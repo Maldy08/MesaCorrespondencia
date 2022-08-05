@@ -1,0 +1,60 @@
+﻿@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@oficio">
+            <DataAnnotationsValidator />
+            <MudGrid>
+               <MudItem xs="4">
+                    Folio
+                    <MudChip>@oficio.Folio</MudChip>
+                </MudItem>
+
+                <MudItem xs="4">
+                    <MudRadioGroup T="int">
+                        <MudRadio Option="1" Color="Color.Primary" UnCheckedColor="Color.Default">CEA</MudRadio>
+                        <MudRadio Option="2" Color="Color.Primary" UnCheckedColor="Color.Default">SEPROA</MudRadio>
+                    </MudRadioGroup>
+                </MudItem>
+
+                <MudItem xs="4">
+                    Fecha
+                    <MudChip>@oficio.Fecha</MudChip>
+                </MudItem>
+
+                <MudItem xs="4">
+                    <MudTextField Label="Numero de oficio" @bind-Value="oficio.NoOficio"  />
+                </MudItem>
+       
+                <MudItem xs="4">
+                    <MudDatePicker Label="Fecha de documento" Date="@oficio.FechaCaptura" DisableToolbar="true" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Cancelar</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Guardar</MudButton>
+                    </MudCardActions>
+                </MudItem>
+             </MudGrid>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance mudDialog { get; set; }
+    [Parameter]
+    public VwOficiosLista oficioEdit { get; set; }
+    private VwOficiosLista oficio = new();
+    void Submit() => mudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => mudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        if (oficioEdit != null)
+            oficio = oficioEdit;
+        else
+            oficioEdit = new();
+    }
+}
