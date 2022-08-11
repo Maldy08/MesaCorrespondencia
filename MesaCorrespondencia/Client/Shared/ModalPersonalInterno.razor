@@ -1,0 +1,109 @@
+﻿@inject IEmpleadoService EmpleadosService
+@inject IAuthService AuthService
+<MudDialog>
+    <DialogContent>
+        <MudTable T="VsEmpleadosSisco" 
+            Items="@Elements"
+            MultiSelection="_multiSelect"
+            @bind-SelectedItems="selectedItems"
+            Dense="true" 
+            Hover="true" 
+            Striped="true"
+            @ref="mudTable" 
+            RowClassFunc="@SelectedRowClassFunc"
+            Filter="new Func<VsEmpleadosSisco,bool>(FilterFunc1)" 
+            @bind-SelectedItem="selectedItem">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Personal Interno</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>NOMBRE COMPLETO</MudTh>
+                <MudTh>DEPARTAMENTO</MudTh>
+                <MudTh>PUESTO</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Nombre del empleado">@context.NombreCompleto</MudTd>
+                <MudTd DataLabel="Departamento">@context.DescripcionDepto</MudTd>
+                <MudTd DataLabel="Puesto">@context.DescripcionPuesto</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{25,50,100}" />
+            </PagerContent>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" OnClick="@Cancel" >Cancelar</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" OnClick="@Submit" >Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+    private string searchString1 = "";
+    private IEnumerable<VsEmpleadosSisco> Elements = new List<VsEmpleadosSisco>();
+
+
+    VsEmpleadosSisco selectedItem = new VsEmpleadosSisco();
+    private HashSet<VsEmpleadosSisco> selectedItems = new HashSet<VsEmpleadosSisco>();
+    private MudTable<VsEmpleadosSisco> mudTable;
+    private int selectedRowNumber = -1;
+    private bool _multiSelect = false;
+
+    protected  override async Task OnInitializedAsync()
+    {
+        if(await AuthService.IsUserInRoleMc())
+            Elements = await EmpleadosService.GetEmpleados();
+        else
+            Elements = await EmpleadosService.GetEmpleadosByDepto(21);
+    }
+
+    private bool FilterFunc1(VsEmpleadosSisco element) => FilterFunc(element, searchString1);
+    private bool FilterFunc(VsEmpleadosSisco element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.NombreCompleto.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.DescripcionDepto.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.NombreCompleto} {element.DescripcionDepto} {element.DescripcionPuesto}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    private string SelectedRowClassFunc(VsEmpleadosSisco element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+}
+
+<style>
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+</style>

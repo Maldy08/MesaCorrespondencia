@@ -1,5 +1,14 @@
 ﻿@inject IDialogService DialogService
+<style>
+    .botones-accion{
+         background-color:#6A1B32;
+         color:white;
+}
 
+.botones-accion:hover{
+    background-color: #6A1B72
+}
+</style>
 <MudDialog>
     <DialogContent>
         <EditForm Model="@oficio">
@@ -33,12 +42,11 @@
                 <MudItem xs="4">
                     <MudDatePicker Label="Fecha Limite" Date="@oficio.FechaLimite" DisableToolbar="true" />
                 </MudItem>
+                <MudItem xs="8">
 
-                 <MudItem lg="6">
-                    <MudTextField T="string" Value="@oficio.RemNombre" ReadOnly="true" Label="Nombre del Remitente" Placeholder="Persona que firma el oficio"/>
                 </MudItem>
 
-                <MudItem lg="6">
+                <MudItem lg="8">
                     <MudTextField T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Placeholder="Persona a quien se dirige el Oficio"/>
                 </MudItem>
 
@@ -48,16 +56,13 @@
                 <MudItem lg="6">
                     <MudTextField T="string" Label="Filled" Variant="Variant.Filled" Text="@sampleText" Lines="5"/>
                 </MudItem>
-
-                <MudItem lg="6">
-                    <MudCardActions>
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Cancelar</MudButton>
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Guardar</MudButton>
-                    </MudCardActions>
-                </MudItem>
              </MudGrid>
         </EditForm>
     </DialogContent>
+    <DialogActions>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel" >Cancelar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit"  >Guardar</MudButton>
+    </DialogActions>
 </MudDialog>
 
 @code {
@@ -76,5 +81,12 @@
             oficio = oficioEdit;
         else
             oficioEdit = new();
+    }
+
+    void ingresar()
+    {
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large, FullWidth = true};
+       // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        DialogService.Show<ModalPersonalInterno>("",options);
     }
 }

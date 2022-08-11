@@ -15,8 +15,9 @@ namespace MesaCorrespondencia.Server.Repositorios
             var response = new ServiceResponse<List<VsEmpleadosSisco>>
             {
                 Data = await _context.EmpleadosSisco
-                .Where(e => e.Activo =="V")
-                .ToListAsync()
+                  .Where(e => e.Activo =="V")
+                  .OrderBy(e => e.Empleado)
+                   .ToListAsync()
             };
             return response;
         }
@@ -26,6 +27,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             {
                 Data = await _context.EmpleadosSisco
                         .Where(e => e.Deptoue == depto && e.Activo == "V")
+                        .OrderBy(e => e.Empleado)
                         .ToListAsync()
             };
             return response;
@@ -34,7 +36,8 @@ namespace MesaCorrespondencia.Server.Repositorios
         {
             var response = new ServiceResponse<VsEmpleadosSisco>
             {
-                Data = await _context.EmpleadosSisco.FirstOrDefaultAsync(e => e.Empleado == id)
+                Data = await _context.EmpleadosSisco
+                    .FirstOrDefaultAsync(e => e.Empleado == id)
             };
             return response;
         }
