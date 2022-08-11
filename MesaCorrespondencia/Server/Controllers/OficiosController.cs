@@ -77,5 +77,12 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = await _oficiosRepository.GetEstatusById(id, eor);
             return Ok(result);
         }
+
+        [HttpGet("get-oficios-usuariosext")]
+        public async Task<ActionResult<ServiceResponse<List<OficiosUsuext>>>> GetOficiosUsuariosExternos()
+        {
+            var result = await _oficiosRepository.GetOficiosUsuariosExternos();
+            return Ok(result);
+        }
     }
 }

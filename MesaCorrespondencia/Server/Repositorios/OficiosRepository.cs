@@ -150,6 +150,17 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos()
+        {
+            var response = new ServiceResponse<List<OficiosUsuext>>
+            {
+                Data = await _context.OficiosUsuexts
+                          .OrderBy(o => o.IdExterno)
+                         .ToListAsync()
+            };
+            return response;
+        }
+
         public async Task<ServiceResponse<OficiosBitacora>> UpdateBitacora(OficiosBitacora oficiosBitacora)
         {
             var bitacoraUpdate = await _context.OficiosBitacoras.FindAsync(oficiosBitacora.Ejercicio, oficiosBitacora.Folio, oficiosBitacora.Eor, oficiosBitacora.FechaCaptura);

@@ -24,6 +24,12 @@ namespace MesaCorrespondencia.Client.Services
             return response.Data;
         }
 
+        public async Task<List<OficiosUsuext>> GetOficioUsuextAll()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosUsuext>>>("api/oficios/get-oficios-usuariosext");
+            return response.Data;
+        }
+
         public async Task<List<VwOficiosLista>> OficiosLista(int eor,int? ejercicio, int? idEmpleado, int? idDepto)
         {
             if (await _authService.IsUserInRoleMc())
@@ -37,8 +43,6 @@ namespace MesaCorrespondencia.Client.Services
                 return response.Data;
             }
         }
-
-
         
 
 
