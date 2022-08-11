@@ -15,7 +15,6 @@ namespace MesaCorrespondencia.Server.Controllers
         }
 
         [HttpGet]
-
         public async Task<ActionResult<ServiceResponse<List<DeptosUe>>>> GetDeptos()
         {
             var result = await _deptoueRepository.GetAllDeptos();

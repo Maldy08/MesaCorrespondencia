@@ -42,26 +42,35 @@
                 <MudItem xs="4">
                     <MudDatePicker Label="Fecha Limite" Date="@oficio.FechaLimite" DisableToolbar="true" />
                 </MudItem>
-                <MudItem xs="8">
 
+                <MudItem xs="6">
+                     <MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@ingresar" T="string" Value="@oficio.RemNombre" ReadOnly="true" Label="Nombre del Remitente" Placeholder="Persona que firma el oficio"></MudTextField>
+                     <br />
+                     <MudText Typo="Typo.caption">@oficio.RemCargo</MudText>
+                     <br />
+                     <MudText Typo="Typo.caption">@oficio.RemDepen</MudText>
                 </MudItem>
 
-                <MudItem lg="8">
-                    <MudTextField T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Placeholder="Persona a quien se dirige el Oficio"/>
+                <MudItem xs="6">
+                    <MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" OnAdornmentClick="@ingresar" T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Placeholder="Persona a quien se dirige el Oficio"/>
+                     <br />
+                     <MudText Typo="Typo.caption">@oficio.DestCargo</MudText>
+                     <br />
+                     <MudText Typo="Typo.caption">@oficio.DestDepen</MudText>
                 </MudItem>
 
-                <MudItem lg="6">
+                <MudItem xs="6">
                     <MudTextField T="string" Value="@oficio.Tema" Label="Tema" Placeholder="Capture el tema principal del oficio"/>
                 </MudItem>
-                <MudItem lg="6">
+                <MudItem xs="6">
                     <MudTextField T="string" Label="Filled" Variant="Variant.Filled" Text="@sampleText" Lines="5"/>
                 </MudItem>
              </MudGrid>
         </EditForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel" >Cancelar</MudButton>
-        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit"  >Guardar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
     </DialogActions>
 </MudDialog>
 
