@@ -12,7 +12,7 @@ namespace MesaCorrespondencia.Shared
         public int Tipo { get; set; }
         public string NoOficio { get; set; } = null!;
         public string? Pdfpath { get; set; }  = string.Empty;
-        public DateTime Fecha { get; set; } //Fecha del documento
+        public DateTime Fecha { get; set; } = DateTime.Now;//Fecha del documento
         public DateTime FechaCaptura { get; set; } = DateTime.Now;
         public DateTime FechaAcuse { get; set; } //Opcional, siempre y cuando el oficio pida una fecha de respuesta y unicamente aplica a eor = 1
         public DateTime? FechaLimite { get; set; }  //Opcional, siempre y cuando el oficio pida uan fecha limite
@@ -25,7 +25,7 @@ namespace MesaCorrespondencia.Shared
         public string DestNombre { get; set; } = string.Empty;
         public string DestCargo { get; set; } = string.Empty;
         public string Tema { get; set; } = string.Empty;
-        public int Estatus { get; set; }
+        public int Estatus { get; set; } = 1;
         public int? Empqentrega { get; set; }
         public string? Relacionoficio { get; set; }
         public int Depto { get; set; }

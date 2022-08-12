@@ -726,6 +726,10 @@ namespace MesaCorrespondencia.Server.Data
                     .HasPrecision(4)
                     .HasColumnName("ID_EMPLEADO");
 
+                entity.Property(e => e.NombreResponsable)
+                    .HasColumnName("NOMBRE_RESPON")
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NoOficio)
                     .IsRequired()
                     .HasMaxLength(50)

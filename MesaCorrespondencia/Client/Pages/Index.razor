@@ -43,8 +43,8 @@
     }
     public async void ingresar()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large, FullWidth = true};
-       // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        var options =  new DialogOptions() { MaxWidth = MaxWidth.Medium };
+        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         DialogService.Show<ModalOficioRecibido>("",options);
     }
 }

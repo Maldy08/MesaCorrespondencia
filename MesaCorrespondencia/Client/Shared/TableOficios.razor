@@ -123,7 +123,7 @@
         OficioSelected(tableRowClickEventArgs.Item);
     }
 
-        private async void OficioSelected(VwOficiosLista element)
+    private async void OficioSelected(VwOficiosLista element)
     {
         await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
@@ -135,8 +135,9 @@
 
     private void Edit(VwOficiosLista element)
     {
+        
         var parameters = new DialogParameters { ["oficioEdit"] = element };
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large, FullWidth = true};
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
         DialogService.Show<ModalOficioRecibido>("", parameters,options);
         Console.WriteLine(element);
     }
