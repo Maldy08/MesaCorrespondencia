@@ -10,11 +10,12 @@
             Hover="true" 
             Striped="true"
             @ref="mudTable" 
+            @ondblclick="@Submit"
             RowClassFunc="@SelectedRowClassFunc"
             Filter="new Func<VsEmpleadosSisco,bool>(FilterFunc1)" 
             @bind-SelectedItem="selectedItem">
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Personal Interno</MudText>
+                <MudText Color="Color.Dark" Align="Align.Center" Typo="Typo.h6">Personal Interno</MudText>
                 <MudSpacer />
                 <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
@@ -41,7 +42,12 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    [Parameter]
+    public EventCallback<VsEmpleadosSisco> selectedEventCallback{ get; set; }
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(selectedItem));  
+    } 
     void Cancel() => MudDialog.Cancel();
     private string searchString1 = "";
     private IEnumerable<VsEmpleadosSisco> Elements = new List<VsEmpleadosSisco>();
@@ -59,7 +65,7 @@
             Elements = await EmpleadosService.GetEmpleados();
         else
             Elements = await EmpleadosService.GetEmpleadosByDepto(21);
-    }
+    } 
 
     private bool FilterFunc1(VsEmpleadosSisco element) => FilterFunc(element, searchString1);
     private bool FilterFunc(VsEmpleadosSisco element, string searchString)
@@ -91,6 +97,19 @@
         {
             return string.Empty;
         }
+    }
+
+
+    private void RowClickEvent(TableRowClickEventArgs<VsEmpleadosSisco> tableRowClickEventArgs)
+    {
+        // EmpleadoSelected(tableRowClickEventArgs.Item);
+        selectedItem = tableRowClickEventArgs.Item;
+    }
+
+
+    private async void EmpleadoSelected(VsEmpleadosSisco element)
+    {
+        await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
 }
 

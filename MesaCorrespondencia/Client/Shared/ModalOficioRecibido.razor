@@ -44,7 +44,7 @@
                 </MudItem>
 
                 <MudItem xs="6">
-                     <MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@ingresar" T="string" Value="@oficio.RemNombre" ReadOnly="true" Label="Nombre del Remitente" Placeholder="Persona que firma el oficio"></MudTextField>
+                     <MudTextField  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@ingresar" T="string" Value="@oficio.RemNombre" ReadOnly="true" Label="Nombre del Remitente" Variant="Variant.Outlined" Placeholder="Persona que firma el oficio"></MudTextField>
                      <br />
                      <MudText Typo="Typo.caption">@oficio.RemCargo</MudText>
                      <br />
@@ -52,7 +52,7 @@
                 </MudItem>
 
                 <MudItem xs="6">
-                    <MudTextField Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" OnAdornmentClick="@ingresar" T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Placeholder="Persona a quien se dirige el Oficio"/>
+                    <MudTextField  Adornment="Adornment.End"  AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" OnAdornmentClick="@ingresar" T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Variant="Variant.Outlined" Placeholder="Persona a quien se dirige el Oficio"/>
                      <br />
                      <MudText Typo="Typo.caption">@oficio.DestCargo</MudText>
                      <br />
@@ -60,10 +60,10 @@
                 </MudItem>
 
                 <MudItem xs="6">
-                    <MudTextField T="string" Value="@oficio.Tema" Label="Tema" Placeholder="Capture el tema principal del oficio"/>
+                    <MudTextField T="string" Value="@oficio.Tema" Label="Tema" Variant="Variant.Outlined" Placeholder="Capture el tema principal del oficio"/>
                 </MudItem>
                 <MudItem xs="6">
-                    <MudTextField T="string" Label="Filled" Variant="Variant.Filled" Text="@sampleText" Lines="5"/>
+                    <MudTextField  T="string" Label="Filled" Variant="Variant.Filled" Text="@sampleText" Lines="5"  />
                 </MudItem>
              </MudGrid>
         </EditForm>
@@ -80,6 +80,7 @@
     [Parameter]
     public VwOficiosLista? oficioEdit { get; set; } 
     private VwOficiosLista oficio = new();
+    private VsEmpleadosSisco empleadoSelected;
     private string sampleText = "Este es un texto de ejemplo";
     void Submit() => mudDialog.Close(DialogResult.Ok(true));
     void Cancel() => mudDialog.Cancel();
@@ -88,14 +89,23 @@
     {
         if (oficioEdit != null)
             oficio = oficioEdit;
-        else
-            oficioEdit = new();
+
     }
 
-    void ingresar()
+    async Task ingresar()
     {
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large, FullWidth = true};
-       // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        DialogService.Show<ModalPersonalInterno>("",options);
+        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        var dialog =  DialogService.Show<ModalPersonalInterno>("",options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            empleadoSelected = result.Data as VsEmpleadosSisco;
+            oficio.RemNombre = empleadoSelected.NombreCompleto;
+            oficio.RemCargo = empleadoSelected.DescripcionDepto;
+            oficio.RemDepen = "CEA";
+
+        }
+        
     }
 }

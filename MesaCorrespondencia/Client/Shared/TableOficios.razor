@@ -14,11 +14,9 @@
 .mud-table-head > .mud-table-row > .mud-table-cell {
     
 }
-
 .color{
      color: #6A1B32;
 }
-
 
 </style>
 
@@ -29,12 +27,11 @@
     Striped="true"
     @ref="mudTable"
     Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
-    OnRowClick="@RowClickEvent"
-      >
+    OnRowClick="@RowClickEvent">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download"/>
+        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download" />
         <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField Variant="Variant.Outlined" @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
             <MudTh>ACCIONES</MudTh>
