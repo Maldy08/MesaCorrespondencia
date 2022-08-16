@@ -1,13 +1,16 @@
 ﻿@inject IDialogService DialogService
 <style>
+    input[type="text"], textarea  {
+        text-transform:uppercase;
+    }
     .botones-accion{
          background-color:#6A1B32;
          color:white;
 }
 
-.botones-accion:hover{
-    background-color: #6A1B72
-}
+    .botones-accion:hover{
+        background-color: #6A1B72
+    }
     .selected {
         background-color: #1E88E5 !important;
     }
@@ -30,7 +33,6 @@
         <EditForm Model="@oficio">
             <DataAnnotationsValidator />
                  <MudGrid  Justify="Justify.Center">
-   
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="8"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-1 ">
@@ -103,7 +105,7 @@
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="6">  
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-1"  Elevation="0">
-                            <MudTextField TextChanged="((e) => Console.WriteLine(e.ToUpper()))" Value="@oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
+                            <MudTextField @bind-Value="oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
                         </MudPaper>  
                     </MudItem>
                     <MudItem xs="2"></MudItem>
@@ -133,7 +135,12 @@
     private VsEmpleadosSisco responsableSelected;
     private OficiosUsuext usuarioExternoSelected;
     private string sampleText = "Este es un texto de ejemplo";
-    void Submit() => mudDialog.Close(DialogResult.Ok(true));
+    private void Submit()
+    {
+        Console.WriteLine(oficio.Tema);
+
+        mudDialog.Close(DialogResult.Ok(true));
+    }
     void Cancel() => mudDialog.Cancel();
 
     protected override void OnInitialized()
@@ -187,5 +194,8 @@
             responsableSelected = result.Data as VsEmpleadosSisco;
             oficio.NombreResponsable = responsableSelected.NombreCompleto;
         }
+
+      
     }
+
 }
