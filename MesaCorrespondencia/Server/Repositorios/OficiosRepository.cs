@@ -104,6 +104,17 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<List<OficiosBitacora>>> GetBitacoraList(int ejercicio, int folio, int eor)
+        {
+            var response = new ServiceResponse<List<OficiosBitacora>>
+            {
+                Data = await _context.OficiosBitacoras
+                             .Where(o => o.Ejercicio == ejercicio && o.Folio == folio && o.Eor == eor)
+                             .ToListAsync()
+            };
+        return response;
+        }
+
         public async Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus()
         {
             var response = new ServiceResponse<List<OficiosEstatus>>

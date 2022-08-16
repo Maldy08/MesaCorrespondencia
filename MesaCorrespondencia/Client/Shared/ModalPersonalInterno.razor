@@ -1,5 +1,27 @@
 ﻿@inject IEmpleadoService EmpleadosService
 @inject IAuthService AuthService
+
+<style>
+    .botones-accion{
+         background-color:#6A1B32;
+         color:white;
+}
+
+.botones-accion:hover{
+    background-color: #6A1B72
+}
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+</style>
 <MudDialog>
     <DialogContent>
         <MudTable T="VsEmpleadosSisco" 
@@ -42,8 +64,6 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter]
-    public EventCallback<VsEmpleadosSisco> selectedEventCallback{ get; set; }
     private void Submit()
     {
         MudDialog.Close(DialogResult.Ok(selectedItem));  
@@ -51,7 +71,7 @@
     void Cancel() => MudDialog.Cancel();
     private string searchString1 = "";
     private IEnumerable<VsEmpleadosSisco> Elements = new List<VsEmpleadosSisco>();
-    VsEmpleadosSisco selectedItem = new VsEmpleadosSisco();
+    VsEmpleadosSisco selectedItem = new ();
     private HashSet<VsEmpleadosSisco> selectedItems = new HashSet<VsEmpleadosSisco>();
     private MudTable<VsEmpleadosSisco> mudTable;
     private int selectedRowNumber = -1;
@@ -96,30 +116,6 @@
             return string.Empty;
         }
     }
-
-    private void RowClickEvent(TableRowClickEventArgs<VsEmpleadosSisco> tableRowClickEventArgs)
-    {
-        // EmpleadoSelected(tableRowClickEventArgs.Item);
-        selectedItem = tableRowClickEventArgs.Item;
-    }
-
-
-    private async void EmpleadoSelected(VsEmpleadosSisco element)
-    {
-        await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
-    }
 }
 
-<style>
-    .selected {
-        background-color: #1E88E5 !important;
-    }
 
-        .selected > td {
-            color: white !important;
-        }
-
-            .selected > td .mud-input {
-                color: white !important;
-            }
-</style>

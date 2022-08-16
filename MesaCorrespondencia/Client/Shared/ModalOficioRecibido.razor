@@ -19,78 +19,107 @@
             .selected > td .mud-input {
                 color: white !important;
             }
+
+            .upperCaseText{
+                text-transform:uppercase;
+            }
 </style>
 <MudDialog>
     <DialogContent>
-        <MudPaper Class="pa-2" Outlined="true" Style="background-color: #69757D; color:white;">
-            <MudText Align="Align.Start"  Typo="Typo.h6">INGRESAR OFICIO RECIBIDO</MudText>
-        </MudPaper>
-        <br />
+
         <EditForm Model="@oficio">
             <DataAnnotationsValidator />
-            <MudGrid>
-               <MudItem xs="2" md="2" lg="2">
-                    Folio
-                    <MudChip>@oficio.Folio</MudChip>
-                </MudItem>
+                 <MudGrid  Justify="Justify.Center">
+   
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="8"> 
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-1 ">
+                            <MudText Typo="Typo.subtitle2" Align="Align.Center">OFICIOS RECIBIDOS</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"> 
+                        Folio
+                        <MudChip>@oficio.Folio</MudChip>
+                    </MudItem>
+                    <MudItem xs="3"> 
+                        <MudRadioGroup T="int" @bind-SelectedOption="oficio.Tipo">
+                            <MudRadio Option="1" Size="Size.Small"  Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">CEA</MudText></MudRadio>
+                            <MudRadio Option="2" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">SEPROA</MudText></MudRadio>
+                        </MudRadioGroup>
+                    </MudItem>
+                    <MudItem xs="3"> 
+                        <div align = "Right">
+                        Fecha
+                        <MudChip>@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="3"> 
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
+                            <MudTextField Value="oficio.NoOficio" Label="Número de Oficio" Variant="Variant.Outlined"></MudTextField>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="1"></MudItem>
+                    <MudItem xs="2"> 
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
+                            <MudDatePicker Label="Fecha Captura" Date="@oficio.FechaCaptura" DisableToolbar="true" />
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="2"> 
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
+                            <MudDatePicker Label="Fecha Limite" Date="@oficio.FechaLimite" DisableToolbar="true" />
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4"> 
+        
+                            <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" Value="@oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
+                                <br />
+                            <MudText Typo="Typo.caption">@oficio.RemCargo</MudText>
+                                <br />
+                            <MudText Typo="Typo.caption">@oficio.RemDepen</MudText>
+        
+                    </MudItem>
+                    <MudItem xs="4"> 
+        
+                            <MudTextField Style="font-size:14px;"  OnAdornmentClick="@ingresarPersonalExterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Destinatario" Value="@oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
+                                <br />
+                            <MudText Typo="Typo.caption">@oficio.DestCargo</MudText>
+                                <br />
+                            <MudText Typo="Typo.caption">@oficio.DestDepen</MudText>
+        
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4"></MudItem>
+                    <MudItem xs="4"> 
+                        <MudTextField Style="font-size:14px;"  OnAdornmentClick="@ingresarResponsable" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Responsable" Value="@oficio.NombreResponsable" Placeholder="Persona que atenderá Oficio"></MudTextField>   
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="6">  
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-1"  Elevation="0">
+                            <MudTextField TextChanged="((e) => Console.WriteLine(e.ToUpper()))" Value="@oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
+                        </MudPaper>  
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="8">  
+                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
+                           <MudTextField  T="string" Label="Observaciones" Variant="Variant.Filled"  Text="@sampleText" Lines="5"  />
+                        </MudPaper>  
+                    </MudItem>
 
-                <MudItem xs="2" md="3" lg="3">
-                    <MudRadioGroup T="int" @bind-SelectedOption="oficio.Tipo">
-                        <MudRadio Option="1" Size="Size.Small"  Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">CEA</MudText></MudRadio>
-                        <MudRadio Option="2" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">SEPROA</MudText></MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-
-                <MudItem xs="2" md="3" lg="3">
-                    Fecha
-                    <MudChip>@oficio.Fecha</MudChip>
-                </MudItem>
-
-                <MudItem xs="2" md="3" lg="3">
-                    <MudTextField Label="Numero de oficio"Variant="Variant.Outlined"  @bind-Value="oficio.NoOficio"  />
-                </MudItem>
-
-                <MudDivider></MudDivider>                
-                <MudItem xs="2" md="4" lg="4">
-                    <MudDatePicker Label="Fecha de documento" Variant="Variant.Outlined" Date="@oficio.FechaCaptura" DisableToolbar="true" />
-                </MudItem>
-
-                <MudItem xs="2" md="4" lg="4">
-                    <MudDatePicker Label="Fecha Limite" Date="@oficio.FechaLimite" Variant="Variant.Outlined" DisableToolbar="true" />
-                </MudItem>
-
-                <MudItem  xs="4" md="6" lg="6">
-                     <MudTextField Class="d-block"  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@ingresarPersonalInterno" T="string" Value="@oficio.RemNombre" ReadOnly="true" Label="Nombre del Remitente" Variant="Variant.Outlined" Placeholder="Persona que firma el oficio"></MudTextField>
-                  
-                     <MudText Class="d-block" Typo="Typo.body2">@oficio.RemCargo</MudText>
-                 
-                     <MudText Class="d-block" Typo="Typo.body2">@oficio.RemDepen</MudText>
-                </MudItem>
-
-                <MudItem xs="4" md="6" lg="6">
-                    <MudTextField  Class="d-block"  Adornment="Adornment.End"  AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" OnAdornmentClick="@ingresarPersonalExterno" T="string" Value="@oficio.DestNombre" ReadOnly="true" Label="Nombre del Destinatario" Variant="Variant.Outlined" Placeholder="Persona a quien se dirige el Oficio"/>
-                  
-                     <MudText Class="d-block" Typo="Typo.body2">@oficio.DestCargo</MudText>
-                    
-                     <MudText Class="d-block" Typo="Typo.body2">@oficio.DestDepen</MudText>
-                </MudItem>
-
-                <MudItem xs="4" md="6" lg="6">
-                    <MudTextField  Adornment="Adornment.End"  AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="@ingresarPersonalInterno" T="string" Value="@oficio.NombreResponsable" ReadOnly="true" Label="Responsable" Variant="Variant.Outlined" Placeholder="Persona que quedará como responsable"/>
-                </MudItem>
-
-                <MudItem xs="6" md="6">
-                    <MudTextField T="string" Value="@oficio.Tema" Label="Tema" Variant="Variant.Outlined" Placeholder="Capture el tema principal del oficio"/>
-                </MudItem>
-                <MudItem xs="12" md="12">
-                    <MudTextField  T="string" Label="Observaciones" Variant="Variant.Filled"  Text="@sampleText" Lines="5"  />
-                </MudItem>
-             </MudGrid>
+                </MudGrid>
         </EditForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Size="Size.Medium" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
-        <MudButton Size="Size.Medium" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -101,6 +130,8 @@
     public VwOficiosLista? oficioEdit { get; set; }
     private VwOficiosLista oficio;
     private VsEmpleadosSisco empleadoSelected;
+    private VsEmpleadosSisco responsableSelected;
+    private OficiosUsuext usuarioExternoSelected;
     private string sampleText = "Este es un texto de ejemplo";
     void Submit() => mudDialog.Close(DialogResult.Ok(true));
     void Cancel() => mudDialog.Cancel();
@@ -113,7 +144,9 @@
             oficio = new();
     }
 
-   protected async Task ingresarPersonalInterno()
+
+
+    protected async Task ingresarPersonalInterno()
     {
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
@@ -128,10 +161,31 @@
         }  
     }
 
-    protected void ingresarPersonalExterno()
+    protected  async Task ingresarPersonalExterno()
     {
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var dialog =  DialogService.Show<ModalPersonalExterno>("",options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            usuarioExternoSelected = result.Data as OficiosUsuext;
+            oficio.DestNombre = usuarioExternoSelected.Nombre;
+            oficio.DestCargo = usuarioExternoSelected.Cargo;
+            oficio.DestDepen = usuarioExternoSelected.Empresa;
+
+        }
+    }
+
+    protected async Task ingresarResponsable()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
+        var dialog = DialogService.Show<ModalPersonalInterno>("", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            responsableSelected = result.Data as VsEmpleadosSisco;
+            oficio.NombreResponsable = responsableSelected.NombreCompleto;
+        }
     }
 }

@@ -11,9 +11,11 @@
         Task<ServiceResponse<Oficio>> UpdateOficio(Oficio oficio);
         Task<ServiceResponse<OficiosBitacora>> CreateBitacora(OficiosBitacora oficiosBitacora);
         Task<ServiceResponse<OficiosBitacora>> UpdateBitacora(OficiosBitacora oficiosBitacora);
+        Task<ServiceResponse<List<OficiosBitacora>>> GetBitacoraList(int ejercicio, int folio, int eor);
         Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus();
         Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
         Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos();
+        
 
     }
 }

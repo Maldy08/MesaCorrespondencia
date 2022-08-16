@@ -84,5 +84,12 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = await _oficiosRepository.GetOficiosUsuariosExternos();
             return Ok(result);
         }
+
+        [HttpGet("get-bitacora-oficio/{ejercicio}/{folio}/{eor}")]
+        public async Task<ActionResult<ServiceResponse<List<OficiosBitacora>>>> GetBitacoraList(int ejercicio, int folio, int eor)
+        {
+            var result = await _oficiosRepository.GetBitacoraList(ejercicio, folio, eor);
+            return Ok(result);
+        }
     }
 }

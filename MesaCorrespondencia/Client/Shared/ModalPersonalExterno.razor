@@ -9,9 +9,21 @@
 .botones-accion:hover{
     background-color: #6A1B72
 }
+    .selected {
+        background-color: #1E88E5 !important;
+    }
 
+        .selected > td {
+            color: white !important;
+        }
 
+            .selected > td .mud-input {
+                color: white !important;
+            }
 </style>
+
+
+
 <MudDialog>
     <DialogContent>
         <MudTable T="OficiosUsuext"  
@@ -24,6 +36,7 @@
             RowClassFunc="@SelectedRowClassFunc"
             @ref="mudTable" 
             @ondblclick="@Submit"
+            @bind-SelectedItem="selectedItem"
             LoadingProgressColor="Color.Info">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Personal Externo</MudText>
@@ -54,9 +67,9 @@
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel() => MudDialog.Cancel();
     private MudTable<OficiosUsuext> mudTable;
+    OficiosUsuext selectedItem = new();
     private string searchString1 = "";
     private int selectedRowNumber = -1;
     private bool _multiSelect = false;
@@ -68,6 +81,10 @@
         Elements = await OficioService.GetOficioUsuextAll();
     }
 
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(selectedItem));  
+    } 
     private bool FilterFunc1(OficiosUsuext element) => FilterFunc(element, searchString1);
     private bool FilterFunc(OficiosUsuext element, string searchString)
     {
@@ -81,8 +98,12 @@
             return true;
         return false;
     }
-
-        private string SelectedRowClassFunc(OficiosUsuext element, int rowNumber)
+    private void RowClickEvent(TableRowClickEventArgs<OficiosUsuext> tableRowClickEventArgs)
+    {
+        // EmpleadoSelected(tableRowClickEventArgs.Item);
+        selectedItem = tableRowClickEventArgs.Item;
+    }
+    private string SelectedRowClassFunc(OficiosUsuext element, int rowNumber)
     {
         if (selectedRowNumber == rowNumber)
         {

@@ -11,13 +11,13 @@ namespace MesaCorrespondencia.Shared
         public int Ejercicio { get; set; }
         public int Folio { get; set; }
         public int Eor { get; set; }
-        public int Tipo { get; set; }
+        public int Tipo { get; set; } = 1;
         public string NoOficio { get; set; } = string.Empty;
         public string? Pdfpath { get; set; } = string.Empty;
-        public DateTime Fecha { get; set; }
-        public DateTime FechaCaptura { get; set; }
-        public DateTime FechaAcuse { get; set; }
-        public DateTime? FechaLimite { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
+        public DateTime FechaCaptura { get; set; } = DateTime.Now;
+        public DateTime FechaAcuse { get; set; } = DateTime.Now;
+        public DateTime? FechaLimite { get; set; } = DateTime.Now;
         public string RemDepen { get; set; } = string.Empty;
         public string RemSiglas { get; set; } = string.Empty;
         public string RemNombre { get; set; } = string.Empty;
