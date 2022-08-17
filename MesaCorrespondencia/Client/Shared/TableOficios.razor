@@ -49,7 +49,7 @@
         <MudTd Class="botones" DataLabel="ACCIONES">
              <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="@ViewClick"></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
-             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="@ViewClick"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
         </MudTd>
         <MudTd DataLabel="NO.FOLIO">@context.Folio</MudTd>
         <MudTd DataLabel="FECHA">@context.Fecha</MudTd>
@@ -140,6 +140,14 @@
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
         DialogService.Show<ModalOficioRecibido>("", parameters,options);
         Console.WriteLine(element);
+    }
+
+    private void MostrarBitacora(VwOficiosLista registro)
+    {
+        var parameters = new DialogParameters { ["OficioBit"] = registro };
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
+        DialogService.Show<ModalBitacoraOficio>("Bitacora de Oficio", parameters,options);
+
     }
 
     //private void ShowBitacora(int eor,int ejercicio,int folio)

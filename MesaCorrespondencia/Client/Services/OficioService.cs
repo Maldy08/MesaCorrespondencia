@@ -19,7 +19,8 @@ namespace MesaCorrespondencia.Client.Services
 
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
         {
-            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosBitacora>>>($"api/get-bitacora-oficio/{ejercicio}/{folio}/{eor}");
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosBitacora>>>($"api/oficios/get-bitacora-oficio/{ejercicio}/{folio}/{eor}");
+
             return response.Data;
         }
 

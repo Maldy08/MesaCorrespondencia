@@ -1,0 +1,150 @@
+﻿@inject IDialogService DialogService
+@inject IOficioService OficioService
+<style>
+    input[type="text"], textarea  {
+        text-transform:uppercase;
+    }
+    .botones-accion{
+         background-color:#6A1B32;
+         color:white;
+}
+
+    .botones-accion:hover{
+        background-color: #6A1B72
+    }
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+
+            .upperCaseText{
+                text-transform:uppercase;
+            }
+</style>
+
+<MudDialog ContentStyle="Width: 900px;">   
+    <DialogContent>
+        <MudGrid Spacing="1" Justify="Justify.Center">
+            <MudItem sm="2"></MudItem>
+            <MudItem sm="2"> 
+                <MudText Align="Align.Start" Typo="Typo.h5">CEA</MudText>
+            </MudItem>
+            <MudItem sm="3"> 
+                Folio
+                <MudChip>@OficioBit.Folio</MudChip>
+            </MudItem>
+            <MudItem sm="5"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="4">
+                <MudText Align="Align.Start" Typo="Typo.body2">
+                    Número de Oficio
+                    <MudChip>@OficioBit.NoOficio</MudChip>
+                </MudText>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText Align="Align.Center" Typo="Typo.caption">
+                    Fecha Oficio
+                    <MudChip>@OficioBit.Fecha.ToString("dd/mm/yyyy")</MudChip>
+                </MudText>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText Align="Align.Center" Typo="Typo.caption">
+                    Fecha Límite
+                    <MudChip>@OficioBit.FechaLimite?.ToString("dd/mm/yyyy")</MudChip>
+                </MudText>
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="4">
+                <MudText Align="Align.Start" Typo="Typo.subtitle2">Remitente</MudText>
+                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.RemNombre </MudText><br />
+                <MudText Align="Align.Left" Typo="Typo.caption">@OficioBit.RemCargo </MudText><br />
+                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.RemDepen </MudText>
+            </MudItem>
+            <MudItem xs="4">
+                <MudText Align="Align.Start" Typo="Typo.subtitle2">Destinatario</MudText>
+                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.DestNombre </MudText><br />
+                <MudText Align="Align.Left" Typo="Typo.caption">@OficioBit.DestCargo </MudText><br />
+                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.DestDepen </MudText>
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="8">  
+                <MudPaper Class="d-flex justify-center mud-width-full py-1"  Elevation="1">
+                     <MudText Align="Align.Start" Typo="Typo.subtitle2">@OficioBit.Tema</MudText>
+                </MudPaper>  
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="6">  
+                <MudTextField T="string" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable/>
+            </MudItem>
+            <MudItem xs="2">  
+                <MudPaper Class="d-flex align-center justify-center mud-width-full py-2"  Elevation="0">
+                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Filled.LibraryAdd" Style="background-color:rgb(106,28,50); color: white;" Size="Size.Small">
+                        Ingresar
+                    </MudButton>
+                </MudPaper>  
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="8"> 
+                <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora">
+                    <HeaderContent>
+                        <MudTh>Fecha</MudTh>
+                        <MudTh>Usuario</MudTh>
+                        <MudTh>Estatus</MudTh>
+                        <MudTh>Comentarios</MudTh>
+                    </HeaderContent>
+                    <RowTemplate >
+                        <MudTd  DataLabel="Fecha">@context.FechaCaptura.ToString("dd/MM/yyyy")</MudTd>
+                        <MudTd DataLabel="Usuario">@context.IdEmpleado</MudTd>
+                        <MudTd DataLabel="Estatus">@context.Estatus</MudTd>
+                        <MudTd DataLabel="Comentarios"><MudText Typo="Typo.caption">@context.Comentarios</MudText></MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance mudDialog { get; set; }
+    void Cancel() => mudDialog.Cancel();
+    [Parameter]
+    public VwOficiosLista OficioBit { get; set; }
+    private List<OficiosBitacora> oficiosBitacoras = new();
+    //private VwOficiosLista OficioBit = new();
+
+    private void Submit()
+    {
+        mudDialog.Close(DialogResult.Ok(true));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        oficiosBitacoras = await OficioService.GetBitacorasList(OficioBit.Ejercicio, OficioBit.Folio, OficioBit.Eor);
+    }
+
+    private MudTable<OficiosBitacora> mudTable;
+    //private IEnumerable<Element> Elements = new List<Element>()
+    //{
+    //    new Element() { Number = "01/05/2022", Sign = "MALOPEZ", Name = "INGRESO", Position = "SE INGRESO EL FOLIO CORRECTAMENTE"},
+    //    new Element() { Number = "05/09/2022", Sign = "MALOPEZ", Name = "ACTUALIZACION", Position = "SE ACTUALIZO EL RESPONSABLE A FULNANITO DE TAL"},
+    //    new Element() { Number = "15/08/2022", Sign = "LROMERO", Name = "SEGUIMIENTO", Position = "CONTINUA ES GESTION, EN ESPERA DE INFORMACION PARA CONTESTACION" }
+    //};
+
+}

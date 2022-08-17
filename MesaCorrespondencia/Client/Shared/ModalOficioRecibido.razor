@@ -9,9 +9,6 @@
          color:white;
 }
 
-    .botones-accion:hover{
-        background-color: #6A1B72
-    }
     .selected {
         background-color: #1E88E5 !important;
     }
@@ -134,18 +131,59 @@
     private VsEmpleadosSisco responsableSelected;
     private OficiosUsuext usuarioExternoSelected;
     private Oficio oficioCreate;
+    private bool isNew = true;
     private string sampleText = "Este es un texto de ejemplo";
     private async Task Submit()
     {
-        oficioCreate = new Oficio
+        if (isNew)
+        {
+            oficioCreate = new Oficio
             {
                 Ejercicio = oficio.Ejercicio,
                 Folio = oficio.Folio,
                 Eor = oficio.Eor,
                 Tipo = oficio.Tipo,
-                NoOficio = oficio.NoOficio
+                NoOficio = oficio.NoOficio,
+                Pdfpath = oficio.Pdfpath,
+                Fecha = oficio.Fecha,
+                FechaCaptura = oficio.FechaCaptura,
+                FechaAcuse = oficio.FechaAcuse,
+                FechaLimite = oficio.FechaLimite,
+                RemDepen = oficio.RemDepen,
+                RemSiglas = oficio.RemSiglas,
+                RemNombre = oficio.RemNombre,
+                RemCargo = oficio.RemCargo,
+                DestDepen = oficio.DestDepen,
+                DestSiglas = oficio.DestSiglas,
+                DestNombre = oficio.DestNombre,
+                DestCargo = oficio.DestCargo,
+                Tema = oficio.Tema,
+                Estatus = oficio.Estatus,
+                Empqentrega = oficio.Empqentrega,
+                Relacionoficio = oficio.Relacionoficio,
+                Depto = oficio.Depto,
+                DeptoRespon = oficio.DeptoRespon,
+                OficioBitacora = new OficiosBitacora
+                {
+                    Ejercicio = oficio.Ejercicio,
+                    Eor = oficio.Eor,
+                    IdEmpleado = oficio.IdEmpleado
+                },
+                OficiosResponsables = new List<OficiosResponsable>{
+                    new OficiosResponsable
+                    {
+                        Ejercicio = oficio.Ejercicio,
+                        Eor = oficio.Eor,
+                        Folio = oficio.Folio,
+                        IdEmpleado = oficio.IdEmpleado,
+                        Rol = oficio.Rol
+                    }
+                }
+
             };
+            
             await OficioService.CreateOficio(oficioCreate);
+        }
 
         mudDialog.Close(DialogResult.Ok(true));
     }
@@ -154,7 +192,10 @@
     protected override void OnInitialized()
     {
         if (oficioEdit != null)
+        {
             oficio = oficioEdit;
+            isNew = false;
+        }
         else
             oficio = new();
             
