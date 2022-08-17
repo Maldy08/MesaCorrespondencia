@@ -1,4 +1,5 @@
 ﻿@inject IDialogService DialogService
+@inject IOficioService OficioService
 <style>
     input[type="text"], textarea  {
         text-transform:uppercase;
@@ -27,9 +28,8 @@
                 text-transform:uppercase;
             }
 </style>
-<MudDialog>
+<MudDialog DisableSidePadding="true" >
     <DialogContent>
-
         <EditForm Model="@oficio">
             <DataAnnotationsValidator />
                  <MudGrid  Justify="Justify.Center">
@@ -61,18 +61,18 @@
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="3"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
-                            <MudTextField Value="oficio.NoOficio" Label="Número de Oficio" Variant="Variant.Outlined"></MudTextField>
+                            <MudTextField  @bind-Value="oficio.NoOficio" Label="Número de Oficio" Variant="Variant.Outlined"></MudTextField>
                         </MudPaper>
                     </MudItem>
                     <MudItem xs="1"></MudItem>
                     <MudItem xs="2"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
-                            <MudDatePicker Label="Fecha Captura" Date="@oficio.FechaCaptura" DisableToolbar="true" />
+                            <MudDatePicker Label="Fecha Captura" Date="oficio.FechaCaptura"  DisableToolbar="true" />
                         </MudPaper>
                     </MudItem>
                     <MudItem xs="2"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
-                            <MudDatePicker Label="Fecha Limite" Date="@oficio.FechaLimite" DisableToolbar="true" />
+                            <MudDatePicker Label="Fecha Limite" Date="oficio.FechaLimite" DisableToolbar="true" />
                         </MudPaper>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
@@ -115,7 +115,6 @@
                            <MudTextField  T="string" Label="Observaciones" Variant="Variant.Filled"  Text="@sampleText" Lines="5"  />
                         </MudPaper>  
                     </MudItem>
-
                 </MudGrid>
         </EditForm>
     </DialogContent>
@@ -134,10 +133,19 @@
     private VsEmpleadosSisco empleadoSelected;
     private VsEmpleadosSisco responsableSelected;
     private OficiosUsuext usuarioExternoSelected;
+    private Oficio oficioCreate;
     private string sampleText = "Este es un texto de ejemplo";
-    private void Submit()
+    private async Task Submit()
     {
-        Console.WriteLine(oficio.Tema);
+        oficioCreate = new Oficio
+            {
+                Ejercicio = oficio.Ejercicio,
+                Folio = oficio.Folio,
+                Eor = oficio.Eor,
+                Tipo = oficio.Tipo,
+                NoOficio = oficio.NoOficio
+            };
+            await OficioService.CreateOficio(oficioCreate);
 
         mudDialog.Close(DialogResult.Ok(true));
     }
@@ -149,9 +157,8 @@
             oficio = oficioEdit;
         else
             oficio = new();
+            
     }
-
-
 
     protected async Task ingresarPersonalInterno()
     {

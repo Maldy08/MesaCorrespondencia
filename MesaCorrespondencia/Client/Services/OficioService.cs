@@ -12,6 +12,11 @@ namespace MesaCorrespondencia.Client.Services
             _authService = authService;
         }
 
+        public async Task CreateOficio(Oficio oficio)
+        {
+            await _httpClient.PostAsJsonAsync("api/oficios",oficio);
+        }
+
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
         {
             var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosBitacora>>>($"api/get-bitacora-oficio/{ejercicio}/{folio}/{eor}");

@@ -9,6 +9,7 @@
         Task<OficiosEstatus> GetOficioEstatus(int id, int eor);
         Task<List<OficiosUsuext>> GetOficioUsuextAll();
         Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor);
+        Task CreateOficio(Oficio oficio);
 
     }
 }

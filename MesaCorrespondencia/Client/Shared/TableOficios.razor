@@ -135,12 +135,19 @@
 
     private void Edit(VwOficiosLista element)
     {
-        
+
         var parameters = new DialogParameters { ["oficioEdit"] = element };
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
         DialogService.Show<ModalOficioRecibido>("", parameters,options);
         Console.WriteLine(element);
     }
+
+    //private void ShowBitacora(int eor,int ejercicio,int folio)
+    //{
+    //    var parameters = new DialogParameters { ["eor"] = eor, ["ejercicio"] = ejercicio, ["folio"] = folio };
+    //    var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
+        
+    //}
     //private string SelectedRowClassFunc(VwOficiosLista element, int rowNumber)
     //{
     //    if(selectedRowNumber == rowNumber)
