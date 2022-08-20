@@ -9,5 +9,6 @@
         Task<bool> IsUserInRoleMc();
         Task SetUserInfoLocal();
         Task ClearUserInfo();
+        Task GetUserInfoLocal();
     }
 }

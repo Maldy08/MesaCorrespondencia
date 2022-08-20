@@ -57,5 +57,11 @@ namespace MesaCorrespondencia.Client.Services
             await _localStorage.RemoveItemAsync("empleado");
             await _localStorage.RemoveItemAsync("nivel");
         }
+
+        public async Task GetUserInfoLocal()
+        {
+            await GetUserInfoDB();
+
+        }
     }
 }

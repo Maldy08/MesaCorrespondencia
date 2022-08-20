@@ -29,61 +29,74 @@
             }
 </style>
 
-<MudDialog ContentStyle="Width: 900px;">   
+<MudDialog>    
     <DialogContent>
         <MudGrid Spacing="1" Justify="Justify.Center">
-            <MudItem sm="2"></MudItem>
-            <MudItem sm="2"> 
-                <MudText Align="Align.Start" Typo="Typo.h5">CEA</MudText>
-            </MudItem>
+            @*<MudItem sm="7" />
             <MudItem sm="3"> 
                 Folio
+                <MudIcon Icon="@Icons.Filled.ConfirmationNumber" Color="Color.Default" Size="Size.Small"/>
                 <MudChip>@OficioBit.Folio</MudChip>
             </MudItem>
-            <MudItem sm="5"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="4">
+            <MudItem sm="2"> 
+                <MudText Align="Align.Center" Typo="Typo.h5">CEA</MudText>
+            </MudItem>*@
+            <MudItem xs="5">
                 <MudText Align="Align.Start" Typo="Typo.body2">
                     Número de Oficio
                     <MudChip>@OficioBit.NoOficio</MudChip>
                 </MudText>
             </MudItem>
-            <MudItem xs="2">
+            <MudItem sm="1" />
+            <MudItem xs="3">
                 <MudText Align="Align.Center" Typo="Typo.caption">
                     Fecha Oficio
-                    <MudChip>@OficioBit.Fecha.ToString("dd/mm/yyyy")</MudChip>
+                    <MudIcon Icon="@Icons.Filled.DateRange" Color="Color.Default" Size="Size.Small"/>
+                    <MudChip>@OficioBit.Fecha.ToString("dd/MM/yyyy")</MudChip>
                 </MudText>
             </MudItem>
-            <MudItem xs="2">
+            <MudItem xs="3">
                 <MudText Align="Align.Center" Typo="Typo.caption">
                     Fecha Límite
-                    <MudChip>@OficioBit.FechaLimite?.ToString("dd/mm/yyyy")</MudChip>
+                    <MudIcon Icon="@Icons.Filled.DateRange" Color="Color.Default" Size="Size.Small"/>
+                    <MudChip Variant="Variant.Text" Color="Color.Error">@OficioBit.FechaLimite?.ToString("dd/MM/yyyy")</MudChip>
                 </MudText>
             </MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="4">
-                <MudText Align="Align.Start" Typo="Typo.subtitle2">Remitente</MudText>
-                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.RemNombre </MudText><br />
-                <MudText Align="Align.Left" Typo="Typo.caption">@OficioBit.RemCargo </MudText><br />
-                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.RemDepen </MudText>
+            <MudItem xs="6">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Remitente</MudText>
+                        <MudIcon Icon="@Icons.Filled.Person" Color="Color.Default" Size="Size.Small"/>
+                        <MudText Typo="Typo.subtitle2">@OficioBit.RemNombre</MudText>
+                        <MudText Typo="Typo.body2">@OficioBit.RemCargo </MudText>
+                        <MudText Typo="Typo.caption">@OficioBit.RemDepen </MudText>
+                    </MudCardContent>
+                </MudCard>
             </MudItem>
-            <MudItem xs="4">
-                <MudText Align="Align.Start" Typo="Typo.subtitle2">Destinatario</MudText>
-                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.DestNombre </MudText><br />
-                <MudText Align="Align.Left" Typo="Typo.caption">@OficioBit.DestCargo </MudText><br />
-                <MudText Align="Align.Start" Typo="Typo.caption">@OficioBit.DestDepen </MudText>
+            <MudItem xs="6">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Destinatario</MudText>
+                        <MudIcon Icon="@Icons.Filled.Person" Color="Color.Default" Size="Size.Small"/>
+                        <MudText Typo="Typo.subtitle2"> @OficioBit.DestNombre</MudText>
+                        <MudText Typo="Typo.body2">@OficioBit.DestCargo </MudText>
+                        <MudText Typo="Typo.caption">@OficioBit.DestDepen </MudText>
+                    </MudCardContent>
+                </MudCard>
             </MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="8">  
-                <MudPaper Class="d-flex justify-center mud-width-full py-1"  Elevation="1">
+            <MudItem xs="12">  
+                @*<MudPaper Class="d-flex mud-width-full py-4" Style="@($"background:{Colors.Indigo.Lighten5};")"  Elevation="1">
                      <MudText Align="Align.Start" Typo="Typo.subtitle2">@OficioBit.Tema</MudText>
-                </MudPaper>  
+                </MudPaper> *@ 
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Tema del Oficio</MudText>
+                        <MudIcon Icon="@Icons.Filled.Textsms" Color="Color.Default" Size="Size.Small"/>
+                        <MudText Typo="Typo.body2">@OficioBit.Tema</MudText>
+                    </MudCardContent>
+                </MudCard>
             </MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="6">  
+            <MudItem xs="10">  
                 <MudTextField T="string" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable/>
             </MudItem>
             <MudItem xs="2">  
@@ -93,10 +106,8 @@
                     </MudButton>
                 </MudPaper>  
             </MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="8"> 
-                <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora">
+            <MudItem xs="12"> 
+                <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora" Dense="true">
                     <HeaderContent>
                         <MudTh>Fecha</MudTh>
                         <MudTh>Usuario</MudTh>
@@ -111,7 +122,6 @@
                     </RowTemplate>
                 </MudTable>
             </MudItem>
-            <MudItem xs="2"></MudItem>
         </MudGrid>
     </DialogContent>
     <DialogActions>
@@ -124,27 +134,17 @@
     [CascadingParameter]
     MudDialogInstance mudDialog { get; set; }
     void Cancel() => mudDialog.Cancel();
+    private void Submit() => mudDialog.Close(DialogResult.Ok(true));
     [Parameter]
     public VwOficiosLista OficioBit { get; set; }
     private List<OficiosBitacora> oficiosBitacoras = new();
-    //private VwOficiosLista OficioBit = new();
-
-    private void Submit()
-    {
-        mudDialog.Close(DialogResult.Ok(true));
-    }
-
+   
     protected override async Task OnInitializedAsync()
     {
         oficiosBitacoras = await OficioService.GetBitacorasList(OficioBit.Ejercicio, OficioBit.Folio, OficioBit.Eor);
     }
 
     private MudTable<OficiosBitacora> mudTable;
-    //private IEnumerable<Element> Elements = new List<Element>()
-    //{
-    //    new Element() { Number = "01/05/2022", Sign = "MALOPEZ", Name = "INGRESO", Position = "SE INGRESO EL FOLIO CORRECTAMENTE"},
-    //    new Element() { Number = "05/09/2022", Sign = "MALOPEZ", Name = "ACTUALIZACION", Position = "SE ACTUALIZO EL RESPONSABLE A FULNANITO DE TAL"},
-    //    new Element() { Number = "15/08/2022", Sign = "LROMERO", Name = "SEGUIMIENTO", Position = "CONTINUA ES GESTION, EN ESPERA DE INFORMACION PARA CONTESTACION" }
-    //};
+    
 
 }

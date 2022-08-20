@@ -11,8 +11,8 @@
    font-size: 12px;
 }
 
-.mud-table-head > .mud-table-row > .mud-table-cell {
-    
+.mud-table-head #tabla-oficios  {
+    background-color : aqua;
 }
 .color{
      color: #6A1B32;
@@ -20,7 +20,8 @@
 
 </style>
 
-<MudTable T="VwOficiosLista"
+<MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">@tituloBoton</MudButton>
+<MudTable id="tabla-oficios" T="VwOficiosLista"
     Loading="@_loading"  
     Items="@vwOficiosListas.Take(10)" 
     Hover="true" 
@@ -51,7 +52,7 @@
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
         </MudTd>
-        <MudTd DataLabel="NO.FOLIO">@context.Folio</MudTd>
+        <MudTd  DataLabel="NO.FOLIO">@context.Folio</MudTd>
         <MudTd DataLabel="FECHA">@context.Fecha</MudTd>
         <MudTd DataLabel="DEPENDENCIA">@context.RemDepen</MudTd>
         <MudTd DataLabel="TIPO">@context.Tipo</MudTd>
@@ -83,17 +84,22 @@
 
     private List<VwOficiosLista> vwOficiosListas = new();
     private string searchString1 = "";
-    private VwOficiosLista selectedOficio = new();
+    private VwOficiosLista selectedOficio;
     private MudTable<VwOficiosLista> mudTable;
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
     private bool _loading = false;
+    private string tituloBoton;
 
     protected override async Task OnInitializedAsync()
     {
         _loading = true;
         await LoadData();
         _loading = false;
+        if (eor == 1)
+            tituloBoton = "Ingresar oficio expedido";
+        else
+            tituloBoton = "Ingresar oficio recibido";
     }
     private async Task LoadData()
     {
@@ -133,23 +139,72 @@
         Console.WriteLine("has dado click");
     }
 
-    private void Edit(VwOficiosLista element)
+    private async Task Edit(VwOficiosLista element)
     {
 
         var parameters = new DialogParameters { ["oficioEdit"] = element };
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
-        DialogService.Show<ModalOficioRecibido>("", parameters,options);
-        Console.WriteLine(element);
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Medium};
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
     }
 
     private void MostrarBitacora(VwOficiosLista registro)
     {
         var parameters = new DialogParameters { ["OficioBit"] = registro };
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
+        var options =  new DialogOptions() {CloseButton = false,MaxWidth = MaxWidth.Medium};
         DialogService.Show<ModalBitacoraOficio>("Bitacora de Oficio", parameters,options);
+    }
+    public async void ingresar()
+    {
+        var options =  new DialogOptions() { CloseButton=true, MaxWidth = MaxWidth.Medium };
+        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var oficio = result.Data as Oficio;
+            selectedOficio = new VwOficiosLista
+                {
+                    Depto = oficio.Depto,
+                    DeptoRespon = oficio.DeptoRespon,
+                    DestCargo = oficio.DestCargo,
+                    DestDepen = oficio.DestDepen,
+                    DestNombre = oficio.DestNombre,
+                    DestSiglas = oficio.DestSiglas,
+                    Ejercicio = oficio.Ejercicio,
+                    Empqentrega = oficio.Empqentrega,
+                    Eor = oficio.Eor,
+                    Estatus = oficio.Estatus,
+                    Fecha = oficio.Fecha,
+                    FechaAcuse = oficio.FechaAcuse,
+                    FechaCaptura = oficio.FechaCaptura,
+                    FechaLimite = oficio.FechaLimite,
+                    Folio = oficio.Folio,
+                    IdEmpleado = oficio.OficiosResponsables[0].IdEmpleado,
+                    NombreResponsable ="",
+                    NoOficio = oficio.NoOficio,
+                    Pdfpath = oficio.Pdfpath,
+                    Relacionoficio = oficio.Relacionoficio,
+                    RemCargo = oficio.RemCargo,
+                    RemDepen = oficio.RemDepen,
+                    RemNombre = oficio.RemNombre,
+                    RemSiglas = oficio.RemSiglas,
+                    Rol = oficio.OficiosResponsables[0].Rol,
+                    Tema = oficio.Tema,
+                    Tipo = oficio.Tipo
+                    
+                };
+                vwOficiosListas.Add(selectedOficio);
+            //selectedOficio = result.Data as VwOficiosLista;
+            //vwOficiosListas.Add(selectedOficio);
+            StateHasChanged();
+        }
 
     }
-
     //private void ShowBitacora(int eor,int ejercicio,int folio)
     //{
     //    var parameters = new DialogParameters { ["eor"] = eor, ["ejercicio"] = ejercicio, ["folio"] = folio };
