@@ -2,6 +2,7 @@
 @inject ILocalStorageService LocalStorage
 @inject IAuthService AuthService
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 <style>
 
 .botones {
@@ -21,6 +22,7 @@
 </style>
 
 <MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">@tituloBoton</MudButton>
+<br />
 <MudTable id="tabla-oficios" T="VwOficiosLista"
     Loading="@_loading"  
     Items="@vwOficiosListas.Take(10)" 
@@ -167,40 +169,42 @@
         if (!result.Cancelled)
         {
             var oficio = result.Data as Oficio;
-            selectedOficio = new VwOficiosLista
-                {
-                    Depto = oficio.Depto,
-                    DeptoRespon = oficio.DeptoRespon,
-                    DestCargo = oficio.DestCargo,
-                    DestDepen = oficio.DestDepen,
-                    DestNombre = oficio.DestNombre,
-                    DestSiglas = oficio.DestSiglas,
-                    Ejercicio = oficio.Ejercicio,
-                    Empqentrega = oficio.Empqentrega,
-                    Eor = oficio.Eor,
-                    Estatus = oficio.Estatus,
-                    Fecha = oficio.Fecha,
-                    FechaAcuse = oficio.FechaAcuse,
-                    FechaCaptura = oficio.FechaCaptura,
-                    FechaLimite = oficio.FechaLimite,
-                    Folio = oficio.Folio,
-                    IdEmpleado = oficio.OficiosResponsables[0].IdEmpleado,
-                    NombreResponsable ="",
-                    NoOficio = oficio.NoOficio,
-                    Pdfpath = oficio.Pdfpath,
-                    Relacionoficio = oficio.Relacionoficio,
-                    RemCargo = oficio.RemCargo,
-                    RemDepen = oficio.RemDepen,
-                    RemNombre = oficio.RemNombre,
-                    RemSiglas = oficio.RemSiglas,
-                    Rol = oficio.OficiosResponsables[0].Rol,
-                    Tema = oficio.Tema,
-                    Tipo = oficio.Tipo
-                    
-                };
-                vwOficiosListas.Add(selectedOficio);
+            Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
+            //selectedOficio = new VwOficiosLista
+            //    {
+            //        Depto = oficio.Depto,
+            //        DeptoRespon = oficio.DeptoRespon,
+            //        DestCargo = oficio.DestCargo,
+            //        DestDepen = oficio.DestDepen,
+            //        DestNombre = oficio.DestNombre,
+            //        DestSiglas = oficio.DestSiglas,
+            //        Ejercicio = oficio.Ejercicio,
+            //        Empqentrega = oficio.Empqentrega,
+            //        Eor = oficio.Eor,
+            //        Estatus = oficio.Estatus,
+            //        Fecha = oficio.Fecha,
+            //        FechaAcuse = oficio.FechaAcuse,
+            //        FechaCaptura = oficio.FechaCaptura,
+            //        FechaLimite = oficio.FechaLimite,
+            //        Folio = oficio.Folio,
+            //        IdEmpleado = oficio.OficiosResponsables[0].IdEmpleado,
+            //        NombreResponsable ="",
+            //        NoOficio = oficio.NoOficio,
+            //        Pdfpath = oficio.Pdfpath,
+            //        Relacionoficio = oficio.Relacionoficio,
+            //        RemCargo = oficio.RemCargo,
+            //        RemDepen = oficio.RemDepen,
+            //        RemNombre = oficio.RemNombre,
+            //        RemSiglas = oficio.RemSiglas,
+            //        Rol = oficio.OficiosResponsables[0].Rol,
+            //        Tema = oficio.Tema,
+            //        Tipo = oficio.Tipo
+
+            //    };
+            //vwOficiosListas.Add(selectedOficio);
             //selectedOficio = result.Data as VwOficiosLista;
             //vwOficiosListas.Add(selectedOficio);
+            await LoadData();
             StateHasChanged();
         }
 

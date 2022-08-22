@@ -5,10 +5,12 @@ namespace MesaCorrespondencia.Server.Repositorios
     public class OficiosRepository : IOficiosRepository
     {
         private readonly DataContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public OficiosRepository(DataContext context)
+        public OficiosRepository(DataContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<ServiceResponse<OficiosBitacora>> CreateBitacora(OficiosBitacora oficiosBitacora)
@@ -35,6 +37,14 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         public async Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio)
         {
+            var pathOficio = "";
+            var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Oficios");
+            var uniqueFilePath = Path.Combine(path, oficio.File.Name);
+            pathOficio = uniqueFilePath;
+            await using FileStream fs = new(uniqueFilePath, FileMode.Create);
+            await oficio.File.OpenReadStream().CopyToAsync(fs);
+            oficio.Pdfpath = pathOficio;
+
             //var oficioAdd = new Oficio
             //{
             //    Ejercicio = oficio.Ejercicio,

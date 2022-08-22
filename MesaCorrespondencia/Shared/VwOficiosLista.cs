@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,5 +37,9 @@ namespace MesaCorrespondencia.Shared
         public int IdEmpleado { get; set; }
         public string NombreResponsable { get; set; } = string.Empty;
         public int Rol { get; set; }
+
+
+        [NotMapped]
+        public IBrowserFile File { get; set; }
     }
 }

@@ -97,34 +97,8 @@
                            <MudTextField  T="string" Label="Observaciones" Variant="Variant.Filled"  @bind-Value="comentarios" Lines="5"  />
                         </MudPaper>  
                     </MudItem>
-                    <MudItem xs="12">
-                        <label  style="
-                                box-shadow: 0 2px 7px #4caf50;
-                                display: inline-flex;
-                                width: 150px;
-                                justify-content: space-around;
-                                border-radius: 2em;
-                                color: white;
-                                border:2px solid;
-                                cursor: pointer;
-                                align-items: center;
-                                padding:16px;
-                                background-color: #4caf50;"         
-                               for="fileInput">
-                            Upload <MudIcon Icon="@Icons.Filled.CloudUpload"/>
-                        </label>
-                        <InputFile id="fileInput" hidden multiple/>
-                            @if (files != null)
-                            {
-                                <MudList>
-                                    @foreach (var file in files)
-                                    {
-                                        <MudListItem Icon="@Icons.Filled.AttachFile">
-                                            @file.Name <code>@file.Size bytes</code>
-                                        </MudListItem>
-                                    }
-                                </MudList>
-                            }
+                    <MudItem xs="10">
+                        <InputFile OnChange="@UploadFiles"  />
                     </MudItem>
                 </MudGrid>
         </EditForm>
@@ -156,6 +130,10 @@
         foreach (var file in e.GetMultipleFiles())
         {
             files.Add(file);
+            Console.WriteLine(file);
+            oficio.File = file;
+
+
         }
         //TODO upload the files to the server
     }
@@ -196,6 +174,7 @@
                 Relacionoficio = "",
                 Depto = await LocalStorage.GetItemAsync<int>("depto"),
                 DeptoRespon = oficio.DeptoRespon,
+                File = oficio.File,
                 OficioBitacora = new OficiosBitacora
                 {
                     Ejercicio = oficio.Ejercicio,
