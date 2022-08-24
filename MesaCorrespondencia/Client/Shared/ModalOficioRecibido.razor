@@ -58,12 +58,12 @@
    
                     <MudItem xs="4"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
-                            <MudDatePicker Label="Fecha Captura" Date="oficio.FechaCaptura"  DisableToolbar="true" />
+                            <MudDatePicker Label="Fecha Captura" @bind-Date="oficio.FechaCaptura" DisableToolbar="true" />
                         </MudPaper>
                     </MudItem>
                     <MudItem xs="4"> 
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
-                            <MudDatePicker Label="Fecha Limite" Date="oficio.FechaLimite" DisableToolbar="true" />
+                            <MudDatePicker Label="Fecha Limite" @bind-Date="oficio.FechaLimite"  DisableToolbar="true" />
                         </MudPaper>
                     </MudItem>
     @*3 renglon *@
@@ -165,7 +165,7 @@
             oficio.Eor = 2;
             oficio.Tipo = 1;
             oficio.Rol = 1;
-            oficio.Folio = 251;
+            oficio.Folio = 253;
 
             oficioCreate = new Oficio
             {
@@ -198,6 +198,7 @@
                 {
                     Ejercicio = oficio.Ejercicio,
                     Folio = oficio.Folio,
+                    FechaCaptura = DateTime.Today,
                     Eor = oficio.Eor,
                     IdEmpleado = await LocalStorage.GetItemAsync<int>("empleado"),
                     Comentarios = comentarios
@@ -223,7 +224,7 @@
                     uploadResults = response.Concat(response).ToList();
                     if (uploadResults != null)
                     {
-                        oficio.Pdfpath = uploadResults.FirstOrDefault().Path;
+                        oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
                         Console.WriteLine(uploadResults.FirstOrDefault().Path);
                     }
 

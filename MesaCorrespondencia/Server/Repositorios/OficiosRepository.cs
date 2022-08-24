@@ -101,6 +101,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             try
             {
               await _context.SaveChangesAsync();
+                
                 //var pathOficio = "";
                 //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Oficios");
                 //var uniqueFilePath = Path.Combine(path, oficio.File.Name);
@@ -118,14 +119,14 @@ namespace MesaCorrespondencia.Server.Repositorios
                 return new ServiceResponse<Oficio>
                 {
                     Data = null,
-                    Message = "Ocurrio un error al guardar el oficio.",
+                    Message = $"Ocurrio un error al guardar el Folio.{oficio.Folio}",
                     Success = false
                 };
             }
             return new ServiceResponse<Oficio>
             {
                 Data = oficio,
-                Message = "Oficio registrdo exitosamente!"
+                Message = $"Folio: {oficio.Folio}, ha sido registrado exitosamente!"
             };
 
         }
@@ -303,6 +304,13 @@ namespace MesaCorrespondencia.Server.Repositorios
             }
         }
 
-
+        public async Task<ServiceResponse<OficiosParametro>> GetParametros(int ejercicio)
+        {
+            var response = new ServiceResponse<OficiosParametro>
+            {
+                Data = await _context.OficiosParametros.FirstOrDefaultAsync(o => o.Ejercicio == ejercicio)
+            };
+            return response;
+        }
     }
 }

@@ -160,5 +160,12 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = await _oficiosRepository.GetBitacoraList(ejercicio, folio, eor);
             return Ok(result);
         }
+
+        [HttpGet("get-parametros")]
+        public async Task<ActionResult<ServiceResponse<OficiosParametro>>> GetParametros(int ejercicio)
+        {
+            var result = await _oficiosRepository.GetParametros(ejercicio);
+            return Ok(result);
+        }
     }
 }

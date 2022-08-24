@@ -17,8 +17,8 @@ namespace MesaCorrespondencia.Shared
         public string NoOficio { get; set; } = string.Empty;
         public string? Pdfpath { get; set; } = string.Empty;
         public DateTime Fecha { get; set; } = DateTime.Now;
-        public DateTime FechaCaptura { get; set; } = DateTime.Now;
-        public DateTime FechaAcuse { get; set; } = DateTime.Now;
+        public DateTime? FechaCaptura { get; set; } = DateTime.Now;
+        public DateTime? FechaAcuse { get; set; } = DateTime.Now;
         public DateTime? FechaLimite { get; set; } = DateTime.Now;
         public string RemDepen { get; set; } = string.Empty;
         public string RemSiglas { get; set; } = string.Empty;

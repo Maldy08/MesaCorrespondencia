@@ -14,8 +14,8 @@ namespace MesaCorrespondencia.Shared
         public string NoOficio { get; set; } = null!;
         public string? Pdfpath { get; set; }  = string.Empty;
         public DateTime Fecha { get; set; } = DateTime.Now;//Fecha del documento
-        public DateTime FechaCaptura { get; set; } = DateTime.Now;
-        public DateTime FechaAcuse { get; set; } //Opcional, siempre y cuando el oficio pida una fecha de respuesta y unicamente aplica a eor = 1
+        public DateTime? FechaCaptura { get; set; } = DateTime.Now;
+        public DateTime? FechaAcuse { get; set; } //Opcional, siempre y cuando el oficio pida una fecha de respuesta y unicamente aplica a eor = 1
         public DateTime? FechaLimite { get; set; }  //Opcional, siempre y cuando el oficio pida uan fecha limite
         public string RemDepen { get; set; } = string.Empty;
         public string RemSiglas { get; set; } = string.Empty;

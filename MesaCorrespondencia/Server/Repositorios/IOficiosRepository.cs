@@ -4,8 +4,6 @@ namespace MesaCorrespondencia.Server.Repositorios
 {
     public interface IOficiosRepository
     {
-        //Task<ServiceResponse<List<Oficio>>> GetAllOficios();
-        //Task<ServiceResponse<Oficio>> GetOficioById(int ejercicio, int folio, int eor);
         Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio);
         Task<ServiceResponse<List<VwOficiosLista>>> GetAllOficios();
         Task<ServiceResponse<List<VwOficiosLista>>> GetOficiosListaMc(int eor);
@@ -17,9 +15,7 @@ namespace MesaCorrespondencia.Server.Repositorios
         Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus();
         Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
         Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos();
-
-        //Task Upload(IFormFile file);
-        
+        Task<ServiceResponse<OficiosParametro>> GetParametros(int ejercicio);
 
     }
 }
