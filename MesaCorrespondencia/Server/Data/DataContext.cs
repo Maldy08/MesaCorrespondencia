@@ -263,7 +263,7 @@ namespace MesaCorrespondencia.Server.Data
                     .HasColumnName("NO_OFICIO");
 
                 entity.Property(e => e.Pdfpath)
-                    .HasMaxLength(300)
+                    .HasMaxLength(600)
                     .IsUnicode(false)
                     .HasColumnName("PDFPATH");
 

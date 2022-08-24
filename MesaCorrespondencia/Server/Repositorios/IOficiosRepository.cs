@@ -1,4 +1,6 @@
-﻿namespace MesaCorrespondencia.Server.Repositorios
+﻿using Microsoft.AspNetCore.Components.Forms;
+
+namespace MesaCorrespondencia.Server.Repositorios
 {
     public interface IOficiosRepository
     {
@@ -15,6 +17,8 @@
         Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus();
         Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
         Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos();
+
+        //Task Upload(IFormFile file);
         
 
     }

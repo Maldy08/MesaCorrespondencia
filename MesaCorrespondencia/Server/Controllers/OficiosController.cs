@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace MesaCorrespondencia.Server.Controllers
 {
@@ -8,18 +10,85 @@ namespace MesaCorrespondencia.Server.Controllers
     public class OficiosController : ControllerBase
     {
         private readonly IOficiosRepository _oficiosRepository;
-
-        public OficiosController(IOficiosRepository oficiosRepository)
+        private readonly IWebHostEnvironment env;
+        public OficiosController(IOficiosRepository oficiosRepository, IWebHostEnvironment env)
         {
             _oficiosRepository = oficiosRepository;
+            this.env = env;
         }
 
-        [HttpPost]
+        [HttpPost("add-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> Create(Oficio oficio)
         {
             var result = await _oficiosRepository.CreateOficio(oficio);
             return Ok(result);
         }
+
+        [HttpPost("file-save")]
+        public async Task<ActionResult<IList<UploadResult>>> UploadFile([FromForm] IEnumerable<IFormFile> files)
+        {
+            var maxAllowedFiles = 3;
+            long maxFileSize = 1202124545;
+            var filesProcessed = 0;
+            var resourcePath = new Uri($"{Request.Scheme}://{Request.Host}/");
+            List<UploadResult> uploadResults = new();
+            foreach (var file in files)
+            {
+                var uploadResult = new UploadResult();
+                string trustedFileNameForFileStorage;
+                var untrustedFileName = file.FileName;
+                uploadResult.FileName = untrustedFileName;
+                var trustedFileNameForDisplay =
+                    WebUtility.HtmlEncode(untrustedFileName);
+                if (filesProcessed < maxAllowedFiles)
+                {
+                    if (file.Length == 0)
+                    {
+
+                        uploadResult.ErrorCode = 1;
+                    }
+                    else if (file.Length > maxFileSize)
+                    {
+
+                        uploadResult.ErrorCode = 2;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            trustedFileNameForFileStorage = Path.GetRandomFileName();
+                            var path = Path.Combine(env.ContentRootPath, "Oficios",
+                                trustedFileNameForFileStorage);
+
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await file.CopyToAsync(fs);
+         
+                            uploadResult.Uploaded = true;
+                            uploadResult.StoredFileName = trustedFileNameForFileStorage;
+                            uploadResult.FileName = untrustedFileName;
+                            uploadResult.Path = path;
+                        }
+                        catch (IOException ex)
+                        {
+
+                            uploadResult.ErrorCode = 3;
+                        }
+                    }
+
+                    filesProcessed++;
+                }
+                else
+                {
+
+                    uploadResult.ErrorCode = 4;
+                }
+
+                uploadResults.Add(uploadResult);
+              
+            }
+            return new CreatedResult(resourcePath, uploadResults);
+        }
+        
 
         [HttpPost("add-bitacora")]
         public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> CreateBitacora(OficiosBitacora oficiosBitacora)

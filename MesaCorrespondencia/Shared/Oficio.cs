@@ -33,8 +33,8 @@ namespace MesaCorrespondencia.Shared
         public int DeptoRespon { get; set; }
 
 
-        [NotMapped]
-        public IBrowserFile File { get; set; }
+        //[NotMapped]
+        //public IBrowserFile File { get; set; }
         [NotMapped]
         public OficiosBitacora OficioBitacora { get; set; } = new();
         [NotMapped]

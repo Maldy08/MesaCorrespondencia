@@ -1,6 +1,7 @@
 ﻿@inject IDialogService DialogService
 @inject IOficioService OficioService
-@inject ILocalStorageService LocalStorage;
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
 <style>
     input[type="text"], textarea  {
         text-transform:uppercase;
@@ -98,7 +99,7 @@
                         </MudPaper>  
                     </MudItem>
                     <MudItem xs="10">
-                        <InputFile OnChange="@UploadFiles"  />
+                        <InputFile OnChange="@UploadFiles" multiple />
                     </MudItem>
                 </MudGrid>
         </EditForm>
@@ -123,17 +124,35 @@
     private Oficio oficioCreate;
     private bool isNew = true;
     private string comentarios = "Este es un texto de ejemplo";
-    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private bool upload = false;
 
-    private void UploadFiles(InputFileChangeEventArgs e)
+    private List<string> fileNames = new();
+    private List<UploadResult> uploadResults = new();
+    private MultipartFormDataContent content;
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
     {
+      
+        content = new MultipartFormDataContent();
         foreach (var file in e.GetMultipleFiles())
         {
-            files.Add(file);
-            Console.WriteLine(file);
-            oficio.File = file;
-
-
+            var fileContent = new StreamContent(file.OpenReadStream());
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            fileNames.Add(file.Name);
+            content.Add(
+                content: fileContent,
+                name: "\"files\"",
+                fileName: file.Name
+            );
+            upload = true;
+            uploadResults.Add(
+                new()
+                    {
+                        FileName = file.Name,
+                        ErrorCode = 6,
+                        Uploaded = false
+                    }
+            );
         }
         //TODO upload the files to the server
     }
@@ -146,7 +165,7 @@
             oficio.Eor = 2;
             oficio.Tipo = 1;
             oficio.Rol = 1;
-            oficio.Folio = 230;
+            oficio.Folio = 250;
 
             oficioCreate = new Oficio
             {
@@ -174,7 +193,7 @@
                 Relacionoficio = "",
                 Depto = await LocalStorage.GetItemAsync<int>("depto"),
                 DeptoRespon = oficio.DeptoRespon,
-                File = oficio.File,
+                //File = oficio.File,
                 OficioBitacora = new OficiosBitacora
                 {
                     Ejercicio = oficio.Ejercicio,
@@ -193,15 +212,38 @@
                         Rol = oficio.Rol
                     }
                 }
-
             };
 
-            await OficioService.CreateOficio(oficioCreate);
-        }
+            if (upload)
+            {
+                var response = await OficioService.Upload(content);
+                if (response != null)
+                {
+                    uploadResults.Clear();
+                    uploadResults = response.Concat(response).ToList();
+                    if (uploadResults != null)
+                    {
+                        oficio.Pdfpath = uploadResults.FirstOrDefault().Path;
+                        Console.WriteLine(uploadResults.FirstOrDefault().Path);
+                    }
 
-        mudDialog.Close(DialogResult.Ok(oficioCreate));
+                }
+                //var response = await Http.PostAsync("api/oficios/file-save", content);
+                //var newUploadResults = await response.Content
+                //  .ReadFromJsonAsync<IList<UploadResult>>();
+                //    if (newUploadResults is not null)
+                //    {
+                //        uploadResults = uploadResults.Concat(newUploadResults).ToList();
+                //        Console.WriteLine(uploadResults);
+                //    }
+                await OficioService.CreateOficio(oficioCreate);
+            }
+          
+            mudDialog.Close(DialogResult.Ok(oficioCreate));
+        }
     }
-    void Cancel() => mudDialog.Cancel();
+
+    private void Cancel() => mudDialog.Cancel();
 
     protected override void OnInitialized()
     {
@@ -259,7 +301,5 @@
             oficio.IdEmpleado = responsableSelected.Empleado;
         }
     }
-
-
 
 }

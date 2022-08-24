@@ -14,7 +14,8 @@ namespace MesaCorrespondencia.Client.Services
 
         public async Task CreateOficio(Oficio oficio)
         {
-            await _httpClient.PostAsJsonAsync("api/oficios",oficio);
+            await _httpClient.PostAsJsonAsync("api/oficios/add-oficio", oficio);
+           
         }
 
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
@@ -55,7 +56,15 @@ namespace MesaCorrespondencia.Client.Services
                 return response.Data;
             }
         }
-        
+
+        public async Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent)
+        {
+            var response = await _httpClient.PostAsync("api/oficios/file-save", formDataContent);
+            var newUploadResults = await response.Content.ReadFromJsonAsync<IList<UploadResult>>();
+            return newUploadResults;
+
+        }
+
 
 
         //public async Task<List<VwOficiosLista>> OficiosListaMC(int eor)

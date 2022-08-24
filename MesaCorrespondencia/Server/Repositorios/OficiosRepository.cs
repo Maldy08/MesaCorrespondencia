@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace MesaCorrespondencia.Server.Repositorios
 {
@@ -35,15 +37,31 @@ namespace MesaCorrespondencia.Server.Repositorios
             }
         }
 
+        public async Task<List<UploadResult>> UploadFiles(List<IFormFile> files)
+        {
+            List<UploadResult> uploadResults = new List<UploadResult>();
+            foreach (var file in files)
+            {
+                var uploadResult  = new UploadResult();
+                string trustedFileNameForFileStorage;
+                var untrustedFileName = file.FileName;
+                uploadResult.FileName = untrustedFileName;
+                var trustedFileNameForDisplay = WebUtility.HtmlEncode(untrustedFileName);
+                trustedFileNameForFileStorage = Path.GetRandomFileName();
+                var path = Path.Combine(_webHostEnvironment.ContentRootPath, "oficios", trustedFileNameForFileStorage);
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.CopyToAsync(fs);
+
+                uploadResult.StoredFileName = trustedFileNameForFileStorage;
+                uploadResults.Add(uploadResult);
+
+            }
+            return uploadResults;
+        }
+
         public async Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio)
         {
-            var pathOficio = "";
-            var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Oficios");
-            var uniqueFilePath = Path.Combine(path, oficio.File.Name);
-            pathOficio = uniqueFilePath;
-            await using FileStream fs = new(uniqueFilePath, FileMode.Create);
-            await oficio.File.OpenReadStream().CopyToAsync(fs);
-            oficio.Pdfpath = pathOficio;
+
 
             //var oficioAdd = new Oficio
             //{
@@ -83,6 +101,13 @@ namespace MesaCorrespondencia.Server.Repositorios
             try
             {
               await _context.SaveChangesAsync();
+                //var pathOficio = "";
+                //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Oficios");
+                //var uniqueFilePath = Path.Combine(path, oficio.File.Name);
+                //pathOficio = uniqueFilePath;
+                //await using FileStream fs = new(uniqueFilePath, FileMode.Create);
+                //await oficio.File.OpenReadStream().CopyToAsync(fs);
+                //oficio.Pdfpath = pathOficio;
                 //if(id == 3)
                 //{
 
@@ -277,5 +302,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                 };
             }
         }
+
+
     }
 }

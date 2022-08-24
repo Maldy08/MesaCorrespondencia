@@ -39,7 +39,7 @@ namespace MesaCorrespondencia.Shared
         public int Rol { get; set; }
 
 
-        [NotMapped]
-        public IBrowserFile File { get; set; }
+        //[NotMapped]
+        //public IBrowserFile File { get; set; }
     }
 }

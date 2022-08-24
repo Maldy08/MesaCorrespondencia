@@ -1,4 +1,5 @@
-﻿namespace MesaCorrespondencia.Client.Services
+﻿
+namespace MesaCorrespondencia.Client.Services
 {
     public interface IOficioService
     {
@@ -10,6 +11,8 @@
         Task<List<OficiosUsuext>> GetOficioUsuextAll();
         Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor);
         Task CreateOficio(Oficio oficio);
+        Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent);
+
 
     }
 }
