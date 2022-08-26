@@ -122,7 +122,8 @@
     private VsEmpleadosSisco responsableSelected;
     private OficiosUsuext usuarioExternoSelected;
     private Oficio oficioCreate;
-    private bool isNew = true;
+    [Parameter]
+    public bool isNew { get; set; }
     private string comentarios = "Este es un texto de ejemplo";
     private bool upload = false;
 
@@ -132,7 +133,7 @@
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-      
+
         content = new MultipartFormDataContent();
         foreach (var file in e.GetMultipleFiles())
         {
@@ -159,15 +160,14 @@
 
     private async Task Submit()
     {
-        if (isNew)
-        {
+        if(isNew){
             oficio.Ejercicio = 2022;
             oficio.Eor = 2;
             oficio.Tipo = 1;
             oficio.Rol = 1;
             oficio.Folio = 253;
-
-            oficioCreate = new Oficio
+        }
+        oficioCreate = new Oficio
             {
                 Ejercicio = oficio.Ejercicio,
                 Folio = oficio.Folio,
@@ -209,38 +209,20 @@
                         Ejercicio = oficio.Ejercicio,
                         Eor = oficio.Eor,
                         Folio = oficio.Folio,
-                        IdEmpleado =   oficio.IdEmpleado,
+                        IdEmpleado =  oficio.IdEmpleado,
                         Rol = oficio.Rol
                     }
                 }
             };
-
-            if (upload)
-            {
-                var response = await OficioService.Upload(content);
-                if (response != null)
-                {
-                    uploadResults.Clear();
-                    uploadResults = response.Concat(response).ToList();
-                    if (uploadResults != null)
-                    {
-                        oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
-                        Console.WriteLine(uploadResults.FirstOrDefault().Path);
-                    }
-
-                }
-                //var response = await Http.PostAsync("api/oficios/file-save", content);
-                //var newUploadResults = await response.Content
-                //  .ReadFromJsonAsync<IList<UploadResult>>();
-                //    if (newUploadResults is not null)
-                //    {
-                //        uploadResults = uploadResults.Concat(newUploadResults).ToList();
-                //        Console.WriteLine(uploadResults);
-                //    }
+        if(upload)
+        {
+            await FileUpload();
+            if(isNew){
                 await OficioService.CreateOficio(oficioCreate);
             }
-          
-            mudDialog.Close(DialogResult.Ok(oficioCreate));
+            else{
+                await OficioService.UpdatePdfPath(oficioCreate);
+            }
         }
     }
 
@@ -255,6 +237,21 @@
         }
         else
             oficio = new();
+    }
+
+    private async Task FileUpload()
+    {
+        var response = await OficioService.Upload(content);
+        if (response != null)
+        {
+            uploadResults.Clear();
+            uploadResults = response.Concat(response).ToList();
+            if (uploadResults != null)
+            {
+                oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
+                Console.WriteLine(uploadResults.FirstOrDefault().Path);
+            }
+        }
     }
 
     protected async Task ingresarPersonalInterno()
@@ -286,7 +283,6 @@
             oficio.DestCargo = usuarioExternoSelected.Cargo;
             oficio.DestDepen = usuarioExternoSelected.Empresa;
             oficio.DestSiglas = usuarioExternoSelected.Siglas;
-
         }
     }
 

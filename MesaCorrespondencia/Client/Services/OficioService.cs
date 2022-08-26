@@ -56,6 +56,11 @@ namespace MesaCorrespondencia.Client.Services
             }
         }
 
+        public async Task UpdatePdfPath(Oficio oficio)
+        {
+            await _httpClient.PostAsJsonAsync("api/oficios/update-pdf-path", oficio);
+        }
+
         public async Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent)
         {
             var response = await _httpClient.PostAsync("api/oficios/file-save", formDataContent);

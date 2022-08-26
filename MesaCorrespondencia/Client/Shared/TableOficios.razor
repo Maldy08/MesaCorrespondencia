@@ -144,7 +144,7 @@
     private async Task Edit(VwOficiosLista element)
     {
 
-        var parameters = new DialogParameters { ["oficioEdit"] = element };
+        var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Medium};
         var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
         var result = await dialog.Result;
@@ -164,7 +164,8 @@
     {
         var options =  new DialogOptions() { CloseButton=true, MaxWidth = MaxWidth.Medium };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",options);
+        var parameters = new DialogParameters { ["isNew"] = true };
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

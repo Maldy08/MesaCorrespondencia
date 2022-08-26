@@ -17,11 +17,33 @@ namespace MesaCorrespondencia.Server.Controllers
             this.env = env;
         }
 
+        [HttpPost("update-pdf-path")]
+        public async Task<ActionResult<ServiceResponse<Oficio>>> UpdatePdfPath(Oficio oficio) 
+        {
+            try
+            {
+                var result = await _oficiosRepository.UpdatePdfPath(oficio);
+                return Ok(result);
+            }
+            catch 
+            {
+
+                return BadRequest("Ocurrio un Error al actualizar la ruta del oficio");
+            }
+        }
+
         [HttpPost("add-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> Create(Oficio oficio)
         {
-            var result = await _oficiosRepository.CreateOficio(oficio);
-            return Ok(result);
+            try
+            {
+                var result = await _oficiosRepository.CreateOficio(oficio);
+                return Ok(result);
+            }
+            catch 
+            {
+                return BadRequest(new ServiceResponse<Oficio> { Message = "Ocurrio un error al procesar la información"});
+            }
         }
 
         [HttpPost("file-save")]
@@ -44,12 +66,10 @@ namespace MesaCorrespondencia.Server.Controllers
                 {
                     if (file.Length == 0)
                     {
-
                         uploadResult.ErrorCode = 1;
                     }
                     else if (file.Length > maxFileSize)
                     {
-
                         uploadResult.ErrorCode = 2;
                     }
                     else
@@ -59,10 +79,8 @@ namespace MesaCorrespondencia.Server.Controllers
                             trustedFileNameForFileStorage = Path.GetRandomFileName();
                             var path = Path.Combine(env.ContentRootPath, "Oficios",
                                 trustedFileNameForFileStorage);
-
                             await using FileStream fs = new(path, FileMode.Create);
                             await file.CopyToAsync(fs);
-         
                             uploadResult.Uploaded = true;
                             uploadResult.StoredFileName = trustedFileNameForFileStorage;
                             uploadResult.FileName = untrustedFileName;
@@ -70,21 +88,17 @@ namespace MesaCorrespondencia.Server.Controllers
                         }
                         catch (IOException ex)
                         {
-
                             uploadResult.ErrorCode = 3;
                         }
                     }
-
                     filesProcessed++;
                 }
                 else
                 {
-
                     uploadResult.ErrorCode = 4;
                 }
 
                 uploadResults.Add(uploadResult);
-              
             }
             return new CreatedResult(resourcePath, uploadResults);
         }
@@ -93,8 +107,22 @@ namespace MesaCorrespondencia.Server.Controllers
         [HttpPost("add-bitacora")]
         public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> CreateBitacora(OficiosBitacora oficiosBitacora)
         {
-            var result = await _oficiosRepository.CreateBitacora(oficiosBitacora);
-            return Ok(result);
+            try
+            {
+                var result = await _oficiosRepository.CreateBitacora(oficiosBitacora);
+                return Ok(result);
+            }
+            catch 
+            {
+                var result = new ServiceResponse<OficiosBitacora>
+                {
+                    Data = null,
+                    Message = "Ocurrio un error al procesar la información",
+                    Success = false
+                };
+               return BadRequest(result);
+            }
+           
         }
 
         [HttpPut]

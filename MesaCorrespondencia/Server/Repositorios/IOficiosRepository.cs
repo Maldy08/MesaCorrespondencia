@@ -16,6 +16,7 @@ namespace MesaCorrespondencia.Server.Repositorios
         Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
         Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos();
         Task<ServiceResponse<OficiosParametro>> GetParametros(int ejercicio);
+        Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio);
 
     }
 }

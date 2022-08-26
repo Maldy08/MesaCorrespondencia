@@ -27,7 +27,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                     Message = "Bitacora agregada exitosamente!"
                 };
             }
-            catch 
+            catch
             {
                 return new ServiceResponse<OficiosBitacora>
                 {
@@ -42,7 +42,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             List<UploadResult> uploadResults = new List<UploadResult>();
             foreach (var file in files)
             {
-                var uploadResult  = new UploadResult();
+                var uploadResult = new UploadResult();
                 string trustedFileNameForFileStorage;
                 var untrustedFileName = file.FileName;
                 uploadResult.FileName = untrustedFileName;
@@ -61,7 +61,7 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         public async Task<ServiceResponse<Oficio>> CreateOficio(Oficio oficio)
         {
-
+            #region 
 
             //var oficioAdd = new Oficio
             //{
@@ -91,30 +91,17 @@ namespace MesaCorrespondencia.Server.Repositorios
             //    DeptoRespon = oficio.DeptoRespon,
 
             //};
-
+            #endregion
             _context.Oficios.Add(oficio);
             if (oficio.OficioBitacora != null)
-                  _context.OficiosBitacoras.Add(oficio.OficioBitacora);
-
+                _context.OficiosBitacoras.Add(oficio.OficioBitacora);
             if (oficio.OficiosResponsables != null && oficio.OficiosResponsables.Count > 0)
-                    oficio.OficiosResponsables.ForEach(of => _context.OficiosResponsables.Add(of));
+                oficio.OficiosResponsables.ForEach(of => _context.OficiosResponsables.Add(of));
             try
             {
-              await _context.SaveChangesAsync();
-                
-                //var pathOficio = "";
-                //var path = Path.Combine(_webHostEnvironment.ContentRootPath, "Oficios");
-                //var uniqueFilePath = Path.Combine(path, oficio.File.Name);
-                //pathOficio = uniqueFilePath;
-                //await using FileStream fs = new(uniqueFilePath, FileMode.Create);
-                //await oficio.File.OpenReadStream().CopyToAsync(fs);
-                //oficio.Pdfpath = pathOficio;
-                //if(id == 3)
-                //{
-
-                //}
+                await _context.SaveChangesAsync();
             }
-            catch 
+            catch
             {
                 return new ServiceResponse<Oficio>
                 {
@@ -128,7 +115,6 @@ namespace MesaCorrespondencia.Server.Repositorios
                 Data = oficio,
                 Message = $"Folio: {oficio.Folio}, ha sido registrado exitosamente!"
             };
-
         }
 
         public async Task<ServiceResponse<List<VwOficiosLista>>> GetAllOficios()
@@ -148,7 +134,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                              .Where(o => o.Ejercicio == ejercicio && o.Folio == folio && o.Eor == eor)
                              .ToListAsync()
             };
-        return response;
+            return response;
         }
 
         public async Task<ServiceResponse<List<OficiosEstatus>>> GetEstatus()
@@ -189,7 +175,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             var response = new ServiceResponse<List<VwOficiosLista>>
             {
                 Data = await _context.VwOficiosListas
-                        .Where(of => of.Ejercicio == ejercicio && of.Eor == eor 
+                        .Where(of => of.Ejercicio == ejercicio && of.Eor == eor
                             && (of.Depto == iddepto && of.Rol == 1 || of.IdEmpleado == iddepto && of.Rol == 2))
                         .OrderByDescending(of => of.Folio)
                         .ToListAsync()
@@ -211,7 +197,7 @@ namespace MesaCorrespondencia.Server.Repositorios
         public async Task<ServiceResponse<OficiosBitacora>> UpdateBitacora(OficiosBitacora oficiosBitacora)
         {
             var bitacoraUpdate = await _context.OficiosBitacoras.FindAsync(oficiosBitacora.Ejercicio, oficiosBitacora.Folio, oficiosBitacora.Eor, oficiosBitacora.FechaCaptura);
-            if(bitacoraUpdate != null)
+            if (bitacoraUpdate != null)
             {
                 bitacoraUpdate.IdEmpleado = oficiosBitacora.IdEmpleado;
                 bitacoraUpdate.Estatus = oficiosBitacora.Estatus;
@@ -249,7 +235,8 @@ namespace MesaCorrespondencia.Server.Repositorios
         public async Task<ServiceResponse<Oficio>> UpdateOficio(Oficio oficio)
         {
             var oficioUpdate = await _context.Oficios.FindAsync(oficio.Ejercicio, oficio.Folio, oficio.Eor);
-            if (oficioUpdate != null) { 
+            if (oficioUpdate != null)
+            {
                 //oficioUpdate.Ejercicio = oficio.Ejercicio;
                 //oficioUpdate.Folio = oficio.Folio;
                 //oficioUpdate.Eor = oficio.Eor;
@@ -283,7 +270,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                         Message = "Registro actualizado correcamente"
                     };
                 }
-                catch 
+                catch
                 {
                     return new ServiceResponse<Oficio>
                     {
@@ -311,6 +298,43 @@ namespace MesaCorrespondencia.Server.Repositorios
                 Data = await _context.OficiosParametros.FirstOrDefaultAsync(o => o.Ejercicio == ejercicio)
             };
             return response;
+        }
+
+        public async Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio)
+        {
+            var oficioUpdate = await _context.Oficios.FindAsync(oficio.Ejercicio, oficio.Folio, oficio.Eor);
+            if (oficioUpdate != null)
+            {
+                oficioUpdate.Pdfpath = oficio.Pdfpath;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return new ServiceResponse<Oficio>
+                    {
+                        Data = oficioUpdate,
+                        Message = "Registro actualizado correcamente"
+                    };
+                }
+                catch (Exception)
+                {
+
+                    return new ServiceResponse<Oficio>
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = "Registro no encontrado"
+                    };
+                }
+            }
+            else
+            {
+                return new ServiceResponse<Oficio>
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Registro no encontrado"
+                };
+            }
         }
     }
 }
