@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -46,6 +47,14 @@ namespace MesaCorrespondencia.Server.Controllers
             }
         }
 
+        [HttpPost("add-oficio-new")]
+        public async Task<ActionResult<ServiceResponse<Oficio>>> AddOficio([FromForm] Oficio oficio)
+        {
+            var files = Request.Form.Files;
+            var resourcePath = new Uri($"{Request.Scheme}://{Request.Host}/");
+            return new CreatedResult(resourcePath,files);
+        }
+
         [HttpPost("file-save")]
         public async Task<ActionResult<IList<UploadResult>>> UploadFile([FromForm] IEnumerable<IFormFile> files)
         {
@@ -62,6 +71,7 @@ namespace MesaCorrespondencia.Server.Controllers
                 uploadResult.FileName = untrustedFileName;
                 var trustedFileNameForDisplay =
                     WebUtility.HtmlEncode(untrustedFileName);
+                
                 if (filesProcessed < maxAllowedFiles)
                 {
                     if (file.Length == 0)
@@ -76,8 +86,10 @@ namespace MesaCorrespondencia.Server.Controllers
                     {
                         try
                         {
-                            trustedFileNameForFileStorage = Path.GetRandomFileName();
-                            var path = Path.Combine(env.ContentRootPath, "Oficios",
+                            var folder = uploadResult.Eor == 1 ? "oficios-expedidos" : "oficios-recibidos";
+                            trustedFileNameForFileStorage = uploadResult.Ejercicio.ToString() + "-" + uploadResult.Eor.ToString() + "-" + uploadResult.Folio.ToString();
+                            //trustedFileNameForFileStorage = Path.GetRandomFileName();
+                            var path = Path.Combine(env.ContentRootPath, folder,
                                 trustedFileNameForFileStorage);
                             await using FileStream fs = new(path, FileMode.Create);
                             await file.CopyToAsync(fs);
@@ -194,6 +206,27 @@ namespace MesaCorrespondencia.Server.Controllers
         {
             var result = await _oficiosRepository.GetParametros(ejercicio);
             return Ok(result);
+        }
+
+        [HttpGet("get-pdf/{ejercicio}/{eor}/{folio}")]
+        public async Task<ActionResult> GetOficiosPDF(int ejercicio, int eor, int folio)
+        {
+            var PDFpath = "";
+            string nombre = ejercicio + "-" + eor + "-" + folio + ".pdf";
+            if (eor == 1)
+                PDFpath = Path.Combine(env.ContentRootPath, "oficios-expedidos/" + nombre);
+            else PDFpath = Path.Combine(env.ContentRootPath, "oficios-recibidos/" + nombre);
+            if (System.IO.File.Exists(PDFpath))
+            {
+                byte[] abc = System.IO.File.ReadAllBytes(PDFpath);
+                System.IO.File.WriteAllBytes(PDFpath, abc);
+                MemoryStream ms = new MemoryStream(abc);
+                return new FileStreamResult(ms, "application/pdf"); ;
+            }
+            else
+            {
+                return NotFound("no encontrado");
+            }
         }
     }
 }

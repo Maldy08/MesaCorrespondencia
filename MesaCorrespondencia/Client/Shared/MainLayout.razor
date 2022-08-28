@@ -28,7 +28,7 @@
                     <NavMenu />
                 </MudDrawer>
                 <MudMainContent>
-                    <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+                    <MudContainer MaxWidth="MaxWidth.False" Class="my-16 pt-16">
                         @Body
                     </MudContainer>
                 </MudMainContent>
@@ -52,8 +52,5 @@
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         await AuthService.ClearUserInfo();
         NavigationManager.NavigateTo("login");
-
     }
-
-
 }

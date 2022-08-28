@@ -12,9 +12,10 @@ namespace MesaCorrespondencia.Client.Services
             _authService = authService;
         }
 
-        public async Task CreateOficio(Oficio oficio)
+        public async Task<bool> CreateOficio(Oficio oficio)
         {
-             await _httpClient.PostAsJsonAsync("api/oficios/add-oficio", oficio);
+             var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficio", oficio);
+             return response.IsSuccessStatusCode;
         }
 
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
@@ -56,9 +57,10 @@ namespace MesaCorrespondencia.Client.Services
             }
         }
 
-        public async Task UpdatePdfPath(Oficio oficio)
+        public async Task<bool> UpdatePdfPath(Oficio oficio)
         {
-            await _httpClient.PostAsJsonAsync("api/oficios/update-pdf-path", oficio);
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/update-pdf-path", oficio);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent)

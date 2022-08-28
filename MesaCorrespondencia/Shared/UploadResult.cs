@@ -13,5 +13,8 @@ namespace MesaCorrespondencia.Shared
         public string? StoredFileName { get; set; }
         public int ErrorCode { get; set; }
         public string? Path { get; set; }
+        public int Ejercicio { get; set; }
+        public int Folio { get; set; }
+        public int Eor { get; set; }
     }
 }

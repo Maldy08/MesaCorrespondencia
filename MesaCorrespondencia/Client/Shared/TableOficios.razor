@@ -3,6 +3,7 @@
 @inject IAuthService AuthService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
 <style>
 
 .botones {
@@ -50,7 +51,7 @@
     
     <RowTemplate>
         <MudTd Class="botones" DataLabel="ACCIONES">
-             <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="@ViewClick"></MudIconButton>
+            <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
         </MudTd>
@@ -136,9 +137,15 @@
         await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
 
-    private void ViewClick()
+    private async Task ViewPDF(VwOficiosLista element)
     {
-        Console.WriteLine("has dado click");
+        var parameters = new DialogParameters { ["path"] = element.Pdfpath };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
+        var dialog = DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
+        var result = await dialog.Result;
+        if(!result.Cancelled){
+
+        }
     }
 
     private async Task Edit(VwOficiosLista element)

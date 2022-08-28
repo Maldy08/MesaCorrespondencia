@@ -151,7 +151,10 @@
                     {
                         FileName = file.Name,
                         ErrorCode = 6,
-                        Uploaded = false
+                        Uploaded = false,
+                        Eor = oficio.Eor,
+                        Ejercicio = oficio.Ejercicio,
+                        Folio = oficio.Folio
                     }
             );
         }
@@ -218,10 +221,17 @@
         {
             await FileUpload();
             if(isNew){
-                await OficioService.CreateOficio(oficioCreate);
+                var response = Http.PostAsJsonAsync("api/oficios/add-oficio-new", oficioCreate);
+                var result = response.Result;
+
+                if( await OficioService.CreateOficio(oficioCreate)){
+                    mudDialog.Close(DialogResult.Ok(oficioCreate));
+               }
             }
             else{
-                await OficioService.UpdatePdfPath(oficioCreate);
+               if( await OficioService.UpdatePdfPath(oficioCreate)) {
+                    mudDialog.Close(DialogResult.Ok(oficioCreate));
+               }
             }
         }
     }
