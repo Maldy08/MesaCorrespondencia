@@ -26,7 +26,7 @@
 <br />
 <MudTable id="tabla-oficios" T="VwOficiosLista"
     Loading="@_loading"  
-    Items="@vwOficiosListas.Take(10)" 
+    Items="@vwOficiosListas" 
     Hover="true" 
     Striped="true"
     @ref="mudTable"
@@ -51,7 +51,7 @@
     
     <RowTemplate>
         <MudTd Class="botones" DataLabel="ACCIONES">
-            <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
         </MudTd>
@@ -67,7 +67,7 @@
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{25,50,100}" />
+        <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
     </PagerContent>
 </MudTable>
 
@@ -93,6 +93,7 @@
     private int selectedRowNumber = -1;
     private bool _loading = false;
     private string tituloBoton;
+    private int rows = 5;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +104,12 @@
             tituloBoton = "Ingresar oficio expedido";
         else
             tituloBoton = "Ingresar oficio recibido";
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            mudTable.SetRowsPerPage(rows);
     }
     private async Task LoadData()
     {
@@ -150,7 +157,6 @@
 
     private async Task Edit(VwOficiosLista element)
     {
-
         var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
         var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Medium};
         var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);

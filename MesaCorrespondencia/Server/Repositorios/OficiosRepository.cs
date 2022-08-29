@@ -336,5 +336,15 @@ namespace MesaCorrespondencia.Server.Repositorios
                 };
             }
         }
+
+        public async Task<ServiceResponse<VwOficiosLista>> GetOficioByFolio(int ejercicio, int eor, int folio)
+        {
+            var response = new ServiceResponse<VwOficiosLista>
+            {
+                Data = await _context.VwOficiosListas.FirstOrDefaultAsync(o => o.Ejercicio == ejercicio && o.Eor == eor && o.Folio == folio)
+             };
+
+            return response;
+        }
     }
 }

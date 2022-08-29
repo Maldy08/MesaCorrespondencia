@@ -228,5 +228,12 @@ namespace MesaCorrespondencia.Server.Controllers
                 return NotFound("no encontrado");
             }
         }
+
+        [HttpGet("get-oficio-by-folio/{ejercicio}/{eor}/{folio}")]
+        public async Task<ActionResult<ServiceResponse<VwOficiosLista>>> GetOficioByFolio(int ejercicio, int eor, int folio)
+        {
+            var result = await _oficiosRepository.GetOficioByFolio(ejercicio,eor,folio);
+            return Ok(result);
+        }
     }
 }

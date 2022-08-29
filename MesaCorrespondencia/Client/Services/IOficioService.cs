@@ -13,5 +13,6 @@ namespace MesaCorrespondencia.Client.Services
         Task<bool> CreateOficio(Oficio oficio);
         Task<bool> UpdatePdfPath(Oficio oficio);
         Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent);
+        Task<VwOficiosLista> GetOficioByFolio(int ejercicio, int eor, int folio);
     }
 }
