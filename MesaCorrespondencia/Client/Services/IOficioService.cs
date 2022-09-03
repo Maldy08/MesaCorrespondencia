@@ -12,7 +12,7 @@ namespace MesaCorrespondencia.Client.Services
         Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor);
         Task<bool> CreateOficio(Oficio oficio);
         Task<bool> UpdatePdfPath(Oficio oficio);
-        Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent);
+        Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent,int ejercicio,int eor,int folio);
         Task<VwOficiosLista> GetOficioByFolio(int ejercicio, int eor, int folio);
     }
 }

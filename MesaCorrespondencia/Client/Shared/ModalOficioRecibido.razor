@@ -1,4 +1,6 @@
-﻿@inject IDialogService DialogService
+﻿@using Microsoft.AspNetCore.Http
+@using System.Net.Http.Headers
+@inject IDialogService DialogService
 @inject IOficioService OficioService
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
@@ -130,15 +132,16 @@
     private List<string> fileNames = new();
     private List<UploadResult> uploadResults = new();
     private MultipartFormDataContent content;
+    private IFormFile formFile;
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-
         content = new MultipartFormDataContent();
         foreach (var file in e.GetMultipleFiles())
         {
             var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
             fileNames.Add(file.Name);
             content.Add(
                 content: fileContent,
@@ -220,20 +223,19 @@
         if(upload)
         {
             await FileUpload();
-            if(isNew){
-                var response = Http.PostAsJsonAsync("api/oficios/add-oficio-new", oficioCreate);
-                var result = response.Result;
+        }
 
+            if(isNew){
                 if( await OficioService.CreateOficio(oficioCreate)){
                     mudDialog.Close(DialogResult.Ok(oficioCreate));
                 }
             }
-            else{
+            else
+            {
                 if( await OficioService.UpdatePdfPath(oficioCreate)) {
                     mudDialog.Close(DialogResult.Ok(oficioCreate));
                 }
             }
-        }
     }
 
     private void Cancel() => mudDialog.Cancel();
@@ -249,11 +251,9 @@
             oficio = new();
     }
 
-
-
     private async Task FileUpload()
     {
-        var response = await OficioService.Upload(content);
+        var response = await OficioService.Upload(content, oficioCreate.Ejercicio, oficioCreate.Eor, oficioCreate.Folio);
         if (response != null)
         {
             uploadResults.Clear();
@@ -261,14 +261,14 @@
             if (uploadResults != null)
             {
                 oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
-                Console.WriteLine(uploadResults.FirstOrDefault().Path);
+                //Console.WriteLine(uploadResults.FirstOrDefault().Path);
             }
         }
     }
 
     protected async Task ingresarPersonalInterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var dialog =  DialogService.Show<ModalPersonalInterno>("",options);
         var result = await dialog.Result;
@@ -277,6 +277,8 @@
             empleadoSelected = result.Data as VsEmpleadosSisco;
             oficio.RemNombre = empleadoSelected.NombreCompleto;
             oficio.RemCargo = empleadoSelected.DescripcionDepto;
+
+            ///validar dependencia
             oficio.RemDepen = "CEA";
             oficio.RemSiglas = "CEA";
         }  
@@ -284,7 +286,7 @@
 
     protected  async Task ingresarPersonalExterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large};
+        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var dialog =  DialogService.Show<ModalPersonalExterno>("",options);
         var result = await dialog.Result;
@@ -300,7 +302,7 @@
 
     protected async Task ingresarResponsable()
     {
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
         var dialog = DialogService.Show<ModalPersonalInterno>("", options);
         var result = await dialog.Result;
         if (!result.Cancelled)

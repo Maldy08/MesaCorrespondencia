@@ -21,7 +21,6 @@ namespace MesaCorrespondencia.Client.Services
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
         {
             var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<OficiosBitacora>>>($"api/oficios/get-bitacora-oficio/{ejercicio}/{folio}/{eor}");
-
             return response.Data;
         }
 
@@ -69,26 +68,12 @@ namespace MesaCorrespondencia.Client.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent)
+        public async Task<IList<UploadResult>> Upload(MultipartFormDataContent formDataContent, int ejercicio, int eor, int folio)
         {
-            var response = await _httpClient.PostAsync("api/oficios/file-save", formDataContent);
+            var response = await _httpClient.PostAsync($"api/oficios/file-save/{ejercicio}/{eor}/{folio}", formDataContent);
             var newUploadResults = await response.Content.ReadFromJsonAsync<IList<UploadResult>>();
             return newUploadResults;
         }
-
-        //public async Task<List<VwOficiosLista>> OficiosListaMC(int eor)
-        //{
-        //    var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<VwOficiosLista>>>($"api/oficios/mc/{eor}");
-        //    return response.Data;
-
-        //}
-        //public async Task<List<VwOficiosLista>> OficiosLista(int ejercicio, int eor, int idEmpleado, int idDepto)
-        //{
-        //    {
-        //        var response = await _httpClient.GetFromJsonAsync<ServiceResponse<List<VwOficiosLista>>>($"api/oficios/{ejercicio}/{eor}/{idEmpleado}/{idDepto}");
-        //        return response.Data;
-        //    }
-
     }
 }
 

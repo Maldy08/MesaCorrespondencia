@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,8 +34,9 @@ namespace MesaCorrespondencia.Shared
         public int DeptoRespon { get; set; }
 
 
+
         //[NotMapped]
-        //public IBrowserFile File { get; set; }
+        //public IFormFile File { get; set; }
         [NotMapped]
         public OficiosBitacora OficioBitacora { get; set; } = new();
         [NotMapped]

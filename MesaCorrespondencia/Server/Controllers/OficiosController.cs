@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
+
+
 namespace MesaCorrespondencia.Server.Controllers
 {
     [Route("api/[controller]")]
@@ -19,14 +21,14 @@ namespace MesaCorrespondencia.Server.Controllers
         }
 
         [HttpPost("update-pdf-path")]
-        public async Task<ActionResult<ServiceResponse<Oficio>>> UpdatePdfPath(Oficio oficio) 
+        public async Task<ActionResult<ServiceResponse<Oficio>>> UpdatePdfPath(Oficio oficio)
         {
             try
             {
                 var result = await _oficiosRepository.UpdatePdfPath(oficio);
                 return Ok(result);
             }
-            catch 
+            catch
             {
 
                 return BadRequest("Ocurrio un Error al actualizar la ruta del oficio");
@@ -36,27 +38,28 @@ namespace MesaCorrespondencia.Server.Controllers
         [HttpPost("add-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> Create(Oficio oficio)
         {
+            //var file = Request.Form.Files[0];
             try
             {
                 var result = await _oficiosRepository.CreateOficio(oficio);
                 return Ok(result);
             }
-            catch 
+            catch
             {
-                return BadRequest(new ServiceResponse<Oficio> { Message = "Ocurrio un error al procesar la información"});
+                return BadRequest(new ServiceResponse<Oficio> { Message = "Ocurrio un error al procesar la información" });
             }
         }
 
-        [HttpPost("add-oficio-new")]
-        public async Task<ActionResult<ServiceResponse<Oficio>>> AddOficio([FromForm] Oficio oficio)
-        {
-            var files = Request.Form.Files;
-            var resourcePath = new Uri($"{Request.Scheme}://{Request.Host}/");
-            return new CreatedResult(resourcePath,files);
-        }
+        //[HttpPost("add-oficio-new")]
+        //public async Task<ActionResult<ServiceResponse<Oficio>>> AddOficio([FromForm] Oficio oficio)
+        //{
+        //    var files = Request.Form.Files;
+        //    var resourcePath = new Uri($"{Request.Scheme}://{Request.Host}/");
+        //    return new CreatedResult(resourcePath,files);
+        //}
 
-        [HttpPost("file-save")]
-        public async Task<ActionResult<IList<UploadResult>>> UploadFile([FromForm] IEnumerable<IFormFile> files)
+        [HttpPost("file-save/{ejercicio}/{eor}/{folio}")]
+        public async Task<ActionResult<IList<UploadResult>>> UploadFile([FromForm] IEnumerable<IFormFile> files, [FromRoute] int ejercicio, [FromRoute] int eor, [FromRoute] int folio)
         {
             var maxAllowedFiles = 3;
             long maxFileSize = 1202124545;
@@ -86,8 +89,8 @@ namespace MesaCorrespondencia.Server.Controllers
                     {
                         try
                         {
-                            var folder = uploadResult.Eor == 1 ? "oficios-expedidos" : "oficios-recibidos";
-                            trustedFileNameForFileStorage = uploadResult.Ejercicio.ToString() + "-" + uploadResult.Eor.ToString() + "-" + uploadResult.Folio.ToString();
+                            var folder = eor == 1 ? "oficios-expedidos" : "oficios-recibidos";
+                            trustedFileNameForFileStorage = ejercicio.ToString() + "-" + eor.ToString() + "-" + folio.ToString() + ".pdf ";
                             //trustedFileNameForFileStorage = Path.GetRandomFileName();
                             var path = Path.Combine(env.ContentRootPath, folder,
                                 trustedFileNameForFileStorage);
@@ -134,7 +137,6 @@ namespace MesaCorrespondencia.Server.Controllers
                 };
                return BadRequest(result);
             }
-           
         }
 
         [HttpPut]
@@ -221,12 +223,11 @@ namespace MesaCorrespondencia.Server.Controllers
                 byte[] abc = System.IO.File.ReadAllBytes(PDFpath);
                 System.IO.File.WriteAllBytes(PDFpath, abc);
                 MemoryStream ms = new MemoryStream(abc);
-                return new FileStreamResult(ms, "application/pdf"); ;
+                return new FileStreamResult(ms, "application/pdf"); 
             }
             else
             {
-                return NotFound("no encontrado");
-            }
+                return NotFound(PDFpath);            }
         }
 
         [HttpGet("get-oficio-by-folio/{ejercicio}/{eor}/{folio}")]

@@ -4,6 +4,8 @@ global using MesaCorrespondencia.Server.Repositorios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(
