@@ -16,5 +16,7 @@ namespace MesaCorrespondencia.Client.Services
         Task<VwOficiosLista> GetOficioByFolio(int ejercicio, int eor, int folio);
         //cambio
         Task<bool> UpdateOficio(Oficio oficio);
+        Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
+
     }
 }

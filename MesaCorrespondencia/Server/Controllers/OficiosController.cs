@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using MesaCorrespondencia.Shared;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -235,6 +236,21 @@ namespace MesaCorrespondencia.Server.Controllers
         {
             var result = await _oficiosRepository.GetOficioByFolio(ejercicio,eor,folio);
             return Ok(result);
+        }
+
+        [HttpPost("add-oficioUsuext")]
+        public async Task<ActionResult<ServiceResponse<OficiosUsuext>>> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            //var file = Request.Form.Files[0];
+            try
+            {
+                var result = await _oficiosRepository.CreateOficioUsuext(oficiosUsuext);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest(new ServiceResponse<OficiosUsuext> { Message = "Ocurrio un error al procesar la información" });
+            }
         }
     }
 }

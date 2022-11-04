@@ -41,11 +41,14 @@
             <HeaderContent>
                 <MudTh>NOMBRE DE LA PERSONA</MudTh>
                 <MudTh>EMPRESA / DEPENDENCIA</MudTh>
+                <MudTh>SIGLAS</MudTh>
                 <MudTh>PUESTO</MudTh>
+
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nombre de la Persona">@context.Nombre</MudTd>
                 <MudTd DataLabel="Departamento">@context.Empresa</MudTd>
+                <MudTd DataLabel="Departamento">@context.Siglas</MudTd>
                 <MudTd DataLabel="Cargo">@context.Cargo</MudTd>
             </RowTemplate>
             <PagerContent>
@@ -54,6 +57,14 @@
         </MudTable>
     </DialogContent>
     <DialogActions>
+
+        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_nombreN" Label="NOMBRE" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_empresaN" Label="EMPRESA" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_siglasN" Label="SIGLAS" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_puestoN" Label="PUESTO" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+        <MudButton hidden="@(!hide)" ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@saveExterno">GUARDAR</MudButton>
+
+        <MudCheckBox @bind-Checked="@hide" Label="Agregar" Color="Color.Primary"></MudCheckBox>
         <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@Cancel" >Cancelar</MudButton>
         <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@Submit" >Guardar</MudButton>
     </DialogActions>
@@ -61,6 +72,12 @@
 
 
 @code {
+    bool hide { get; set; } = false;
+    string _nombreN { get; set; }
+    string _empresaN { get; set; }
+    string _siglasN { get; set; }
+    string _puestoN { get; set; }
+
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     void Cancel() => MudDialog.Cancel();
     private MudTable<OficiosUsuext> mudTable;
@@ -80,6 +97,14 @@
     {
         MudDialog.Close(DialogResult.Ok(selectedItem));  
     } 
+
+    private void saveExterno()
+    {
+        var externo = new OficiosUsuext(0,_empresaN,_siglasN,_nombreN,_puestoN,DateTime.Now,true);
+        OficioService.CreateOficioUsuext(externo);
+        // esconder formulario
+    }
+
     private bool FilterFunc1(OficiosUsuext element) => FilterFunc(element, searchString1);
     private bool FilterFunc(OficiosUsuext element, string searchString)
     {

@@ -81,6 +81,12 @@ namespace MesaCorrespondencia.Client.Services
             var response = await _httpClient.PutAsJsonAsync("api/oficios/update-oficio", oficio);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficioUsuext", oficiosUsuext);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
 
