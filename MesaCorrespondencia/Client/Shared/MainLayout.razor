@@ -5,7 +5,7 @@
 
 @inherits LayoutComponentBase
 
-        <MudThemeProvider />
+<MudThemeProvider Theme="@myCustomTheme" /> 
         <MudDialogProvider />
         <MudSnackbarProvider />
 <AuthorizeView>
@@ -53,4 +53,12 @@
         await AuthService.ClearUserInfo();
         NavigationManager.NavigateTo("login");
     }
+
+    MudTheme myCustomTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = new MudBlazor.Utilities.MudColor("#6a1b31")
+            }
+        };
 }
