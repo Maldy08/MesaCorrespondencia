@@ -70,14 +70,18 @@
                         </MudPaper>
                     </MudItem>
     @*3 renglon *@
-                    <MudItem xs="6"> 
-                            <MudTextField  Style="@($"color:{Colors.Grey.Lighten1};")" OnAdornmentClick="@ingresarPersonalInterno"  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
+                    <MudItem xs="6"> @* nombre remitetnte check*@
+                    <MudSwitch @bind-Checked="@remitente" ThumbIcon="@(remitente==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(remitente==true ? Color.Success : Color.Error)">Externo?</MudSwitch>
+
+                    <MudTextField Style="@($"color:{Colors.Grey.Lighten1}; font-size:14px; ")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
                                 <br />
                             <MudText Typo="Typo.body2">@oficio.RemCargo</MudText>
                                 <br />
                             <MudText Typo="Typo.caption">@oficio.RemDepen</MudText>
                     </MudItem>
-                    <MudItem xs="6"> 
+                    <MudItem xs="6">
+                    @* nombre destinatario check*@
+                    <MudSwitch hidden="@(hide)" @bind-Checked="@destinatario" ThumbIcon="@(destinatario==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(destinatario==true ? Color.Success : Color.Error)">Interno?</MudSwitch>
                             <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarPersonalExterno"  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
                                 <br />
                             <MudText Typo="Typo.body2">@oficio.DestCargo</MudText>
@@ -114,6 +118,11 @@
 </MudDialog>
 
 @code {
+    bool remitente = false;
+    bool destinatario = false;
+    bool hide = true;
+
+
     [CascadingParameter]
     MudDialogInstance mudDialog { get; set; }
     [Parameter]
@@ -141,7 +150,7 @@
         foreach (var file in e.GetMultipleFiles())
         {
             var fileContent = new StreamContent(file.OpenReadStream());
-            
+
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
             fileNames.Add(file.Name);
             content.Add(
@@ -228,19 +237,19 @@
             await FileUpload();
         }
 
-            if(isNew){
-                if( await OficioService.CreateOficio(oficioCreate)){
-                    mudDialog.Close(DialogResult.Ok(oficioCreate));
-                }
+        if(isNew){
+            if( await OficioService.CreateOficio(oficioCreate)){
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
             }
-            else
-            {
+        }
+        else
+        {
             if (await OficioService.UpdateOficio(oficioCreate)) {
                 await OficioService.UpdatePdfPath(oficioCreate); //??????
 
-                    mudDialog.Close(DialogResult.Ok(oficioCreate));
-                }
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
             }
+        }
     }
 
     private void Cancel() => mudDialog.Cancel();
@@ -273,36 +282,59 @@
 
     protected async Task ingresarPersonalInterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog =  DialogService.Show<ModalPersonalInterno>("",options);
+        var dialog = getModalPersonal(!remitente); //ture externos flase internos ; remitetnte 
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            empleadoSelected = result.Data as VsEmpleadosSisco;
-            oficio.RemNombre = empleadoSelected.NombreCompleto;
-            oficio.RemCargo = empleadoSelected.DescripcionDepto;
+            if (remitente)
+            {
+                empleadoSelected = result.Data as VsEmpleadosSisco;
+                oficio.RemNombre = empleadoSelected.NombreCompleto;
+                oficio.RemCargo = empleadoSelected.DescripcionDepto;
 
-            ///validar dependencia
-            oficio.RemDepen = "CEA";
-            oficio.RemSiglas = "CEA";
+                ///validar dependencia
+                oficio.RemDepen = "CEA";
+                oficio.RemSiglas = "CEA";
+            }else{
+                usuarioExternoSelected = result.Data as OficiosUsuext;
+                oficio.RemNombre = usuarioExternoSelected.Nombre;
+                oficio.RemCargo = usuarioExternoSelected.Cargo;
+                oficio.RemDepen = usuarioExternoSelected.Empresa;
+                oficio.RemSiglas = usuarioExternoSelected.Siglas;
+            }
         }  
     }
 
     protected  async Task ingresarPersonalExterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog =  DialogService.Show<ModalPersonalExterno>("",options);
+        var dialog = getModalPersonal(destinatario); //ture externos flase internos
         var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (!result.Cancelled) 
         {
-            usuarioExternoSelected = result.Data as OficiosUsuext;
-            oficio.DestNombre = usuarioExternoSelected.Nombre;
-            oficio.DestCargo = usuarioExternoSelected.Cargo;
-            oficio.DestDepen = usuarioExternoSelected.Empresa;
-            oficio.DestSiglas = usuarioExternoSelected.Siglas;
+            if (destinatario)
+            {
+                usuarioExternoSelected = result.Data as OficiosUsuext;
+                oficio.DestNombre = usuarioExternoSelected.Nombre;
+                oficio.DestCargo = usuarioExternoSelected.Cargo;
+                oficio.DestDepen = usuarioExternoSelected.Empresa;
+                oficio.DestSiglas = usuarioExternoSelected.Siglas;
+            }else{
+                //verificar datos correspondientes
+                empleadoSelected = result.Data as VsEmpleadosSisco;
+                oficio.DestNombre = empleadoSelected.NombreCompleto;
+                oficio.DestCargo = empleadoSelected.DescripcionDepto;
+                oficio.DestDepen = "CEA"; //validar?
+                oficio.DestSiglas = "CEA";
+            }
         }
+    }
+
+    private MudBlazor.IDialogReference getModalPersonal(bool modal){
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        return (modal == true ? DialogService.Show<ModalPersonalExterno>("", options) : DialogService.Show<ModalPersonalInterno>("", options));
     }
 
     protected async Task ingresarResponsable()
