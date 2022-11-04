@@ -139,7 +139,7 @@ namespace MesaCorrespondencia.Server.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> UpdateOficio(Oficio oficio)
         {
             var result = await _oficiosRepository.UpdateOficio(oficio);

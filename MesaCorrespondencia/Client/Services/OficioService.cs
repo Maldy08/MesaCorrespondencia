@@ -74,6 +74,13 @@ namespace MesaCorrespondencia.Client.Services
             var newUploadResults = await response.Content.ReadFromJsonAsync<IList<UploadResult>>();
             return newUploadResults;
         }
+        //cambio Alex
+        public async Task<bool> UpdateOficio(Oficio oficio)
+        {
+
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-oficio", oficio);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
 

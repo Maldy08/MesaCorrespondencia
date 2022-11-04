@@ -29,7 +29,8 @@
                 text-transform:uppercase;
             }
 </style>
-<MudDialog >
+<MudDialog Style="max-height: 80vh; overflow-y: auto; ;">    @*Scroll en el modal style *@
+
     <DialogContent>
   <EditForm Model="@oficio">
             <DataAnnotationsValidator />
@@ -166,6 +167,8 @@
 
     private async Task Submit()
     {
+        //oficios bitacora y oficio responsable?????????????
+
         if(isNew){
             oficio.Ejercicio = 2022;
             oficio.Eor = 2;
@@ -232,7 +235,9 @@
             }
             else
             {
-                if( await OficioService.UpdatePdfPath(oficioCreate)) {
+            if (await OficioService.UpdateOficio(oficioCreate)) {
+                await OficioService.UpdatePdfPath(oficioCreate); //??????
+
                     mudDialog.Close(DialogResult.Ok(oficioCreate));
                 }
             }
