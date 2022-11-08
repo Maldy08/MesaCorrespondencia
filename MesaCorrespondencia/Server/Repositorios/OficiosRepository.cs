@@ -370,5 +370,16 @@ namespace MesaCorrespondencia.Server.Repositorios
                 Message = $"Folio: {oficiosUsuext.Nombre}, ha sido registrado exitosamente!"
             };
         }
+
+        public  ServiceResponse<int> GetIndexUserxt()
+        {
+            var response = new ServiceResponse<int>
+            {
+                Data =  _context.OficiosUsuexts.Max(x => x.IdExterno)
+            };
+
+            return response;
+        }
+
     }
 }

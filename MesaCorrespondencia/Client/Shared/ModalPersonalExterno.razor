@@ -58,11 +58,13 @@
     </DialogContent>
     <DialogActions>
 
-        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_nombreN" Label="NOMBRE" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_empresaN" Label="EMPRESA" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_siglasN" Label="SIGLAS" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-        <MudTextField hidden="@(!hide)" Style="font-size:10px;" @bind-Value="_puestoN" Label="PUESTO" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-        <MudButton hidden="@(!hide)" ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@saveExterno">GUARDAR</MudButton>
+            <MudForm hidden="@(!hide)">
+        <MudTh>  <MudTextField  Style="font-size:10px;" @bind-Value="_nombreN" Label="NOMBRE" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> </MudTh>
+            <MudTh> <MudTextField Style="font-size:10px;" @bind-Value="_empresaN" Label="EMPRESA" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
+        <MudTh> <MudTextField  Style="font-size:10px;" @bind-Value="_siglasN" Label="SIGLAS" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
+            <MudTh> <MudTextField Style="font-size:10px;" @bind-Value="_puestoN" Label="PUESTO" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
+            <MudTh>  <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@saveExterno">GUARDAR</MudButton></MudTh>
+        </MudForm>
 
         <MudCheckBox @bind-Checked="@hide" Label="Agregar" Color="Color.Primary"></MudCheckBox>
         <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@Cancel" >Cancelar</MudButton>
@@ -98,10 +100,17 @@
         MudDialog.Close(DialogResult.Ok(selectedItem));  
     } 
 
-    private void saveExterno()
+    private async Task saveExterno()
     {
-        var externo = new OficiosUsuext(0,_empresaN,_siglasN,_nombreN,_puestoN,DateTime.Now,true);
+
+        var idindex = (await(OficioService.GetIndexUserxt()));
+        var externo = new OficiosUsuext((idindex + 1), _empresaN.ToUpper(), _siglasN.ToUpper(), _nombreN.ToUpper(), _puestoN.ToUpper(), DateTime.Now, true);
         OficioService.CreateOficioUsuext(externo);
+         //Elements.Concat(new [] { externo });  //tabla update
+         //StateHasChanged();
+        MudDialog.Close(DialogResult.Ok(externo));
+
+        //cerrar y tomar dato?
         // esconder formulario
     }
 

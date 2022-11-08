@@ -252,5 +252,12 @@ namespace MesaCorrespondencia.Server.Controllers
                 return BadRequest(new ServiceResponse<OficiosUsuext> { Message = "Ocurrio un error al procesar la información" });
             }
         }
+
+        [HttpGet("get-index-userxt")]
+        public ActionResult<ServiceResponse<VwOficiosLista>> GetIndexUserxt()
+        {
+            var result =  _oficiosRepository.GetIndexUserxt();
+            return Ok(result);
+        }
     }
 }

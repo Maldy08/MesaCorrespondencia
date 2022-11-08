@@ -18,5 +18,8 @@ namespace MesaCorrespondencia.Client.Services
         Task<bool> UpdateOficio(Oficio oficio);
         Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
 
+        Task<int> GetIndexUserxt();
+        
+
     }
 }

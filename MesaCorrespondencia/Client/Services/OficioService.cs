@@ -87,6 +87,11 @@ namespace MesaCorrespondencia.Client.Services
             var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficioUsuext", oficiosUsuext);
             return response.IsSuccessStatusCode;
         }
+        public async Task<int> GetIndexUserxt()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/oficios/get-index-userxt");
+            return response.Data;
+        }
     }
 }
 
