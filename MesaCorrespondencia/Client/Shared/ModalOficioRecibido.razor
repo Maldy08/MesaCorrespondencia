@@ -119,19 +119,30 @@
     public VwOficiosLista? oficioEdit { get; set; }
     [Parameter]
     public int Eor { get; set; }
+
     private VwOficiosLista oficio;
+
     private VsEmpleadosSisco empleadoSelected;
+
     private VsEmpleadosSisco responsableSelected;
+
     private OficiosUsuext usuarioExternoSelected;
+
     private Oficio oficioCreate;
+
     [Parameter]
     public bool isNew { get; set; }
+
     private string comentarios = "Este es un texto de ejemplo";
+
     private bool upload = false;
 
     private List<string> fileNames = new();
+
     private List<UploadResult> uploadResults = new();
+
     private MultipartFormDataContent content;
+
     private IFormFile formFile;
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
@@ -268,7 +279,7 @@
 
     protected async Task ingresarPersonalInterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var dialog =  DialogService.Show<ModalPersonalInterno>("",options);
         var result = await dialog.Result;
@@ -286,7 +297,7 @@
 
     protected  async Task ingresarPersonalExterno()
     {
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Large,FullWidth = true};
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var dialog =  DialogService.Show<ModalPersonalExterno>("",options);
         var result = await dialog.Result;
@@ -302,7 +313,7 @@
 
     protected async Task ingresarResponsable()
     {
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ModalPersonalInterno>("", options);
         var result = await dialog.Result;
         if (!result.Cancelled)

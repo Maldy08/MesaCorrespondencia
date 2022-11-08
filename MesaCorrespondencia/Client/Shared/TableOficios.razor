@@ -52,7 +52,13 @@
     
     <RowTemplate>
         <MudTd Class="botones" DataLabel="ACCIONES">
-             <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
+            @if(!String.IsNullOrEmpty(context.Pdfpath)){
+                <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
+            }
+            else{
+                <MudIconButton Disabled="true" Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
+            }
+             
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
         </MudTd>
@@ -67,8 +73,11 @@
            <TableOficiosEstatus Eor="@context.Eor" Estatus="@context.Estatus"/>
         </MudTd>
     </RowTemplate>
+      
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
+        @if(!isPage){
+            <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
+        }
     </PagerContent>
 </MudTable>
 
@@ -85,11 +94,13 @@
     public string Title { get; set; } = string.Empty;
     [Parameter]
     public EventCallback<VwOficiosLista> selectedEventCallback{ get; set; }
+    [Parameter]
+    public bool isPage { get; set; } = false;
 
     private List<VwOficiosLista> vwOficiosListas = new();
     private string searchString1 = "";
     private VwOficiosLista selectedOficio;
-    private MudTable<VwOficiosLista> mudTable = new();
+    private MudTable<VwOficiosLista>? mudTable = new();
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
     private bool _loading = false;
@@ -110,8 +121,13 @@
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
-            mudTable.SetRowsPerPage(rows);
+        {
+            if(!isPage){
+                mudTable.SetRowsPerPage(rows); 
+            }
+        }
     }
+
     private async Task LoadData()
     {
         if(await AuthService.IsUserInRoleMc())
@@ -147,19 +163,28 @@
 
     private async Task ViewPDF(VwOficiosLista element)
     {
-        var parameters = new DialogParameters { ["path"] = element.Pdfpath };
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
-        var dialog = DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
-        var result = await dialog.Result;
-        if(!result.Cancelled){
 
-        }
+        var pdf =  await OficioService.GetPDF(element.Ejercicio, element.Eor, element.Folio);
+        if (pdf.Length == 0) return;
+        string pdfContent = "";
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(pdf);
+
+        var parameters = new DialogParameters { ["path"] = pdfContent };
+        //var parameters = new DialogParameters { ["ejercicio"] = element.Ejercicio, ["eor"] = element.Eor, ["folio"] = element.Folio };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, DisableBackdropClick = true };
+        //var dialog = 
+        DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
+        //var result = await dialog.Result;
+        //if(!result.Cancelled){
+
+        //}
     }
 
     private async Task Edit(VwOficiosLista element)
     {
         var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Medium};
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
         var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -171,12 +196,12 @@
     private void MostrarBitacora(VwOficiosLista registro)
     {
         var parameters = new DialogParameters { ["OficioBit"] = registro };
-        var options =  new DialogOptions() {CloseButton = false,MaxWidth = MaxWidth.Medium};
+        var options = new DialogOptions() { CloseButton = false, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
         DialogService.Show<ModalBitacoraOficio>("Bitacora de Oficio", parameters,options);
     }
     public async void ingresar()
     {
-        var options =  new DialogOptions() { CloseButton=true, MaxWidth = MaxWidth.Medium };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var parameters = new DialogParameters { ["isNew"] = true };
         var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);

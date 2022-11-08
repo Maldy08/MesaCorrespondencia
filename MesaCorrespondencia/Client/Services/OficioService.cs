@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using MesaCorrespondencia.Shared;
+using System.Net.Http.Json;
 
 namespace MesaCorrespondencia.Client.Services
 {
@@ -10,6 +11,12 @@ namespace MesaCorrespondencia.Client.Services
         {
             _httpClient = httpClient;
             _authService = authService;
+        }
+
+        public async Task<bool> CreateBicatora(OficiosBitacora oficiosBitacora)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-bitacora", oficiosBitacora);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CreateOficio(Oficio oficio)
@@ -48,6 +55,15 @@ namespace MesaCorrespondencia.Client.Services
             return response.Data;
         }
 
+        public async Task<byte[]> GetPDF(int ejercicio, int eor, int folio)
+        {
+            var file = await _httpClient.GetStreamAsync($"api/oficios/get-pdf/{ejercicio}/{eor}/{folio}");
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
         public async Task<List<VwOficiosLista>> OficiosLista(int eor,int? ejercicio, int? idEmpleado, int? idDepto)
         {
             if (await _authService.IsUserInRoleMc())

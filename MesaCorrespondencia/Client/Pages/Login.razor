@@ -27,31 +27,6 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-    @*<section class="py-5">
-        <div class="p-5 text-center">
-            <img src="images/logoLoginBC.png" alt="" width="378" height="164" class="d-inline-block align-text-bottom">
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-lg-5 mx-auto">
-                    <div class="p-5 bg-light rounded text-center">
-
-                        <InputText id="usuario" @bind-Value="user.Usuario" class="form-control mb-2" placeholder="usuario" />
-                        <ValidationMessage For="@(() => user.Usuario)" />
-                        <InputText id="password" @bind-Value="user.Password" class="form-control mb-2" type="password" placeholder="******" />
-                        <ValidationMessage For="@(() => user.Password)" />
-
-                        <button class="btn py-2 w-100 mb-2 text-white" style="background-color: #6a1b31;">Iniciar Sesión</button>
-                        
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class=text-danger>
-            <span> @errorMessage</span>
-        </div>
-    </section>*@
 </EditForm>
 
 @code {
@@ -74,6 +49,5 @@
             errorMessage = result.Message;
         }
     }
-
 
 }
