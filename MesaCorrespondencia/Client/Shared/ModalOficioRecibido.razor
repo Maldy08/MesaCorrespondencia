@@ -5,6 +5,29 @@
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
 <style>
+    .mud-grid-spacing-xs-3>.mud-grid-item {
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+    }
+
+    .pt-4, .py-4 {
+        padding-top: 1px !important;
+    }
+        .mud-grid-spacing-xs-3 > .mud-grid-item{
+        padding: 5px;
+    }
+
+    .pb-4, .py-4 {
+        padding-bottom: 1px !important;
+    }
+    
+    .mud-input {
+        font-size: .6rem;
+    }
+    .mud-typography-body2{
+    }
     input[type="text"], textarea  {
         text-transform:uppercase;
     }
@@ -29,9 +52,11 @@
                 text-transform:uppercase;
             }
 </style>
-<MudDialog Style="max-height: 80vh; overflow-y: auto; ;">    @*Scroll en el modal style *@
 
-    <DialogContent>
+    <MudDialog>
+        @*Scroll en el modal style   Style="max-height: 80vh; overflow-y: auto;"   *@
+
+    <DialogContent >
   <EditForm Model="@oficio">
             <DataAnnotationsValidator />
                  <MudGrid>
@@ -39,7 +64,7 @@
     @*1 renglon *@
                     <MudItem xs="4"> 
                          Folio
-                        <MudChip>5554545</MudChip>
+                        <MudChip Size="Size.Small">5554545</MudChip>
                     </MudItem>
                     <MudItem xs="4"> 
                         <MudRadioGroup T="int" @bind-SelectedOption="oficio.Tipo">
@@ -49,7 +74,7 @@
                     </MudItem>
                     <MudItem xs="4"> 
                         Fecha
-                        <MudChip>@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
+                    <MudChip Size="Size.Small">@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
                     </MudItem>
 
     @*2 renglon *@
@@ -70,38 +95,38 @@
                         </MudPaper>
                     </MudItem>
     @*3 renglon *@
-                    <MudItem xs="6"> @* nombre remitetnte check*@
-                    <MudSwitch @bind-Checked="@remitente" ThumbIcon="@(remitente==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(remitente==true ? Color.Success : Color.Error)">Externo?</MudSwitch>
+                <MudItem xs="6">
+                    @* nombre remitetnte check   hidden="true"*@
+                    <MudPaper Elevation="0">
 
-                    <MudTextField Style="@($"color:{Colors.Grey.Lighten1}; font-size:14px; ")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
-                                <br />
-                            <MudText Typo="Typo.body2">@oficio.RemCargo</MudText>
-                                <br />
-                            <MudText Typo="Typo.caption">@oficio.RemDepen</MudText>
+                        <MudSwitch Style="font-size:.6rem;" @bind-Checked="@remitente" ThumbIcon="@(remitente==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(remitente==true ? Color.Success : Color.Error)">Externo?</MudSwitch>
+                                       </MudPaper>
+
+                    <MudTextField IconSize="Size.Small" Style="@($"color:{Colors.Grey.Lighten1}; font-size:.6rem; ")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
+                            <MudText Style="font-size:.6rem;" Typo="Typo.body2">@oficio.RemCargo</MudText>
+                            <MudText  Style="font-size:.6rem;" Typo="Typo.caption">@oficio.RemDepen</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                    @* nombre destinatario check*@
-                    <MudSwitch hidden="@(hide)" @bind-Checked="@destinatario" ThumbIcon="@(destinatario==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(destinatario==true ? Color.Success : Color.Error)">Interno?</MudSwitch>
-                            <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarPersonalExterno"  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
-                                <br />
-                            <MudText Typo="Typo.body2">@oficio.DestCargo</MudText>
-                                <br />
-                            <MudText Typo="Typo.caption">@oficio.DestDepen</MudText>
+                    @* nombre destinatario check *@
+                    <MudSwitch  Style="font-size:.6rem;" hidden="@(hide)" @bind-Checked="@destinatario" ThumbIcon="@(destinatario==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(destinatario==true ? Color.Success : Color.Error)">Interno?</MudSwitch>
+                    <MudTextField IconSize="Size.Small" Style="font-size:.6rem;" OnAdornmentClick="@ingresarPersonalExterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
+                            <MudText Style="font-size:.6rem;" Typo="Typo.body2">@oficio.DestCargo</MudText>
+                            <MudText Style="font-size:.6rem;" Typo="Typo.caption">@oficio.DestDepen</MudText>
                     </MudItem>
-                    <MudItem xs="6"/>
-                    <MudItem xs="6"> 
-                        <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarResponsable"  Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Responsable" @bind-Value="oficio.NombreResponsable" Placeholder="Persona que atenderá Oficio"></MudTextField>   
-                        <MudTextField  Style="display:none" T="int" ReadOnly="true"  @bind-Value="oficio.IdEmpleado" ></MudTextField>   
-                    </MudItem>
+                <MudItem xs="6" />
+                <MudItem xs="6">
+                    <MudTextField  IconSize="Size.Small" Style="font-size:.6rem;" OnAdornmentClick="@ingresarResponsable" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Responsable" @bind-Value="oficio.NombreResponsable" Placeholder="Persona que atenderá Oficio"></MudTextField>
+                    <MudTextField IconSize="Size.Small" Style="display:none;  font-size:.6rem;" T="int" ReadOnly="true" @bind-Value="oficio.IdEmpleado"></MudTextField>
+                </MudItem>
     @*4 renglon *@
                     <MudItem xs="8">  
                         <MudPaper Class="d-flex align-center justify-center mud-width-full py-1"  Elevation="0">
-                            <MudTextField @bind-Value="oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
+                        <MudTextField Style="font-size:.6rem;" @bind-Value="oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
                         </MudPaper>  
                     </MudItem>
     @*5 renglon *@
                     <MudItem xs="12">  
-                        <MudPaper Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
+                        <MudPaper  Style="padding: 22;" Class="d-flex align-center justify-center mud-width-full py-4"  Elevation="0">
                            <MudTextField  T="string" Label="Observaciones" Variant="Variant.Filled"  @bind-Value="comentarios" Lines="5"  />
                         </MudPaper>  
                     </MudItem>
@@ -176,7 +201,7 @@
 
     private async Task Submit()
     {
-        //oficios bitacora y oficio responsable?????????????
+        //oficios bitacora y oficio responsable?????
 
         if(isNew){
             oficio.Ejercicio = 2022;
@@ -245,7 +270,7 @@
         else
         {
             if (await OficioService.UpdateOficio(oficioCreate)) {
-                await OficioService.UpdatePdfPath(oficioCreate); //??????
+                await OficioService.UpdatePdfPath(oficioCreate); //?????? se nesecita actualizar?
 
                 mudDialog.Close(DialogResult.Ok(oficioCreate));
             }
@@ -324,7 +349,7 @@
                 //verificar datos correspondientes
                 empleadoSelected = result.Data as VsEmpleadosSisco;
                 oficio.DestNombre = empleadoSelected.NombreCompleto;
-                oficio.DestCargo = empleadoSelected.DescripcionDepto;
+                oficio.DestCargo =  empleadoSelected.DescripcionDepto;
                 oficio.DestDepen = "CEA"; //validar?
                 oficio.DestSiglas = "CEA";
             }

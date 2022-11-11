@@ -58,13 +58,13 @@
     </DialogContent>
     <DialogActions>
 
-            <MudForm hidden="@(!hide)">
+            <form hidden="@(!hide)">
         <MudTh>  <MudTextField  Style="font-size:10px;" @bind-Value="_nombreN" Label="NOMBRE" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField> </MudTh>
             <MudTh> <MudTextField Style="font-size:10px;" @bind-Value="_empresaN" Label="EMPRESA" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
         <MudTh> <MudTextField  Style="font-size:10px;" @bind-Value="_siglasN" Label="SIGLAS" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
             <MudTh> <MudTextField Style="font-size:10px;" @bind-Value="_puestoN" Label="PUESTO" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTh>
             <MudTh>  <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@saveExterno">GUARDAR</MudButton></MudTh>
-        </MudForm>
+        </form>
 
         <MudCheckBox @bind-Checked="@hide" Label="Agregar" Color="Color.Primary"></MudCheckBox>
         <MudButton ButtonType="ButtonType.Submit" Class="botones-accion" OnClick="@Cancel" >Cancelar</MudButton>

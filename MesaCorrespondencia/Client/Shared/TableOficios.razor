@@ -10,9 +10,19 @@
     width: 120px;
 }
 .mud-table td{
-   font-size: 12px;
+   font-size: 10px;
 }
 
+    ..mud-icon-size-small{
+        font-size: 1.25rem;
+    }
+    .mud-table-cell {
+        font-size: .7rem;
+    }
+
+    .root {
+    mud-typography-h6-size: 1.225rem;
+    }
 .mud-table-head #tabla-oficios  {
     background-color : aqua;
 }
@@ -21,6 +31,10 @@
 }
 
 </style>
+
+
+
+
 
 <MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">@tituloBoton</MudButton>
 <br />
@@ -33,6 +47,7 @@
     @ref="mudTable"
     Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
     OnRowClick="@RowClickEvent">
+ 
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download" />
         <MudSpacer />
@@ -71,6 +86,7 @@
         <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
     </PagerContent>
 </MudTable>
+
 
 @code {
     [Parameter]
@@ -152,14 +168,14 @@
         var dialog = DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
         var result = await dialog.Result;
         if(!result.Cancelled){
-
+            StateHasChanged();
         }
     }
 
     private async Task Edit(VwOficiosLista element)
     {
         var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
-        var options =  new DialogOptions() {CloseButton = true,MaxWidth = MaxWidth.Medium};
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }; // ajustar tamaño en heigh
         var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
