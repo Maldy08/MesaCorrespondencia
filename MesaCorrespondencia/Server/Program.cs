@@ -41,6 +41,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         }
     );
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors(op =>
+{
+    op.AddDefaultPolicy(b =>
+    {
+        b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
@@ -62,6 +70,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors();
 
 //Authentication Middleware
 app.UseAuthentication();
