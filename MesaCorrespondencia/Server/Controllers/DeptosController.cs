@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MesaCorrespondencia.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DeptosController : ControllerBase
@@ -14,12 +17,14 @@ namespace MesaCorrespondencia.Server.Controllers
             _deptoueRepository = deptoueRepository;
         }
 
+       
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<DeptosUe>>>> GetDeptos()
         {
             var result = await _deptoueRepository.GetAllDeptos();
             return Ok(result);
         }
+
 
         [HttpGet("{deptoId}")]
         public async Task<ActionResult<ServiceResponse<DeptosUe>>> GetProduct(int deptoId)

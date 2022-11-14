@@ -18,6 +18,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOficioService, OficioService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IDeptoService, DeptoService>();
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

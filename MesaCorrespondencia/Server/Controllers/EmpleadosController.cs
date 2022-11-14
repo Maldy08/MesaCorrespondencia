@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MesaCorrespondencia.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmpleadosController : ControllerBase
@@ -13,6 +15,7 @@ namespace MesaCorrespondencia.Server.Controllers
         {
             _empleadosRepository = empleadosRepository;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<VsEmpleadosSisco>>>> GetAll()

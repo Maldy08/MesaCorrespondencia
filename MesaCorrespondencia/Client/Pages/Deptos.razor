@@ -1,0 +1,34 @@
+﻿@inject IDeptoService DeptoService
+@page "/deptos"
+
+<h3>Listado - Departamentos</h3>
+
+<MudTable T="DeptosUe"
+          Items="@deptos"
+          Hover="true"
+          Striped="true"
+          Dense="true">
+    <HeaderContent>
+        <MudTh>IdCea</MudTh>
+        <MudTh>IdShpoa</MudTh>
+        <MudTh>Descripcion</MudTh>
+        <MudTh>IdReporta</MudTh>
+        <MudTh>AgrupaPoa</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.IdCea</MudTd>
+        <MudTd>@context.IdShpoa</MudTd>
+        <MudTd>@context.Descripcion</MudTd>
+        <MudTd>@context.IdReporta</MudTd>
+        <MudTd>@context.AgrupaPoa</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private List<DeptosUe> deptos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        deptos = await DeptoService.GetAllDeptos();
+    }
+}

@@ -16,7 +16,8 @@ namespace MesaCorrespondencia.Server.Repositorios
         {
             var response = new ServiceResponse<List<DeptosUe>>
             {
-                Data = await _context.DeptosUe.ToListAsync()
+                Data = await _context.DeptosUe.OrderBy(x => x.IdCea)
+                .ToListAsync()
             };
             return response;
         }
