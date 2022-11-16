@@ -13,7 +13,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://200.56.97.7:7281/") });
+var apiURL = builder.Configuration["AppSettings:apiURL"];
+if (string.IsNullOrEmpty(apiURL)) apiURL = builder.HostEnvironment.BaseAddress;
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiURL) });
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOficioService, OficioService>();
