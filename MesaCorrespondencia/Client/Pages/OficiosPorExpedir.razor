@@ -1,0 +1,32 @@
+﻿@page "/oficiosxexpedir"
+
+
+@inject IAuthService _authService
+@inject ILocalStorageService LocalStorage
+@inject IDialogService DialogService
+@attribute [Authorize]
+
+<PageTitle>Principal</PageTitle>
+<TableOficiosPorExpedir selectedEventCallback="@selectedEmpleado" Title="Oficios por expedir" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto" />
+<br /><br />
+
+@code{
+    private int empleado;
+    private int depto;
+    private VwOficiosLista vwOficiosLista;
+    private TableOficiosPorExpedir tableOficios;
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        empleado = await LocalStorage.GetItemAsync<int>("empleado");
+    }
+
+    private void selectedEmpleado(VwOficiosLista element)
+    {
+        vwOficiosLista = element;
+    }
+    }

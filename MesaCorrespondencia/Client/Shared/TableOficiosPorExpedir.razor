@@ -38,7 +38,7 @@
 
 <MudButton Size="Size.Small" OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">@tituloBoton</MudButton>
 <br />
-<MudTable id="tabla-oficios" T="VwOficiosLista"
+<MudTable Style="padding-top : 2px; padding-bottom : 2px" id="tabla-oficios" T="VwOficiosLista "
     Loading="@_loading"  
     Items="@vwOficiosListas" 
     Hover="true"
@@ -47,7 +47,7 @@
     @ref="mudTable"
     Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
     OnRowClick="@RowClickEvent">
- 
+
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download" />
         <MudSpacer />
@@ -58,29 +58,25 @@
             <MudTh>NO.FOLIO</MudTh>
             <MudTh>FECHA</MudTh>
             <MudTh>DEPENDENCIA</MudTh>
-            <MudTh>TIPO</MudTh>
             <MudTh>NO.DE OFICIO</MudTh>
             <MudTh>REMITENTE</MudTh>
             <MudTh>DESTINATARIO</MudTh>
-            <MudTh>ESTATUS</MudTh>
     </HeaderContent>
-    
+
     <RowTemplate>
         <MudTd Class="botones" DataLabel="ACCIONES">
-             <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
-             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
+             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Cancel" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => cancelar(context)"></MudIconButton>
         </MudTd>
         <MudTd  DataLabel="NO.FOLIO">@context.Folio</MudTd>
         <MudTd DataLabel="FECHA">@context.Fecha.ToString("dd/MM/yyyy")</MudTd>
         <MudTd DataLabel="DEPENDENCIA">@context.RemDepen</MudTd>
-        <MudTd DataLabel="TIPO">@context.Tipo</MudTd>
         <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
         <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
         <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
-        <MudTd DataLabel="ESTATUS" >
-           <TableOficiosEstatus Eor="@context.Eor" Estatus="@context.Estatus"/>
-        </MudTd>
+           
+        <MudTd><MudButton style="height: 25px; width : 9;padding 15px 11px;" Color="Color.Primary" Variant="Variant.Filled">DESCARGAR</MudButton></MudTd>
+
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
@@ -100,7 +96,7 @@
     [Parameter]
     public string Title { get; set; } = string.Empty;
     [Parameter]
-    public EventCallback<VwOficiosLista> selectedEventCallback{ get; set; }
+    public EventCallback<VwOficiosLista> selectedEventCallback { get; set; }
 
     private List<VwOficiosLista> vwOficiosListas = new();
     private string searchString1 = "";
@@ -109,7 +105,7 @@
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
     private bool _loading = false;
-    private string tituloBoton;
+    private string tituloBoton =  "CREAR OFICIO";
     private int rows = 5;
 
     protected override async Task OnInitializedAsync()
@@ -117,10 +113,7 @@
         _loading = true;
         await LoadData();
         _loading = false;
-        if (eor == 1)
-            tituloBoton = "Ingresar oficio expedido";
-        else
-            tituloBoton = "Ingresar oficio recibido";
+      
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -130,10 +123,10 @@
     }
     private async Task LoadData()
     {
-        if(await AuthService.IsUserInRoleMc())
+        if (await AuthService.IsUserInRoleMc())
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
-            vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
+            vwOficiosListas = await OficioService.OficiosLista(eor, ejercicio, empleado, depto);
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);
@@ -161,22 +154,12 @@
         await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
     }
 
-    private async Task ViewPDF(VwOficiosLista element)
-    {
-        var parameters = new DialogParameters { ["path"] = element.Pdfpath };
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
-        var dialog = DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
-        var result = await dialog.Result;
-        if(!result.Cancelled){
-            StateHasChanged();
-        }
-    }
 
     private async Task Edit(VwOficiosLista element)
     {
-        var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
+        var parameters = new DialogParameters { ["oficioEdit"] = element, ["isNew"] = false };
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }; // ajustar tamaño en heigh
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -184,62 +167,28 @@
         }
     }
 
-    private void MostrarBitacora(VwOficiosLista registro)
+    private void cancelar(VwOficiosLista registro)
     {
-        var parameters = new DialogParameters { ["OficioBit"] = registro };
-        var options =  new DialogOptions() {CloseButton = false,MaxWidth = MaxWidth.Medium};
-        DialogService.Show<ModalBitacoraOficio>("Bitacora de Oficio", parameters,options);
+       
     }
     public async void ingresar()
     {
-        var options =  new DialogOptions() { CloseButton=true, MaxWidth = MaxWidth.Medium };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var parameters = new DialogParameters { ["isNew"] = true };
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             var oficio = result.Data as Oficio;
-            //Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
-            //selectedOficio = new VwOficiosLista
-            //    {
-            //        Depto = oficio.Depto,
-            //        DeptoRespon = oficio.DeptoRespon,
-            //        DestCargo = oficio.DestCargo,
-            //        DestDepen = oficio.DestDepen,
-            //        DestNombre = oficio.DestNombre,
-            //        DestSiglas = oficio.DestSiglas,
-            //        Ejercicio = oficio.Ejercicio,
-            //        Empqentrega = oficio.Empqentrega,
-            //        Eor = oficio.Eor,
-            //        Estatus = oficio.Estatus,
-            //        Fecha = oficio.Fecha,
-            //        FechaAcuse = oficio.FechaAcuse,
-            //        FechaCaptura = oficio.FechaCaptura,
-            //        FechaLimite = oficio.FechaLimite,
-            //        Folio = oficio.Folio,
-            //        IdEmpleado = oficio.OficiosResponsables[0].IdEmpleado,
-            //        NombreResponsable ="",
-            //        NoOficio = oficio.NoOficio,
-            //        Pdfpath = oficio.Pdfpath,
-            //        Relacionoficio = oficio.Relacionoficio,
-            //        RemCargo = oficio.RemCargo,
-            //        RemDepen = oficio.RemDepen,
-            //        RemNombre = oficio.RemNombre,
-            //        RemSiglas = oficio.RemSiglas,
-            //        Rol = oficio.OficiosResponsables[0].Rol,
-            //        Tema = oficio.Tema,
-            //        Tipo = oficio.Tipo
-
-            //    };
-            //vwOficiosListas.Add(selectedOficio);
-            //selectedOficio = result.Data as VwOficiosLista;
-            //vwOficiosListas.Add(selectedOficio);
-            if(oficio!= null){
+            if (oficio != null)
+            {
                 await LoadData();
                 StateHasChanged();
                 Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
-            }else{
+            }
+            else
+            {
 
             }
         }

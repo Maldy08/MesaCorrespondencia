@@ -18,6 +18,7 @@ namespace MesaCorrespondencia.Server.Data
         public  DbSet<OficiosXexpedir> OficiosXexpedirs { get; set; }
         public  DbSet<VwOficiosLista> VwOficiosListas { get; set; }
         public  DbSet<OficiosParametro> OficiosParametros { get; set; }
+        public virtual DbSet<GetDepartamentos> GetDepartamentos { get; set; } = null!;
 
 
 
@@ -31,8 +32,16 @@ namespace MesaCorrespondencia.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("CEA");
+
+            modelBuilder.Entity<GetDepartamentos>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToFunction("GetDeptos");
+
+            });
 
             modelBuilder.Entity<DeptosUe>(entity =>
             {

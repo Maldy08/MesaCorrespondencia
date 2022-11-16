@@ -5,6 +5,17 @@
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
 <style>
+
+    .mud-typography-body1{
+        mud-typography-body1-size: .6rem;
+    }
+
+    .switchBtn {
+        position: relative;
+        display: inline-block;
+        width: 110px;
+        height: 34px;
+    }
     .mud-grid-spacing-xs-3>.mud-grid-item {
         margin-top: 0px;
         margin-right: 0px;
@@ -66,15 +77,15 @@
                          Folio
                         <MudChip Size="Size.Small">5554545</MudChip>
                     </MudItem>
-                    <MudItem xs="4"> 
-                        <MudRadioGroup T="int" @bind-SelectedOption="oficio.Tipo">
-                            <MudRadio Option="1" Size="Size.Small"  Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">CEA</MudText></MudRadio>
-                            <MudRadio Option="2" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">SEPROA</MudText></MudRadio>
+                    <MudItem xs="4">
+                    <MudRadioGroup  T="int" @bind-SelectedOption="oficio.Tipo">
+                            <MudRadio Style="font-size:.6rem;   height: 3px;"  Option="1" Size="Size.Small"  Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">CEA</MudText></MudRadio>
+                            <MudRadio Style="font-size:.6rem;   height: 3px;"  Option="2" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">SEPROA</MudText></MudRadio>
                         </MudRadioGroup>
                     </MudItem>
                     <MudItem xs="4"> 
                         Fecha
-                    <MudChip Size="Size.Small">@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
+                    <MudChip  Size="Size.Small">@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
                     </MudItem>
 
     @*2 renglon *@
@@ -96,10 +107,10 @@
                     </MudItem>
     @*3 renglon *@
                 <MudItem xs="6">
-                    @* nombre remitetnte check   hidden="true"*@
+                    @* nombre remitetnte check  display: inline-block;   hidden="true"*@
                     <MudPaper Elevation="0">
 
-                        <MudSwitch Style="font-size:.6rem;" @bind-Checked="@remitente" ThumbIcon="@(remitente==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(remitente==true ? Color.Success : Color.Error)">Externo?</MudSwitch>
+                        <MudItem sm="12" md="12">    <MudSwitch Style="font-size:.6rem;   width: 10px;  height: 5px;" @bind-Checked="@remitente" ThumbIcon="@(remitente==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(remitente==true ? Color.Success : Color.Error)">Externo?</MudSwitch></MudItem>
                                        </MudPaper>
 
                     <MudTextField IconSize="Size.Small" Style="@($"color:{Colors.Grey.Lighten1}; font-size:.6rem; ")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
@@ -108,8 +119,8 @@
                     </MudItem>
                     <MudItem xs="6">
                     @* nombre destinatario check *@
-                    <MudSwitch  Style="font-size:.6rem;" hidden="@(hide)" @bind-Checked="@destinatario" ThumbIcon="@(destinatario==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(destinatario==true ? Color.Success : Color.Error)">Interno?</MudSwitch>
-                    <MudTextField IconSize="Size.Small" Style="font-size:.6rem;" OnAdornmentClick="@ingresarPersonalExterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
+                    <MudItem sm="12" md="12"><MudSwitch Style="font-size:.6rem;   width: 10px;  height: 5px;" hidden="@(hide)" @bind-Checked="@destinatario" ThumbIcon="@(destinatario==false ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(destinatario==true ? Color.Success : Color.Error)">Interno?</MudSwitch> </MudItem>
+                    <MudTextField  IconSize="Size.Small" Style="font-size:.6rem;" OnAdornmentClick="@ingresarPersonalExterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
                             <MudText Style="font-size:.6rem;" Typo="Typo.body2">@oficio.DestCargo</MudText>
                             <MudText Style="font-size:.6rem;" Typo="Typo.caption">@oficio.DestDepen</MudText>
                     </MudItem>

@@ -4,6 +4,14 @@
     input[type="text"], textarea  {
         text-transform:uppercase;
     }
+
+    .mud-table td {
+        font-size: .6rem;
+    }
+
+    .mud-table th {
+        font-size: .6rem;
+    }
     .botones-accion{
          background-color:#6A1B32;
          color:white;
@@ -49,14 +57,14 @@
             </MudItem>
             <MudItem sm="1" />
             <MudItem xs="3">
-                <MudText Align="Align.Center" Typo="Typo.caption">
+                <MudText  Align="Align.Center" Typo="Typo.caption">
                     Fecha Oficio
                     <MudIcon Icon="@Icons.Filled.DateRange" Color="Color.Default" Size="Size.Small"/>
                     <MudChip>@OficioBit.Fecha.ToString("dd/MM/yyyy")</MudChip>
                 </MudText>
             </MudItem>
             <MudItem xs="3">
-                <MudText Align="Align.Center" Typo="Typo.caption">
+                <MudText  Align="Align.Center" Typo="Typo.caption">
                     Fecha Límite
                     <MudIcon Icon="@Icons.Filled.DateRange" Color="Color.Default" Size="Size.Small"/>
                     <MudChip Variant="Variant.Text" Color="Color.Error">@OficioBit.FechaLimite?.ToString("dd/MM/yyyy")</MudChip>
@@ -65,22 +73,22 @@
             <MudItem xs="6">
                 <MudCard>
                     <MudCardContent>
-                        <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Remitente</MudText>
+                        <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")" >Remitente</MudText>
                         <MudIcon Icon="@Icons.Filled.Person" Color="Color.Default" Size="Size.Small"/>
-                        <MudText Typo="Typo.subtitle2">@OficioBit.RemNombre</MudText>
-                        <MudText Typo="Typo.body2">@OficioBit.RemCargo </MudText>
-                        <MudText Typo="Typo.caption">@OficioBit.RemDepen </MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.subtitle2">@OficioBit.RemNombre</MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.body2">@OficioBit.RemCargo </MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.caption">@OficioBit.RemDepen </MudText>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
             <MudItem xs="6">
                 <MudCard>
-                    <MudCardContent>
+                    <MudCardContent >
                         <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Destinatario</MudText>
                         <MudIcon Icon="@Icons.Filled.Person" Color="Color.Default" Size="Size.Small"/>
-                        <MudText Typo="Typo.subtitle2"> @OficioBit.DestNombre</MudText>
-                        <MudText Typo="Typo.body2">@OficioBit.DestCargo </MudText>
-                        <MudText Typo="Typo.caption">@OficioBit.DestDepen </MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.subtitle2"> @OficioBit.DestNombre</MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.body2">@OficioBit.DestCargo </MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.caption">@OficioBit.DestDepen </MudText>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
@@ -92,12 +100,12 @@
                     <MudCardContent>
                         <MudText Typo="Typo.overline" Style="@($"color:{Colors.Grey.Lighten1};")">Tema del Oficio</MudText>
                         <MudIcon Icon="@Icons.Filled.Textsms" Color="Color.Default" Size="Size.Small"/>
-                        <MudText Typo="Typo.body2">@OficioBit.Tema</MudText>
+                        <MudText Style="font-size:.6rem;" Typo="Typo.body2">@OficioBit.Tema</MudText>
                     </MudCardContent>
                 </MudCard>
             </MudItem>
             <MudItem xs="10">  
-                <MudTextField T="string" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable/>
+                <MudTextField Style="font-size:.6rem;" T="string" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable />
             </MudItem>
             <MudItem xs="2">  
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-2"  Elevation="0">
@@ -106,7 +114,7 @@
                     </MudButton>
                 </MudPaper>  
             </MudItem>
-            <MudItem xs="12"> 
+            <MudItem xs="12" > 
                 <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora" Dense="true">
                     <HeaderContent>
                         <MudTh>Fecha</MudTh>
@@ -118,7 +126,7 @@
                         <MudTd  DataLabel="Fecha">@context.FechaCaptura.ToString("dd/MM/yyyy")</MudTd>
                         <MudTd DataLabel="Usuario">@context.IdEmpleado</MudTd>
                         <MudTd DataLabel="Estatus">@context.Estatus</MudTd>
-                        <MudTd DataLabel="Comentarios"><MudText Typo="Typo.caption">@context.Comentarios</MudText></MudTd>
+                        <MudTd DataLabel="Comentarios">@context.Comentarios</MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudItem>

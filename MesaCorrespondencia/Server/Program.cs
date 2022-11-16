@@ -23,6 +23,7 @@ builder.Services.AddScoped<IDeptoueRepository, DeptoueRepository>();
 builder.Services.AddScoped<IOficiosRepository, OficiosRepository>();
 builder.Services.AddScoped<IEmpleadosRepository, EmpleadosRepository>();
 builder.Services.AddScoped<IOficiosParametroRepository, OficiosParametroRepository>();
+builder.Services.AddScoped<IFunctionsRepository, FunctionsRepository>();
 
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
