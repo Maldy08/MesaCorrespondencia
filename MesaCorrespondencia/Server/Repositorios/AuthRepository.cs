@@ -73,7 +73,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                      _configuration["Jwt:Issuer"],
                      _configuration["Jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(10),
+                    expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
