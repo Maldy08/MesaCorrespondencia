@@ -22,7 +22,7 @@ credencial = stream;
 
 }
 
-  public  MemoryStream DriveExportPdf()
+  public  MemoryStream DriveExportWord()
         {
             try
             {
@@ -72,9 +72,9 @@ credencial = stream;
                                 stream.Seek(0, SeekOrigin.Begin);//set position to beginning    
 
 
-      //    var requestD = service.Files.Delete(copReq.Id);
-    //      requestD.SupportsAllDrives = true;
-       //   requestD.Execute();
+       //    var requestD = service.Files.Delete(copReq.Id);
+     //      requestD.SupportsAllDrives = true;
+        //   requestD.Execute();
                 return stream;
             }
             catch (Exception e)
@@ -119,7 +119,7 @@ credencial = stream;
                     ApplicationName = "Google Docs API .NET Quickstart"
                 });
   
-
+            //actualizando campos de la plantilla
         IList<Request> requests = new List<Request>();
         requests.Add(new Request{ReplaceAllText = (new ReplaceAllTextRequest{
             ContainsText = (new SubstringMatchCriteria{
@@ -218,7 +218,10 @@ credencial = stream;
         }
 
 
- 
+ /// <summary>
+ /// Crear copia de la plantilla
+ /// </summary>
+ /// <returns>File docs generado (ID Documento)</returns>
     private Google.Apis.Drive.v3.Data.File fileMetadata(){
         return   new Google.Apis.Drive.v3.Data.File()
             {

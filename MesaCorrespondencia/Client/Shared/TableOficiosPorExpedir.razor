@@ -2,8 +2,10 @@
 @inject ILocalStorageService LocalStorage
 @inject IAuthService AuthService
 @inject IDialogService DialogService
+@inject IGCloudService GCloudS
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
+
 <style>
 
 .botones {
@@ -55,12 +57,13 @@
     </ToolBarContent>
     <HeaderContent>
             <MudTh>ACCIONES</MudTh>
-            <MudTh>NO.FOLIO</MudTh>
             <MudTh>FECHA</MudTh>
-            <MudTh>DEPENDENCIA</MudTh>
+            <MudTh>AREA</MudTh>
             <MudTh>NO.DE OFICIO</MudTh>
             <MudTh>REMITENTE</MudTh>
             <MudTh>DESTINATARIO</MudTh>
+            <MudTh>TEMA</MudTh>
+
     </HeaderContent>
 
     <RowTemplate>
@@ -68,14 +71,15 @@
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
              <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Cancel" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => cancelar(context)"></MudIconButton>
         </MudTd>
-        <MudTd  DataLabel="NO.FOLIO">@context.Folio</MudTd>
         <MudTd DataLabel="FECHA">@context.Fecha.ToString("dd/MM/yyyy")</MudTd>
-        <MudTd DataLabel="DEPENDENCIA">@context.RemDepen</MudTd>
+        <MudTd DataLabel="AREA">@context.RemDepen</MudTd>
         <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
         <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
         <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
+        <MudTd DataLabel="TEMA">@context.Tema</MudTd>
+
            
-        <MudTd><MudButton style="height: 25px; width : 9;padding 15px 11px;" Color="Color.Primary" Variant="Variant.Filled">DESCARGAR</MudButton></MudTd>
+        <MudTd><MudButton OnClick="() => Descargar(context)" style="height: 25px; width : 9;padding 15px 11px;" Color="Color.Primary" Variant="Variant.Filled">DESCARGAR</MudButton></MudTd>
 
     </RowTemplate>
     <PagerContent>
@@ -113,7 +117,7 @@
         _loading = true;
         await LoadData();
         _loading = false;
-      
+
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -169,26 +173,39 @@
 
     private void cancelar(VwOficiosLista registro)
     {
-       
+        // eliminar preoficio
     }
+
+    private async void Descargar(VwOficiosLista registro)
+    {
+        var ms = await GCloudS.GetDocumento(registro);
+        ms.Seek(0, SeekOrigin.Begin);//set position to beginning
+
+        using var streamRef = new DotNetStreamReference(stream: ms);
+        await JSRuntime.InvokeVoidAsync("downloadFileFromStream", "fileName.docx", streamRef);
+        ms.Close();
+
+    }
+
     public async void ingresar()
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var parameters = new DialogParameters { ["isNew"] = true };
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo", parameters, options);
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio Por Expedir", options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             var oficio = result.Data as Oficio;
             if (oficio != null)
             {
+            //    await OficioService.CreateOficio(oficio);
                 await LoadData();
                 StateHasChanged();
                 Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
-            }
+            } //ofiocs_xpedir
             else
             {
+                Snackbar.Add($"Error al ingresar el oficio!", Severity.Error);
 
             }
         }

@@ -18,6 +18,9 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOficioService, OficioService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IGCloudService, GCloudService>();
+builder.Services.AddScoped<IFunctionsService, FunctionsService>();
+
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

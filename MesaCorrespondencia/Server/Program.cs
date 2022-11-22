@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
+using MesaCorrespondencia.Server.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +24,7 @@ builder.Services.AddScoped<IOficiosRepository, OficiosRepository>();
 builder.Services.AddScoped<IEmpleadosRepository, EmpleadosRepository>();
 builder.Services.AddScoped<IOficiosParametroRepository, OficiosParametroRepository>();
 builder.Services.AddScoped<IFunctionsRepository, FunctionsRepository>();
+builder.Services.AddScoped<IGCloudSRepository, GCloudSRepository>();
 
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();

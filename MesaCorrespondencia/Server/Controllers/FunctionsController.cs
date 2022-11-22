@@ -13,7 +13,7 @@ namespace MesaCorrespondencia.Server.Controllers
             _functionsRepository = functionsRepository;
         }
 
-        [HttpGet("sum-rango-fecha/{id}")]
+        [HttpGet("get-departamentos-function/{id}")]
         public async Task<ActionResult<ServiceResponse<List<GetDepartamentos>>>> Get(int id)
         {
             var result = await _functionsRepository.getDepartamentosF(id);
