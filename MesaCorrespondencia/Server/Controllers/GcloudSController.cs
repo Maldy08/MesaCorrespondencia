@@ -2,7 +2,6 @@ using MesaCorrespondencia.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Google.Apis.Auth.OAuth2;
 using MesaCorrespondencia.Server.Repository;
-
 namespace MesaCorrespondencia.Server.Controllers
 {
       
@@ -10,10 +9,7 @@ namespace MesaCorrespondencia.Server.Controllers
     [Route("[controller]")]
     public class GcloudSController : ControllerBase
     {
-
-
         private readonly IGCloudSRepository _IGCloudSRepository;
-
         public GcloudSController(IGCloudSRepository logger)
         {
             _IGCloudSRepository = logger;
@@ -26,7 +22,6 @@ namespace MesaCorrespondencia.Server.Controllers
             var ms = g.DriveExportWord();
             ms.Position = 0;
             return ms;
-
         }
 
         private GoogleCredential GetCredentials()

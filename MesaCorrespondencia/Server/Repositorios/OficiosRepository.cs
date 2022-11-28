@@ -93,20 +93,25 @@ namespace MesaCorrespondencia.Server.Repositorios
             //};
             #endregion
             _context.Oficios.Add(oficio);
-            if (oficio.OficioBitacora != null)
-                _context.OficiosBitacoras.Add(oficio.OficioBitacora);
+            //   if (oficio.OficioBitacora != null)
+            // {
+            //   _context.OficiosBitacoras.Add(oficio.OficioBitacora);
+            //}
             if (oficio.OficiosResponsables != null && oficio.OficiosResponsables.Count > 0)
+            {
                 oficio.OficiosResponsables.ForEach(of => _context.OficiosResponsables.Add(of));
+            }
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e.ToString());
                 return new ServiceResponse<Oficio>
                 {
                     Data = null,
-                    Message = $"Ocurrio un error al guardar el Folio.{oficio.Folio}",
+                    Message = $"Ocurrio un error al guardar el Folio.{oficio.Folio} {e.ToString()} 9999 { oficio.OficioBitacora!=null }",
                     Success = false
                 };
             }
@@ -175,8 +180,8 @@ namespace MesaCorrespondencia.Server.Repositorios
             var response = new ServiceResponse<List<VwOficiosLista>>
             {
                 Data = await _context.VwOficiosListas
-                        .Where(of => of.Ejercicio == ejercicio && of.Eor == eor
-                            && (of.Depto == iddepto && of.Rol == 1 || of.IdEmpleado == iddepto && of.Rol == 2))
+                        .Where(of => of.Ejercicio == ejercicio && of.Eor == eor     //depto a empleado
+                            && (of.Depto == iddepto && of.Rol == 1 || of.IdEmpleado == idEmpleado && of.Rol == 2))
                         .OrderByDescending(of => of.Folio)
                         .ToListAsync()
             };

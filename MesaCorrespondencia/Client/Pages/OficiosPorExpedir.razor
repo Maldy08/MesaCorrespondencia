@@ -7,7 +7,7 @@
 @attribute [Authorize]
 
 <PageTitle>Principal</PageTitle>
-<TableOficiosPorExpedir selectedEventCallback="@selectedEmpleado" Title="Oficios por expedir" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto" />
+<TableOficiosPorExpedir selectedEventCallback="@selectedEmpleado" Title="Oficios por expedir" eor="3" ejercicio="2022" empleado="@empleado" depto="@depto" />
 <br /><br />
 
 @code{
@@ -23,6 +23,7 @@
     private async Task LoadData()
     {
         empleado = await LocalStorage.GetItemAsync<int>("empleado");
+        depto = await LocalStorage.GetItemAsync<int>("depto");
     }
 
     private void selectedEmpleado(VwOficiosLista element)
