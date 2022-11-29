@@ -1,0 +1,345 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Net.Http.Headers
+@inject IDialogService DialogService
+@inject IOficioService OficioService
+@inject ILocalStorageService LocalStorage
+@inject IDeptoService DeptoService
+@inject HttpClient Http
+<style>
+    input[type="text"], textarea {
+        text-transform: uppercase;
+    }
+
+    .botones-accion {
+        background-color: #6A1B32;
+        color: white;
+    }
+
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+
+    .upperCaseText {
+        text-transform: uppercase;
+    }
+</style>
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@oficio">
+            <DataAnnotationsValidator />
+            <MudGrid>
+
+                @*1 renglon *@
+                <MudItem xs="4">
+                    Folio
+                    <MudChip>5554545</MudChip>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudRadioGroup T="int" @bind-SelectedOption="oficio.Tipo">
+                        <MudRadio Option="1" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">CEA</MudText></MudRadio>
+                        <MudRadio Option="2" Size="Size.Small" Color="Color.Primary" UnCheckedColor="Color.Default"><MudText Typo="Typo.body2">SEPROA</MudText></MudRadio>
+                    </MudRadioGroup>
+                </MudItem>
+                <MudItem xs="4">
+                    Fecha
+                    <MudChip>@oficio.Fecha.ToString("dd/MM/yyyy") </MudChip>
+                </MudItem>
+
+                @*2 renglon *@
+@*                <MudItem xs="4">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
+                        <MudTextField @bind-Value="oficio.NoOficio" Label="Número de Oficio" Variant="Variant.Outlined"></MudTextField>
+                    </MudPaper>
+                </MudItem>*@
+                <MudItem xs="4">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
+                       @* <MudTextField @bind-Value="oficio.Depto" Label="Area o Departamento" Variant="Variant.Outlined"></MudTextField>*@
+                        <MudSelect T="string" Label="Area o Departamento" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+
+                        </MudSelect>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="4">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
+                        <MudDatePicker Label="Fecha Captura" @bind-Date="oficio.FechaCaptura" DisableToolbar="true" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
+                        <MudDatePicker Label="Fecha Limite" @bind-Date="oficio.FechaLimite" DisableToolbar="true" />
+                    </MudPaper>
+                </MudItem>
+                @*3 renglon *@
+                <MudItem xs="6">
+                    <MudTextField Style="@($"color:{Colors.Grey.Lighten1};")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
+                    <br />
+                    <MudText Typo="Typo.body2">@oficio.RemCargo</MudText>
+                    <br />
+                    <MudText Typo="Typo.caption">@oficio.RemDepen</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarPersonalExterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Filled.PersonAdd" T="string" ReadOnly="true" Label="Nombre del Destinatario" @bind-Value="oficio.DestNombre" Placeholder="Persona a quien va dirigido"></MudTextField>
+                    <br />
+                    <MudText Typo="Typo.body2">@oficio.DestCargo</MudText>
+                    <br />
+                    <MudText Typo="Typo.caption">@oficio.DestDepen</MudText>
+                </MudItem>
+                <MudItem xs="6" />
+                <MudItem xs="6">
+                    <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarResponsable" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Responsable" @bind-Value="oficio.NombreResponsable" Placeholder="Persona que atenderá Oficio"></MudTextField>
+                    <MudTextField Style="display:none" T="int" ReadOnly="true" @bind-Value="oficio.IdEmpleado"></MudTextField>
+                </MudItem>
+                @*4 renglon *@
+                <MudItem xs="8">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-1" Elevation="0">
+                        <MudTextField @bind-Value="oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
+                    </MudPaper>
+                </MudItem>
+                @*5 renglon *@
+                <MudItem xs="12">
+                    <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
+                        <MudTextField T="string" Label="Observaciones" Variant="Variant.Filled" @bind-Value="comentarios" Lines="5" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="10">
+                    <InputFile OnChange="@UploadFiles" multiple />
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance mudDialog { get; set; }
+    [Parameter]
+    public VwOficiosLista? oficioEdit { get; set; }
+    [Parameter]
+    public int Eor { get; set; }
+
+    private VwOficiosLista oficio;
+
+    private VsEmpleadosSisco empleadoSelected;
+
+    private VsEmpleadosSisco responsableSelected;
+
+    private OficiosUsuext usuarioExternoSelected;
+
+    private Oficio oficioCreate;
+
+    private List<DeptosUe> _getAllDeptosList = new();
+
+    [Parameter]
+    public bool isNew { get; set; }
+
+    private string comentarios = "Este es un texto de ejemplo";
+
+    private bool upload = false;
+
+    private List<string> fileNames = new();
+
+    private List<UploadResult> uploadResults = new();
+
+    private MultipartFormDataContent content;
+
+    private IFormFile formFile;
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        content = new MultipartFormDataContent();
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var fileContent = new StreamContent(file.OpenReadStream());
+
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            fileNames.Add(file.Name);
+            content.Add(
+                content: fileContent,
+                name: "\"files\"",
+                fileName: file.Name
+            );
+            upload = true;
+            uploadResults.Add(
+                new()
+                    {
+                        FileName = file.Name,
+                        ErrorCode = 6,
+                        Uploaded = false,
+                        Eor = oficio.Eor,
+                        Ejercicio = oficio.Ejercicio,
+                        Folio = oficio.Folio
+                    }
+            );
+        }
+        //TODO upload the files to the server
+    }
+
+    private async Task Submit()
+    {
+        if (isNew)
+        {
+            oficio.Ejercicio = 2022;
+            oficio.Eor = 2;
+            oficio.Tipo = 1;
+            oficio.Rol = 1;
+            oficio.Folio = 253;
+        }
+        oficioCreate = new Oficio
+            {
+                Ejercicio = oficio.Ejercicio,
+                Folio = oficio.Folio,
+                Eor = oficio.Eor,
+                Tipo = oficio.Tipo,
+                NoOficio = oficio.NoOficio,
+                Pdfpath = oficio.Pdfpath,
+                Fecha = oficio.Fecha,
+                FechaCaptura = oficio.FechaCaptura,
+                FechaAcuse = oficio.FechaAcuse,
+                FechaLimite = oficio.FechaLimite,
+                RemDepen = oficio.RemDepen,
+                RemSiglas = oficio.RemSiglas,
+                RemNombre = oficio.RemNombre,
+                RemCargo = oficio.RemCargo,
+                DestDepen = oficio.DestDepen,
+                DestSiglas = oficio.DestSiglas,
+                DestNombre = oficio.DestNombre,
+                DestCargo = oficio.DestCargo,
+                Tema = oficio.Tema,
+                Estatus = 1,
+                Empqentrega = 0,
+                Relacionoficio = "",
+                Depto = await LocalStorage.GetItemAsync<int>("depto"),
+                DeptoRespon = oficio.DeptoRespon,
+                //File = oficio.File,
+                OficioBitacora = new OficiosBitacora
+                {
+                    Ejercicio = oficio.Ejercicio,
+                    Folio = oficio.Folio,
+                    FechaCaptura = DateTime.Today,
+                    Eor = oficio.Eor,
+                    IdEmpleado = await LocalStorage.GetItemAsync<int>("empleado"),
+                    Comentarios = comentarios
+                },
+                OficiosResponsables = new List<OficiosResponsable>{
+                    new OficiosResponsable
+                    {
+                        Ejercicio = oficio.Ejercicio,
+                        Eor = oficio.Eor,
+                        Folio = oficio.Folio,
+                        IdEmpleado =  oficio.IdEmpleado,
+                        Rol = oficio.Rol
+                    }
+                }
+            };
+        if (upload)
+        {
+            await FileUpload();
+        }
+
+        if (isNew)
+        {
+            if (await OficioService.CreateOficio(oficioCreate))
+            {
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
+            }
+        }
+        else
+        {
+            if (await OficioService.UpdatePdfPath(oficioCreate))
+            {
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
+            }
+        }
+    }
+
+    private void Cancel() => mudDialog.Cancel();
+
+    protected override async void OnInitialized()
+    {
+        if (oficioEdit != null)
+        {
+            oficio = oficioEdit;
+            isNew = false;
+        }
+        else
+            oficio = new();
+
+        _getAllDeptosList = await DeptoService.GetAllDeptos();
+    }
+
+    private async Task FileUpload()
+    {
+        var response = await OficioService.Upload(content, oficioCreate.Ejercicio, oficioCreate.Eor, oficioCreate.Folio);
+        if (response != null)
+        {
+            uploadResults.Clear();
+            uploadResults = response.Concat(response).ToList();
+            if (uploadResults != null)
+            {
+                oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
+                //Console.WriteLine(uploadResults.FirstOrDefault().Path);
+            }
+        }
+    }
+
+    protected async Task ingresarPersonalInterno()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
+        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        var dialog = DialogService.Show<ModalPersonalInterno>("", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            empleadoSelected = result.Data as VsEmpleadosSisco;
+            oficio.RemNombre = empleadoSelected.NombreCompleto;
+            oficio.RemCargo = empleadoSelected.DescripcionDepto;
+
+            ///validar dependencia
+            oficio.RemDepen = "CEA";
+            oficio.RemSiglas = "CEA";
+        }
+    }
+
+    protected async Task ingresarPersonalExterno()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
+        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
+        var dialog = DialogService.Show<ModalPersonalExterno>("", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            usuarioExternoSelected = result.Data as OficiosUsuext;
+            oficio.DestNombre = usuarioExternoSelected.Nombre;
+            oficio.DestCargo = usuarioExternoSelected.Cargo;
+            oficio.DestDepen = usuarioExternoSelected.Empresa;
+            oficio.DestSiglas = usuarioExternoSelected.Siglas;
+        }
+    }
+
+    protected async Task ingresarResponsable()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<ModalPersonalInterno>("", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            responsableSelected = result.Data as VsEmpleadosSisco;
+            oficio.NombreResponsable = responsableSelected.NombreCompleto;
+            oficio.IdEmpleado = responsableSelected.Empleado;
+        }
+    }
+
+}
