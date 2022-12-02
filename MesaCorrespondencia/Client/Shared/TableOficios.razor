@@ -204,7 +204,8 @@
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var parameters = new DialogParameters { ["isNew"] = true };
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);
+        //var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);
+        var dialog = DialogService.Show<ModalOficioExpedido>("Ingresar Oficio por Expedir", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

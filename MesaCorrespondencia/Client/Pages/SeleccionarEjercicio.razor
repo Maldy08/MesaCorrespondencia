@@ -1,0 +1,43 @@
+﻿@page "/ejercicio"
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AppState appState
+
+<form>
+    <MudGrid Justify="Justify.Center">
+        <MudItem lg="4" xs="8" md="6"> 
+            <MudCard > 
+                <MudCardContent>
+                    <MudSelect @bind-Value="@_selectedEjercicio" Label="Seleccione el ejercicio" T="int" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                       <MudSelectItem T="int" Value="2021"><MudText Typo="Typo.body2">2021</MudText> </MudSelectItem>
+                       <MudSelectItem T="int" Value="2022"><MudText Typo="Typo.body2">2022</MudText> </MudSelectItem>
+                       <MudSelectItem T="int" Value="2023"><MudText Typo="Typo.body2">2023</MudText> </MudSelectItem>
+                    </MudSelect>
+                </MudCardContent>
+                 <MudCardActions>
+                    <MudButton OnClick="@onContinuar" FullWidth Variant="Variant.Filled" Style="background-color: #6a1b31; color:white;">
+                         Continuar
+                     </MudButton>
+                  </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</form>
+@code {
+    private int _selectedEjercicio;
+
+    protected override void OnInitialized()
+    {
+
+        _selectedEjercicio = DateTime.Now.Year;
+        // List<int> ejercicios = new List<int> { 2022, 2023 };
+    }
+
+    void onContinuar()
+    {
+        appState.Ejercicio = _selectedEjercicio;
+        NavigationManager.NavigateTo("/");
+      
+    }
+
+}

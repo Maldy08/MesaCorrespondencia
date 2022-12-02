@@ -793,11 +793,11 @@ namespace MesaCorrespondencia.Server.Data
 
             modelBuilder.Entity<OficiosParametro>(entity =>
             {
-                entity.HasNoKey();
-
 
                 //Tabla solamente de Folios de la mesa de correspondencia, no numeros consecutivos de oficio por departamento
                 entity.ToTable("OFICIOS_PARAMETROS");
+
+                entity.HasKey(o => o.Ejercicio);
 
                 entity.Property(e => e.Ejercicio)
                     .HasPrecision(4)

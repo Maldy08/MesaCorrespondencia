@@ -300,6 +300,46 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<OficiosParametro>> UpdateParametros(OficiosParametro oficiosParametro)
+        {
+            var _oficiosParametro = await _context.OficiosParametros.FindAsync(oficiosParametro.Ejercicio);
+
+            if (_oficiosParametro != null)
+            {
+                _oficiosParametro.Ejercicio = oficiosParametro.Ejercicio;
+                _oficiosParametro.NextFXexp = oficiosParametro.NextFXexp;
+                _oficiosParametro.NextFEnv = oficiosParametro.NextFEnv;
+                _oficiosParametro.NextFRec = oficiosParametro.NextFEnv;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return new ServiceResponse<OficiosParametro>
+                    {
+                        Data = _oficiosParametro,
+                        Message = "Registro actualizado correcamente"
+                    };
+                }
+                catch 
+                {
+                    return new ServiceResponse<OficiosParametro>
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = "Ocurrio un error al actualizar el registro"
+                    };
+                }
+            }
+            else
+            {
+                return new ServiceResponse<OficiosParametro>
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Registro no encontrado"
+                };
+            }
+        }
+
         public async Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio)
         {
             var oficioUpdate = await _context.Oficios.FindAsync(oficio.Ejercicio, oficio.Folio, oficio.Eor);
@@ -346,5 +386,7 @@ namespace MesaCorrespondencia.Server.Repositorios
 
             return response;
         }
+
+
     }
 }

@@ -9,7 +9,7 @@ using System.Net;
 
 namespace MesaCorrespondencia.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OficiosController : ControllerBase
@@ -209,6 +209,13 @@ namespace MesaCorrespondencia.Server.Controllers
         public async Task<ActionResult<ServiceResponse<OficiosParametro>>> GetParametros(int ejercicio)
         {
             var result = await _oficiosRepository.GetParametros(ejercicio);
+            return Ok(result);
+        }
+
+        [HttpPut("update-parametros")]
+        public async Task<ActionResult<ServiceResponse<OficiosParametro>>> UpdateParametros( OficiosParametro oficiosParametro)
+        {
+            var result = await _oficiosRepository.UpdateParametros(oficiosParametro);
             return Ok(result);
         }
 

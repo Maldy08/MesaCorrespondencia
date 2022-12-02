@@ -2,13 +2,24 @@
 @inject IAuthService _authService
 @inject ILocalStorageService LocalStorage
 @inject IDialogService DialogService
-@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject AppState appState
+@implements IDisposable
+
+
 
 <PageTitle>Principal</PageTitle>
+@if(appState.Ejercicio != 0)
+{
+    <TableOficios selectedEventCallback="@selectedEmpleado" Title="Ultimos Recibidos" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto" />
+    <br />
+    <br />
+    <TableOficios selectedEventCallback="@selectedEmpleado" Title="Ultimos Enviados" eor="1" ejercicio="2022" empleado="@empleado" depto="@depto" />
+}
+
 @*<MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">Ingresar oficio recibido</MudButton>*@
-<TableOficios selectedEventCallback="@selectedEmpleado" Title="Ultimos Recibidos" eor="2" ejercicio="2022" empleado="@empleado" depto="@depto"/>
-<br /><br />
-<TableOficios selectedEventCallback="@selectedEmpleado" Title="Ultimos Enviados" eor="1" ejercicio="2022" empleado="@empleado" depto="@depto"/>
+      
+
 
 @*<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-8"></MudText>
@@ -19,9 +30,12 @@
     private int depto;
     private VwOficiosLista vwOficiosLista;
     private TableOficios tableOficios;
+
     protected async override Task OnInitializedAsync()
     {
-        await LoadData();
+        appState.OnChange += StateHasChanged;
+        if(appState.Ejercicio!=0)
+            await LoadData();
         //if (await _authService.IsUserAuthenticated())
         //{
         //    await _authService.GetUserInfo();
@@ -41,5 +55,7 @@
     {
         vwOficiosLista = element;
     }
+
+    public void Dispose() => appState.OnChange -= StateHasChanged;
 
 }

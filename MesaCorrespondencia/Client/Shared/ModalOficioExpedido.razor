@@ -38,6 +38,7 @@
             <MudGrid>
 
                 @*1 renglon *@
+
                 <MudItem xs="4">
                     Folio
                     <MudChip>5554545</MudChip>
@@ -54,30 +55,35 @@
                 </MudItem>
 
                 @*2 renglon *@
+
 @*                <MudItem xs="4">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
                         <MudTextField @bind-Value="oficio.NoOficio" Label="Número de Oficio" Variant="Variant.Outlined"></MudTextField>
                     </MudPaper>
                 </MudItem>*@
-                <MudItem xs="4">
+                <MudItem xs="6">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
                        @* <MudTextField @bind-Value="oficio.Depto" Label="Area o Departamento" Variant="Variant.Outlined"></MudTextField>*@
-                        <MudSelect T="string" Label="Area o Departamento" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-
+                        <MudSelect T="string" HelperText="Selecciona el area que expide el oficio" Label="Area o Departamento" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                            @foreach (var depto in _getAllDeptosList)
+                            {
+                                <MudSelectItem T="string" Value="@depto.Descripcion"><MudText  Typo="Typo.body2">@depto.Descripcion</MudText> </MudSelectItem>
+                            }
                         </MudSelect>
                     </MudPaper>
                 </MudItem>
 
-                <MudItem xs="4">
+                <MudItem xs="3">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
                         <MudDatePicker Label="Fecha Captura" @bind-Date="oficio.FechaCaptura" DisableToolbar="true" />
                     </MudPaper>
                 </MudItem>
-                <MudItem xs="4">
+                <MudItem xs="3">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
                         <MudDatePicker Label="Fecha Limite" @bind-Date="oficio.FechaLimite" DisableToolbar="true" />
                     </MudPaper>
                 </MudItem>
+
                 @*3 renglon *@
                 <MudItem xs="6">
                     <MudTextField Style="@($"color:{Colors.Grey.Lighten1};")" OnAdornmentClick="@ingresarPersonalInterno" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Remitente" @bind-Value="oficio.RemNombre" Placeholder="Persona que firma el oficio"></MudTextField>
@@ -98,12 +104,14 @@
                     <MudTextField Style="font-size:14px;" OnAdornmentClick="@ingresarResponsable" Adornment="Adornment.End" AdornmentColor="Color.Dark" AdornmentIcon="@Icons.Material.Filled.Search" T="string" ReadOnly="true" Label="Nombre del Responsable" @bind-Value="oficio.NombreResponsable" Placeholder="Persona que atenderá Oficio"></MudTextField>
                     <MudTextField Style="display:none" T="int" ReadOnly="true" @bind-Value="oficio.IdEmpleado"></MudTextField>
                 </MudItem>
+
                 @*4 renglon *@
                 <MudItem xs="8">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-1" Elevation="0">
                         <MudTextField @bind-Value="oficio.Tema" Label="Tema" Variant="Variant.Outlined"></MudTextField>
                     </MudPaper>
                 </MudItem>
+
                 @*5 renglon *@
                 <MudItem xs="12">
                     <MudPaper Class="d-flex align-center justify-center mud-width-full py-4" Elevation="0">
@@ -157,7 +165,7 @@
 
     private IFormFile formFile;
 
-    private async Task UploadFiles(InputFileChangeEventArgs e)
+    private void UploadFiles(InputFileChangeEventArgs e)
     {
         content = new MultipartFormDataContent();
         foreach (var file in e.GetMultipleFiles())
@@ -195,6 +203,7 @@
             oficio.Eor = 2;
             oficio.Tipo = 1;
             oficio.Rol = 1;
+            //obtener folio de MC
             oficio.Folio = 253;
         }
         oficioCreate = new Oficio
@@ -278,6 +287,7 @@
             oficio = new();
 
         _getAllDeptosList = await DeptoService.GetAllDeptos();
+
     }
 
     private async Task FileUpload()
@@ -290,7 +300,6 @@
             if (uploadResults != null)
             {
                 oficioCreate.Pdfpath = uploadResults.FirstOrDefault().Path;
-                //Console.WriteLine(uploadResults.FirstOrDefault().Path);
             }
         }
     }
@@ -308,8 +317,19 @@
             oficio.RemCargo = empleadoSelected.DescripcionDepto;
 
             ///validar dependencia
-            oficio.RemDepen = "CEA";
-            oficio.RemSiglas = "CEA";
+            ///
+            switch (oficio.Tipo)
+            {
+                case 1:
+                    oficio.RemDepen = "CEA";
+                    oficio.RemSiglas = "CEA";
+                    break;
+                case 2:
+                    oficio.RemDepen = "SEPROA";
+                    oficio.RemSiglas = "SEPROA";
+                    break;
+            }
+
         }
     }
 
