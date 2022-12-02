@@ -50,6 +50,7 @@
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");
+        await LocalStorage.SetItemAsync<int>("MC__ejercicio", 0);
         await AuthenticationStateProvider.GetAuthenticationStateAsync();
         await AuthService.ClearUserInfo();
         NavigationManager.NavigateTo("login");

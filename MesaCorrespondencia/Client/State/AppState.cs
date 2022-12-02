@@ -4,8 +4,6 @@
     {
         private int ejercicio;
         public event Action OnChange;
-        
-
         public int Ejercicio
         {
             get { return ejercicio; }
