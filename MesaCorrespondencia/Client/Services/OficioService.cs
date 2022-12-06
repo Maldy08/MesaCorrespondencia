@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics;
+using System.Net.Http.Json;
 
 namespace MesaCorrespondencia.Client.Services
 {
@@ -14,8 +15,8 @@ namespace MesaCorrespondencia.Client.Services
 
         public async Task<bool> CreateOficio(Oficio oficio)
         {
-             var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficio", oficio);
-             return response.IsSuccessStatusCode;
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficio", oficio);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<List<OficiosBitacora>> GetBitacorasList(int ejercicio, int folio, int eor)
@@ -48,7 +49,7 @@ namespace MesaCorrespondencia.Client.Services
             return response.Data;
         }
 
-        public async Task<List<VwOficiosLista>> OficiosLista(int eor,int? ejercicio, int? idEmpleado, int? idDepto)
+        public async Task<List<VwOficiosLista>> OficiosLista(int eor, int? ejercicio, int? idEmpleado, int? idDepto)
         {
             if (await _authService.IsUserInRoleMc())
             {
@@ -92,6 +93,28 @@ namespace MesaCorrespondencia.Client.Services
             var response = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/oficios/get-index-userxt");
             return response.Data;
         }
+
+
+        public async Task<OficiosParametro> GetOficioParametro(int ejercicio)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<OficiosParametro>>($"api/oficios/get-parametros/{ejercicio}");
+            return response.Data;
+        }
+
+        public async Task<bool> UpdateParametrosXEXP(int ejercicio)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/oficios/update-parametros", ejercicio);
+            return response.IsSuccessStatusCode; 
+        }
+
+        public async Task<bool> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+               var response = await _httpClient.DeleteAsync($"api/oficios/delete-preoficio/{ejercicio}/{eor}/{folio}");
+                return response.IsSuccessStatusCode;
+            
+        }
+
+      
     }
 }
 

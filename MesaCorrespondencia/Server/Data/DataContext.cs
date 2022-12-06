@@ -821,6 +821,10 @@ namespace MesaCorrespondencia.Server.Data
                 entity.Property(e => e.NextFRec)
                     .HasPrecision(6)
                     .HasColumnName("NEXT_F_REC");
+
+                entity.Property(e => e.NextXexp)
+                    .HasPrecision(6)
+                    .HasColumnName("NEXT_F_XEXP");
             });
 
         }

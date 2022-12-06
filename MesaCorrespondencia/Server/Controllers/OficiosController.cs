@@ -204,10 +204,17 @@ namespace MesaCorrespondencia.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-parametros")]
+        [HttpGet("get-parametros/{ejercicio}")]
         public async Task<ActionResult<ServiceResponse<OficiosParametro>>> GetParametros(int ejercicio)
         {
             var result = await _oficiosRepository.GetParametros(ejercicio);
+            return Ok(result);
+        }
+
+        [HttpPut("update-parametros")]
+        public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> UpdateParametrosXEXP(int ejercicio)
+        {
+            var result = await _oficiosRepository.UpdateParametrosXEXP(ejercicio);
             return Ok(result);
         }
 
@@ -257,6 +264,13 @@ namespace MesaCorrespondencia.Server.Controllers
         public ActionResult<ServiceResponse<VwOficiosLista>> GetIndexUserxt()
         {
             var result =  _oficiosRepository.GetIndexUserxt();
+            return Ok(result);
+        }
+
+        [HttpDelete("delete-preoficio/{ejercicio}/{eor}/{folio}")]
+        public async Task<IActionResult> DeleteAsync(int ejercicio, int eor, int folio)
+        {
+            var result = await _oficiosRepository.DeleteOficio(ejercicio, eor, folio);
             return Ok(result);
         }
     }

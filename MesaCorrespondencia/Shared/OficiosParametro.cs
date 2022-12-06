@@ -11,5 +11,7 @@ namespace MesaCorrespondencia.Shared
         public int Ejercicio { get; set; }
         public int NextFRec { get; set; }
         public int NextFEnv { get; set; }
+        public int NextXexp { get; set; }
+
     }
 }

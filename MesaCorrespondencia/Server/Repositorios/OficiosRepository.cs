@@ -105,13 +105,13 @@ namespace MesaCorrespondencia.Server.Repositorios
             {
                 await _context.SaveChangesAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
                 return new ServiceResponse<Oficio>
                 {
                     Data = null,
-                    Message = $"Ocurrio un error al guardar el Folio.{oficio.Folio} {e.ToString()} 9999 { oficio.OficioBitacora!=null }",
+                    Message = $"Ocurrio un error al guardar el Folio.{oficio.Folio} {e.ToString()} 9999 {oficio.OficioBitacora != null}",
                     Success = false
                 };
             }
@@ -305,6 +305,45 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<bool>> UpdateParametrosXEXP(int ejercicio)
+        {
+            var oficioParamatro = _context.OficiosParametros.Where(o => o.Ejercicio == ejercicio).FirstOrDefault();
+            if (oficioParamatro != null)
+            {
+                var next = oficioParamatro.NextXexp + 1;
+                oficioParamatro.NextXexp = next;
+                try
+                {
+                    await _context.SaveChangesAsync(); //revisar actualizacion fallida en la bd, completado en la api
+                    return new ServiceResponse<bool>
+                    {
+                        Data = true,
+                        Success = true,
+                        Message = "Registro actualizado exitamente! " + next + " " + _context.OficiosParametros.FirstOrDefault(o => o.Ejercicio == ejercicio).NextXexp//VAlida con una llegada
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new ServiceResponse<bool>
+                    {
+                        Data = false,
+                        Success = false,
+                        Message = e.Message
+                    };
+                }
+            }
+            else
+            {
+                return new ServiceResponse<bool>
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "ejercicio no encontrado"
+                };
+            }
+        }
+
+
         public async Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio)
         {
             var oficioUpdate = await _context.Oficios.FindAsync(oficio.Ejercicio, oficio.Folio, oficio.Eor);
@@ -347,7 +386,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             var response = new ServiceResponse<VwOficiosLista>
             {
                 Data = await _context.VwOficiosListas.FirstOrDefaultAsync(o => o.Ejercicio == ejercicio && o.Eor == eor && o.Folio == folio)
-             };
+            };
 
             return response;
         }
@@ -376,15 +415,45 @@ namespace MesaCorrespondencia.Server.Repositorios
             };
         }
 
-        public  ServiceResponse<int> GetIndexUserxt()
+        public ServiceResponse<int> GetIndexUserxt()
         {
             var response = new ServiceResponse<int>
             {
-                Data =  _context.OficiosUsuexts.Max(x => x.IdExterno)
+                Data = _context.OficiosUsuexts.Max(x => x.IdExterno)
             };
 
             return response;
         }
 
+        //terminar
+        public async Task<ServiceResponse<bool>> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var oficioD = await _context.Oficios.FirstOrDefaultAsync(x => x.Ejercicio == ejercicio && x.Eor == eor && x.Folio == folio);
+
+            if (oficioD == null)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+                return response;
+            }
+            try
+            {
+                _context.Oficios.Remove(oficioD);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Data = true;
+
+            }
+            catch (DbUpdateException)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+
+            }
+            return response;
+
+        }
     }
 }

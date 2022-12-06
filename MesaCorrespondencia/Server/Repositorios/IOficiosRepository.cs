@@ -16,10 +16,12 @@ namespace MesaCorrespondencia.Server.Repositorios
         Task<ServiceResponse<OficiosEstatus>> GetEstatusById(int id, int eor);
         Task<ServiceResponse<List<OficiosUsuext>>> GetOficiosUsuariosExternos();
         Task<ServiceResponse<OficiosParametro>> GetParametros(int ejercicio);
+        Task<ServiceResponse<bool>> UpdateParametrosXEXP(int ejercicio);
         Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio);
         Task<ServiceResponse<VwOficiosLista>> GetOficioByFolio(int ejercicio, int eor, int folio);
         Task<ServiceResponse<OficiosUsuext>> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
         ServiceResponse<int> GetIndexUserxt();
+        Task<ServiceResponse<bool>> DeleteOficio(int ejercicio, int eor, int folio);
 
 
     }

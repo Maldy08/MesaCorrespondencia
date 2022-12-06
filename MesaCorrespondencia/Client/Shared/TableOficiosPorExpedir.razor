@@ -171,10 +171,19 @@
         }
     }
 
-    private void cancelar(VwOficiosLista registro)
+    private async void cancelar(VwOficiosLista registro)
     {
         // eliminar preoficio
-        OficioService.
+
+        if (await OficioService.DeleteOficio(registro.Ejercicio, registro.Eor, registro.Folio))
+        {
+            Snackbar.Add($"Eliminado correctamente!", Severity.Success);
+            await LoadData();
+            StateHasChanged();
+        }else{
+            Snackbar.Add($"Error al eliminar!", Severity.Error);
+
+        }
     }
 
     private async void Descargar(VwOficiosLista registro)
@@ -199,9 +208,10 @@
             var oficio = result.Data as Oficio;
             if (oficio != null)
             {
-            //    await OficioService.CreateOficio(oficio);
+                //    await OficioService.CreateOficio(oficio);
                 await LoadData();
                 StateHasChanged();
+                await OficioService.UpdateParametrosXEXP(2022);
                 Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
             } //oficios_xpedir
             else
