@@ -28,16 +28,15 @@
 
     protected override void OnInitialized()
     {
-
         _selectedEjercicio = DateTime.Now.Year;
         // List<int> ejercicios = new List<int> { 2022, 2023 };
     }
 
-    void onContinuar()
+    async Task onContinuar()
     {
         appState.Ejercicio = _selectedEjercicio;
+        await LocalStorage.SetItemAsync("MC__ejercicio", _selectedEjercicio);
         NavigationManager.NavigateTo("/");
-      
     }
 
 }

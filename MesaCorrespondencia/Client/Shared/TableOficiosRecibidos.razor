@@ -22,7 +22,7 @@
 
 </style>
 
-<MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">@tituloBoton</MudButton>
+<MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">Ingresar oficio recibido</MudButton>
 <br />
 <MudTable id="tabla-oficios" T="VwOficiosLista"
     Loading="@_loading"  
@@ -104,7 +104,7 @@
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
     private bool _loading = false;
-    private string tituloBoton;
+ 
     private int rows = 5;
 
     protected override async Task OnInitializedAsync()
@@ -112,10 +112,6 @@
         _loading = true;
         await LoadData();
         _loading = false;
-        if (eor == 1)
-            tituloBoton = "Ingresar oficio expedido";
-        else
-            tituloBoton = "Ingresar oficio recibido";
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -185,7 +181,7 @@
     {
         var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters,options);
+        var dialog = DialogService.Show<ModalOficioRecibido>("Editar Oficio Recibido", parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -202,49 +198,12 @@
     public async void ingresar()
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
-        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
         var parameters = new DialogParameters { ["isNew"] = true };
-        //var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido Nuevo",parameters,options);
-        var dialog = DialogService.Show<ModalOficioExpedido>("Ingresar Oficio por Expedir", parameters, options);
+        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             var oficio = result.Data as Oficio;
-            //Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
-            //selectedOficio = new VwOficiosLista
-            //    {
-            //        Depto = oficio.Depto,
-            //        DeptoRespon = oficio.DeptoRespon,
-            //        DestCargo = oficio.DestCargo,
-            //        DestDepen = oficio.DestDepen,
-            //        DestNombre = oficio.DestNombre,
-            //        DestSiglas = oficio.DestSiglas,
-            //        Ejercicio = oficio.Ejercicio,
-            //        Empqentrega = oficio.Empqentrega,
-            //        Eor = oficio.Eor,
-            //        Estatus = oficio.Estatus,
-            //        Fecha = oficio.Fecha,
-            //        FechaAcuse = oficio.FechaAcuse,
-            //        FechaCaptura = oficio.FechaCaptura,
-            //        FechaLimite = oficio.FechaLimite,
-            //        Folio = oficio.Folio,
-            //        IdEmpleado = oficio.OficiosResponsables[0].IdEmpleado,
-            //        NombreResponsable ="",
-            //        NoOficio = oficio.NoOficio,
-            //        Pdfpath = oficio.Pdfpath,
-            //        Relacionoficio = oficio.Relacionoficio,
-            //        RemCargo = oficio.RemCargo,
-            //        RemDepen = oficio.RemDepen,
-            //        RemNombre = oficio.RemNombre,
-            //        RemSiglas = oficio.RemSiglas,
-            //        Rol = oficio.OficiosResponsables[0].Rol,
-            //        Tema = oficio.Tema,
-            //        Tipo = oficio.Tipo
-
-            //    };
-            //vwOficiosListas.Add(selectedOficio);
-            //selectedOficio = result.Data as VwOficiosLista;
-            //vwOficiosListas.Add(selectedOficio);
             if(oficio!= null){
                 await LoadData();
                 StateHasChanged();
