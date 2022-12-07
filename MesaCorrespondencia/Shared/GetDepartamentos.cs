@@ -8,8 +8,8 @@ namespace MesaCorrespondencia.Shared
 {
     public class GetDepartamentos
     {
-        public int VAL_1 { get; set; }
-        public int VAL_2 { get; set; }
-        public string VAL_3 { get; set; } = string.Empty;
+        public int id { get; set; }
+        public int id_CEA { get; set; }
+        public string descripcion { get; set; } = String.Empty;
     }
 }
