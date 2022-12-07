@@ -90,6 +90,23 @@ namespace MesaCorrespondencia.Client.Services
             var newUploadResults = await response.Content.ReadFromJsonAsync<IList<UploadResult>>();
             return newUploadResults;
         }
+
+        public async Task<bool> UpdateOficio(Oficio oficio)
+        {
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-oficio", oficio);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficioUsuext", oficiosUsuext);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<int> GetIndexUserxt()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/oficios/get-index-userxt");
+            return response.Data;
+        }
     }
 }
 

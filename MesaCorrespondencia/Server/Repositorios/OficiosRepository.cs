@@ -387,6 +387,40 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<OficiosUsuext>> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            try
+            {
+                _context.OficiosUsuexts.Add(oficiosUsuext);
+
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return new ServiceResponse<OficiosUsuext>
+                {
+                    Data = oficiosUsuext,
+                    Message = $"Ocurrio un error al guardar el Folio. {oficiosUsuext.IdExterno}",
+                    Success = false
+                };
+            }
+            return new ServiceResponse<OficiosUsuext>
+            {
+                Data = oficiosUsuext,
+                Message = $"Folio: {oficiosUsuext.Nombre}, ha sido registrado exitosamente!"
+            };
+        }
+
+        public ServiceResponse<int> GetIndexUserxt()
+        {
+            var response = new ServiceResponse<int>
+            {
+                Data = _context.OficiosUsuexts.Max(x => x.IdExterno)
+            };
+
+            return response;
+        }
+
 
     }
 }

@@ -20,5 +20,8 @@ namespace MesaCorrespondencia.Server.Repositorios
         Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio);
         Task<ServiceResponse<VwOficiosLista>> GetOficioByFolio(int ejercicio, int eor, int folio);
 
+        Task<ServiceResponse<OficiosUsuext>> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
+        ServiceResponse<int> GetIndexUserxt();
+
     }
 }

@@ -245,5 +245,28 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = await _oficiosRepository.GetOficioByFolio(ejercicio,eor,folio);
             return Ok(result);
         }
+
+
+        [HttpPost("add-oficioUsuext")]
+        public async Task<ActionResult<ServiceResponse<OficiosUsuext>>> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            //var file = Request.Form.Files[0];
+            try
+            {
+                var result = await _oficiosRepository.CreateOficioUsuext(oficiosUsuext);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest(new ServiceResponse<OficiosUsuext> { Message = "Ocurrio un error al procesar la información" });
+            }
+        }
+
+        [HttpGet("get-index-userxt")]
+        public ActionResult<ServiceResponse<VwOficiosLista>> GetIndexUserxt()
+        {
+            var result = _oficiosRepository.GetIndexUserxt();
+            return Ok(result);
+        }
     }
 }

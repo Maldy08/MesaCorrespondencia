@@ -5,8 +5,6 @@
 
    
 
-@if(_ejercicio != 99 || _ejercicio != 0)
-{
     <MudNavMenu>
         <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
         <MudNavLink Href="/oficios-recibidos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.FileDownload">Oficios Recibidos</MudNavLink>
@@ -14,7 +12,7 @@
         <MudNavLink Href="/oficios-porexpedir" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.DriveFileRenameOutline">Oficios por Expedir</MudNavLink>
     </MudNavMenu>
   
-}
+
 
 
 
@@ -25,6 +23,7 @@
         appState.OnChange += StateHasChanged;
         _ejercicio = await localStorage.GetItemAsync<int>("MC__ejercicio");
         appState.Ejercicio = _ejercicio;
+       
     }
 
     public void Dispose()
