@@ -23,6 +23,8 @@ builder.Services.AddScoped<IOficioService, OficioService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IDeptoService, DeptoService>();
 builder.Services.AddScoped<IOficioParametroService, OficioParametroService>();
+builder.Services.AddScoped<IGCloudService, GCloudService>();
+builder.Services.AddScoped<IFunctionsService, FunctionsService>();
 builder.Services.AddSingleton<AppState>();
 
 builder.Services.AddOptions();

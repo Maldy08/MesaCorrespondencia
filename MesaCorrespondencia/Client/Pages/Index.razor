@@ -33,32 +33,10 @@
     protected async override Task OnInitializedAsync()
     {
         appState.OnChange += StateHasChanged;
-        if(appState.Ejercicio!=0)
-        {
-            await LoadData();
-        }
-        else
-        {
-            var _ejercicio = await LocalStorage.GetItemAsync<int>("MC__ejercicio");
-            if( _ejercicio!= 99)
-            {
-                appState.Ejercicio = _ejercicio;
-                await LoadData();
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/ejercicio");
-            }
-        }
+        var _ejercicio = await LocalStorage.GetItemAsync<int>("MC__ejercicio");
+        appState.Ejercicio = _ejercicio;
+        await LoadData();
 
-            
-        //if (await _authService.IsUserAuthenticated())
-        //{
-        //    await _authService.GetUserInfo();
-        //    var usuario = _authService.usuario;
-        //}
-        //else
-        //    Console.WriteLine("no authenticado");
     }
 
     private async Task LoadData()

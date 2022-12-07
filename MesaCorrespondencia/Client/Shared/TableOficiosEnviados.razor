@@ -180,7 +180,7 @@
     {
         var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ModalOficioExpedido>("Editar Oficio por Enviar", parameters,options);
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Editar Oficio por Enviar", parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -198,7 +198,7 @@
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
         var parameters = new DialogParameters { ["isNew"] = true };
-        var dialog = DialogService.Show<ModalOficioExpedido>("Ingresar Oficio por Enviar", parameters, options);
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio por Enviar", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

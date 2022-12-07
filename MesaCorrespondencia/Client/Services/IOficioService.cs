@@ -22,5 +22,10 @@ namespace MesaCorrespondencia.Client.Services
         Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
 
         Task<int> GetIndexUserxt();
+        Task<bool> DeleteOficio(int ejercicio, int eor, int folio);
+
+        Task<OficiosParametro> GetParametros(int ejercicio);
+
+        Task<bool> UpdateParametros(OficiosParametro oficiosParametro);
     }
 }

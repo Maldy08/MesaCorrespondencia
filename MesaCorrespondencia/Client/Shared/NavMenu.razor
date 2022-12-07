@@ -1,6 +1,6 @@
 ﻿@inject AppState appState
 @inject ILocalStorageService localStorage
-@implements IDisposable
+@*@implements IDisposable*@
 
 
    
@@ -17,17 +17,17 @@
 
 
 @code{
-    private int _ejercicio;
-    protected override async void OnInitialized()
-    {
-        appState.OnChange += StateHasChanged;
-        _ejercicio = await localStorage.GetItemAsync<int>("MC__ejercicio");
-        appState.Ejercicio = _ejercicio;
+    //private int _ejercicio;
+    //protected override async void OnInitialized()
+    //{
+    //    appState.OnChange += StateHasChanged;
+    //    _ejercicio = await localStorage.GetItemAsync<int>("MC__ejercicio");
+    //    appState.Ejercicio = _ejercicio;
        
-    }
+    //}
 
-    public void Dispose()
-    {
-        appState.OnChange -= StateHasChanged;
-    }
+    //public void Dispose()
+    //{
+    //    appState.OnChange -= StateHasChanged;
+    //}
 }

@@ -107,6 +107,25 @@ namespace MesaCorrespondencia.Client.Services
             var response = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/oficios/get-index-userxt");
             return response.Data;
         }
+
+        public async Task<bool> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+            var response = await _httpClient.DeleteAsync($"api/oficios/delete-preoficio/{ejercicio}/{eor}/{folio}");
+            return response.IsSuccessStatusCode;
+
+        }
+
+        public async Task<OficiosParametro> GetParametros(int ejercicio)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<OficiosParametro>>($"api/oficios/get-parametros/{ejercicio}");
+            return response.Data;
+        }
+
+        public async Task<bool> UpdateParametros(OficiosParametro oficiosParametro)
+        {
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-parametros", oficiosParametro);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
 
