@@ -181,8 +181,8 @@
 
             }
         }
-      
-        
+
+
     }
 
     private async void cancelar(VwOficiosLista registro)
@@ -210,18 +210,18 @@
             using var streamRef = new DotNetStreamReference(stream: st);
 
             await JSRuntime.InvokeVoidAsync("downloadFileFromStream", "Oficio_" + registro.Tema + ".docx", streamRef);
-         }else{
+        }else{
             Snackbar.Add($"Error al ingresar el oficio!", Severity.Error);
 
-         }
+        }
 
     }
 
     public async void ingresar()
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
-        var parameters = new DialogParameters {  ["isNew"] = true };
-        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio Por Expedir",parameters,options);
+        var parameters = new DialogParameters { ["oficio"] = null,["isNew"] = true };
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Editar Oficio Por Expedir", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -231,8 +231,12 @@
                 //    await OficioService.CreateOficio(oficio);
                 await LoadData();
                 StateHasChanged();
-                await OficioService.UpdateParametrosXEXP(2022); //ejercicio
-                Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
+                if (await OficioService.UpdateParametrosXEXP(new UlitimoExternoIndex(2022))) //ejercicio
+                {
+                    Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
+                }else{
+                    Snackbar.Add($"Error al actualizar xexp", Severity.Success);
+                }
             } //oficios_xpedir
             else
             {

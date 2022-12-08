@@ -101,9 +101,9 @@ namespace MesaCorrespondencia.Client.Services
             return response.Data;
         }
 
-        public async Task<bool> UpdateParametrosXEXP(int ejercicio)
+        public async Task<bool> UpdateParametrosXEXP(UlitimoExternoIndex ejercicio)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/oficios/update-parametros", ejercicio);
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-parametros", ejercicio);
             return response.IsSuccessStatusCode; 
         }
 

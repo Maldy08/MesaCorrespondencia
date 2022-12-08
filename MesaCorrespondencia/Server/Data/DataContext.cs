@@ -806,7 +806,7 @@ namespace MesaCorrespondencia.Server.Data
 
             modelBuilder.Entity<OficiosParametro>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Ejercicio);
 
                 entity.ToTable("OFICIOS_PARAMETROS");
 

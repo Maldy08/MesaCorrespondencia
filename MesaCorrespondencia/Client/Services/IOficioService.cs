@@ -21,7 +21,7 @@ namespace MesaCorrespondencia.Client.Services
         Task<int> GetIndexUserxt();
 
         Task<OficiosParametro> GetOficioParametro(int ejercicio);
-        Task<bool> UpdateParametrosXEXP(int ejercicio);
+        Task<bool> UpdateParametrosXEXP(UlitimoExternoIndex ejercicio);
         Task<bool> DeleteOficio(int ejercicio, int eor, int folio);
 
 

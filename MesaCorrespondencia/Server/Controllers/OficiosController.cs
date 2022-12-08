@@ -212,9 +212,9 @@ namespace MesaCorrespondencia.Server.Controllers
         }
 
         [HttpPut("update-parametros")]
-        public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> UpdateParametrosXEXP(int ejercicio)
+        public async Task<ActionResult<ServiceResponse<OficiosBitacora>>> UpdateParametrosXEXP(UlitimoExternoIndex ejercicio)
         {
-            var result = await _oficiosRepository.UpdateParametrosXEXP(ejercicio);
+            var result = await _oficiosRepository.UpdateParametrosXEXP(ejercicio.IdExterno);
             return Ok(result);
         }
 

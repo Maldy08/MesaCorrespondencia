@@ -308,11 +308,11 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         public async Task<ServiceResponse<bool>> UpdateParametrosXEXP(int ejercicio)
         {
-            var oficioParamatro = _context.OficiosParametros.Where(o => o.Ejercicio == ejercicio).FirstOrDefault();
-            if (oficioParamatro != null)
+            var oficioParamatro = _context.OficiosParametros.FirstOrDefaultAsync(o => o.Ejercicio == ejercicio);
+            if (oficioParamatro.Result != null)
             {
-                var next = oficioParamatro.NextXexp + 1;
-                oficioParamatro.NextXexp = next;
+                var next = oficioParamatro.Result.NextXexp + 1;
+                oficioParamatro.Result.NextXexp = next;
                 try
                 {
                     await _context.SaveChangesAsync(); //revisar actualizacion fallida en la bd, completado en la api
