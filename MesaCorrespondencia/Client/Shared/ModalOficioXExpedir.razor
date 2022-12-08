@@ -227,18 +227,19 @@
 
     protected override  async Task OnInitializedAsync()
     {
-        _departamentos = await FunctionService.getDepartamentosF(await LocalStorage.GetItemAsync<int>("depto")); //falta tomar el id correspondiente
 
         if (oficio != null)
         {
             isNew = false;
-            _departamentoSelected = _departamentos.Find(a => a.id_CEA == oficio.DeptoRespon);
         }else{
         oficio = new();
             var folio = await OficioService.GetOficioParametro(2022);
             oficio.Folio = folio.NextXexp;
         }
-        
+                _departamentos = await FunctionService.getDepartamentosF(await LocalStorage.GetItemAsync<int>("depto")); //falta tomar el id correspondiente
+
+                _departamentoSelected = (oficio.DeptoRespon != 0 ?  _departamentos.Find(a => a.id_CEA == oficio.DeptoRespon) : null);
+
     //
     }
 
