@@ -161,14 +161,28 @@
 
     private async Task Edit(VwOficiosLista element)
     {
-        var parameters = new DialogParameters { ["oficioEdit"] = element, ["isNew"] = false };
+        var parameters = new DialogParameters { ["oficio"] = element, ["isNew"] = false };
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }; // ajustar tamaño en heigh
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters, options);
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Editar Oficio Por Expedir", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            StateHasChanged();
+            var oficio = result.Data as Oficio;
+            if (oficio != null)
+            {
+                //    await OficioService.CreateOficio(oficio);
+                await LoadData();
+                StateHasChanged();
+                Snackbar.Add($"Oficio {oficio.Folio} actualizado exitosamente!", Severity.Success);
+            } //oficios_xpedir
+            else
+            {
+                Snackbar.Add($"Error al actualizar el oficio!", Severity.Error);
+
+            }
         }
+      
+        
     }
 
     private async void cancelar(VwOficiosLista registro)
@@ -196,18 +210,18 @@
             using var streamRef = new DotNetStreamReference(stream: st);
 
             await JSRuntime.InvokeVoidAsync("downloadFileFromStream", "Oficio_" + registro.Tema + ".docx", streamRef);
-    }else{
+         }else{
             Snackbar.Add($"Error al ingresar el oficio!", Severity.Error);
 
-    }
+         }
 
     }
 
     public async void ingresar()
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
-        // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio Por Expedir", options);
+        var parameters = new DialogParameters {  ["isNew"] = true };
+        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio Por Expedir",parameters,options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -217,7 +231,7 @@
                 //    await OficioService.CreateOficio(oficio);
                 await LoadData();
                 StateHasChanged();
-                await OficioService.UpdateParametrosXEXP(2022);
+                await OficioService.UpdateParametrosXEXP(2022); //ejercicio
                 Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
             } //oficios_xpedir
             else

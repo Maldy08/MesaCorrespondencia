@@ -105,7 +105,7 @@
 
         var idindex = (await(OficioService.GetIndexUserxt()));
         var externo = new OficiosUsuext((idindex + 1), _empresaN.ToUpper(), _siglasN.ToUpper(), _nombreN.ToUpper(), _puestoN.ToUpper(), DateTime.Now, true);
-         await  OficioService.CreateOficioUsuext(externo);
+       await  OficioService.CreateOficioUsuext(externo);
          //Elements.Concat(new [] { externo });  //tabla update
          //StateHasChanged();
         MudDialog.Close(DialogResult.Ok(externo));
