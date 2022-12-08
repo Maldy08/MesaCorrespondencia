@@ -1,28 +1,41 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
+using System.Net;
+using Microsoft;
+using Microsoft.AspNetCore;
+
+using File = System.IO.File;
+using System.IO;
 
 namespace MesaCorrespondencia.Client.Services
 {
     public class GCloudService : IGCloudService
     {
         private readonly HttpClient _httpClient;
+        private readonly IAuthService _authService;
 
-        public GCloudService(HttpClient httpClient)
+
+
+
+        public GCloudService(HttpClient httpClient, IAuthService authService)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient ;
+           _authService = authService;
         }
-        public async Task<MemoryStream> GetDocumento(VwOficiosLista oficio)
+        public async Task<byte[]> GetDocumento(VwOficiosLista preoficio)
         {
+            
+            var file = await _httpClient.GetStreamAsync($"GcloudS/doc/{preoficio.Ejercicio}/{preoficio.Eor}/{preoficio.Folio}");
 
-            var data = await _httpClient.GetStreamAsync("GcloudS");
-
-            data.Seek(0, SeekOrigin.Begin);//set position to beginning    
-
-          
-            return (MemoryStream)data;
-
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
         }
 
     }
 }
+ 

@@ -189,11 +189,17 @@
     private async void Descargar(VwOficiosLista registro)
     {
         var ms = await GCloudS.GetDocumento(registro);
-        ms.Seek(0, SeekOrigin.Begin);//set position to beginning
+        //ms.Seek(0, SeekOrigin.Begin);//set position to beginning
+        Stream st = new MemoryStream(ms);
+        st.Seek(0, SeekOrigin.Begin);
+        if(st.CanRead){
+            using var streamRef = new DotNetStreamReference(stream: st);
 
-        using var streamRef = new DotNetStreamReference(stream: ms);
-        await JSRuntime.InvokeVoidAsync("downloadFileFromStream", "fileName.docx", streamRef);
-        ms.Close();
+            await JSRuntime.InvokeVoidAsync("downloadFileFromStream", "Oficio_" + registro.Tema + ".docx", streamRef);
+    }else{
+            Snackbar.Add($"Error al ingresar el oficio!", Severity.Error);
+
+    }
 
     }
 

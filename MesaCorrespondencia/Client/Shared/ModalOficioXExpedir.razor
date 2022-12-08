@@ -207,7 +207,7 @@
         oficio = new();
         _departamentos = await FunctionService.getDepartamentosF(await LocalStorage.GetItemAsync<int>("depto")); //falta tomar el id correspondiente
         var folio = await OficioService.GetOficioParametro(2022);
-        oficio.Folio = folio.NextXexp;
+        oficio.Folio = folio.NextXexp+98;
     //
     }
 

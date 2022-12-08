@@ -11,7 +11,7 @@ namespace MesaCorrespondencia.Server.Repository
 
             try
             {
-                var g = new GCloudS(GetCredentials());
+                var g = new GCloudS(GetCredentials(),null);
                 var ms = g.DriveExportWord();
                 ms.Position = 0;
                 a.Data = ms;

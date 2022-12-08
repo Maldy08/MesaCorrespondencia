@@ -1,9 +1,12 @@
-﻿namespace MesaCorrespondencia.Client.Services
+﻿using Microsoft.JSInterop;
+using System.IO;
+
+namespace MesaCorrespondencia.Client.Services
 {
     public interface IGCloudService
     {
 
-        public  Task<MemoryStream> GetDocumento(VwOficiosLista oficio);
+        public Task<byte[]> GetDocumento(VwOficiosLista oficio);
 
     }
 }
