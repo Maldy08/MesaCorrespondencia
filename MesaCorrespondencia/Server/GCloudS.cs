@@ -12,16 +12,17 @@ using Google.Apis.Drive.v3;
 public class GCloudS
 {
     private GoogleCredential credencial;
+    private VwOficiosLista preoficio;
     public GCloudS()
     {
     }
     String fileId = "1NVUavkhHQTYSslMudpeg5pJDOWskPBxnc8Sjkm-O7lc";
     String nombre = "miDocu";
     String mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-    public GCloudS(GoogleCredential stream)
+    public GCloudS(GoogleCredential stream, VwOficiosLista preoficio)
     {
         credencial = stream;
-
+        this.preoficio = preoficio;
     }
 
     public MemoryStream DriveExportWord()
@@ -98,13 +99,13 @@ public class GCloudS
 
     private void documentUpdate(String documentId)
     {
-        String DEPENDENCIA = "COMISI�N ESTATAL DEL AGUA DE BAJA CALIFORNIA";
-        String SECCION = "DIRECCION JURIDICA Y DE NORMATIVIDAD";
-        String OFICIO = "39/2.1/048/2021";
+        String DEPENDENCIA = preoficio.RemDepen;
+        String SECCION = preoficio.Depto.ToString(); //???
+        String OFICIO = "39/2.1/048/2021"; //???
         String FECHA = DateTime.Now.ToString("yyyy/MM/dd");
-        String ASUNTO = "FORMATO PARA OFICIOS";
-        String RESPONSABLE = "Alejandro Ramos Hernandez";
-        String PUESTO = "Practicante";
+        String ASUNTO = preoficio.Tema;
+        String RESPONSABLE = preoficio.RemNombre;
+        String PUESTO = preoficio.RemCargo;
 
 
 
@@ -243,7 +244,7 @@ public class GCloudS
     {
         return new Google.Apis.Drive.v3.Data.File()
         {
-            Name = "oficio_" + "alejandro" + "_" + DateTime.Now.ToString("dd/MM/yyyy"),
+            Name = "oficio_" + preoficio.Folio + "_" + DateTime.Now.ToString("dd/MM/yyyy"),
             Parents = new List<string>
                     {
                         "13oNtrIExmCN6Oy6pJQ9KpzEBDbwmMflZ" //FolderID

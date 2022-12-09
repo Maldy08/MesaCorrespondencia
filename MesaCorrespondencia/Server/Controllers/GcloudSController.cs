@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Google.Apis.Auth.OAuth2;
 using MesaCorrespondencia.Server.Repository;
+using Microsoft.JSInterop;
+using System.Text.Json;
+using MesaCorrespondencia.Server.Repositorios;
+
 namespace MesaCorrespondencia.Server.Controllers
 {
 
@@ -10,18 +14,31 @@ namespace MesaCorrespondencia.Server.Controllers
     public class GcloudSController : ControllerBase
     {
         private readonly IGCloudSRepository _IGCloudSRepository;
-        public GcloudSController(IGCloudSRepository logger)
+        private readonly IOficiosRepository _IOficio;
+
+        private readonly IWebHostEnvironment env;
+        public GcloudSController(IGCloudSRepository logger, IWebHostEnvironment env, IOficiosRepository _IOficio)
         {
             _IGCloudSRepository = logger;
+            this.env = env;
+            this._IOficio = _IOficio;
         }
 
-        [HttpGet]
-        public MemoryStream GetData()
+        [HttpGet("doc/{ejercicio}/{eor}/{folio}")]  //([FromQuery]VwOficiosLista preoficio)
+        public async Task<IActionResult> GetDat(int ejercicio, int eor, int folio)
         {
-            var g = new GCloudS(GetCredentials());
-            var ms = g.DriveExportWord();
-            ms.Position = 0;
-            return ms;
+            var preoficio = _IOficio.GetOficioByFolio(ejercicio, eor, folio).Result.Data;
+            DotNetStreamReference streamRef = null;
+            MemoryStream ms = null;
+            if (preoficio != null)
+            {
+                var g = new GCloudS(GetCredentials(), preoficio);
+
+                ms = g.DriveExportWord();
+                ms.Position = 0;
+                return File(ms, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Documento.docx");
+            }
+            return NotFound();
         }
 
         private GoogleCredential GetCredentials()
