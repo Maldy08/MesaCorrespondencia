@@ -136,7 +136,12 @@
         if (await AuthService.IsUserInRoleMc())
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
-            vwOficiosListas = await OficioService.OficiosLista(eor, ejercicio, empleado, await LocalStorage.GetItemAsync<int>("depto"));
+        {
+             depto = await LocalStorage.GetItemAsync<int>("depto");
+             empleado = await LocalStorage.GetItemAsync<int>("empleado");
+             vwOficiosListas = await OficioService.OficiosLista(eor, ejercicio, empleado, depto);
+        }      
+            
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);

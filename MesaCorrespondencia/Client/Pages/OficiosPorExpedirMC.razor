@@ -1,8 +1,27 @@
 ﻿@page "/oficios-por-expedir-mc"
+@*@inject AuthService authService
+@inject ILocalStorageService localStorage*@
+
 
 <h3>Oficios - Expedidos</h3>
 
-<TableOficiosPorExpedirMC eor="3" ejercicio="2022" isPage="true" />
-@code {
+@*@if(isMC)
+{
+    <TableOficiosPorExpedirMC eor="3" ejercicio="2022" isPage="true" />
+}
+else
+{
+    <TableOficiosPorExpedirUsuario Title="Oficios por expedir" eor="3" ejercicio="2022"  />
+}*@
+<TableOficiosPorExpedirUsuario Title="Oficios por expedir" eor="3" ejercicio="2022" />
 
+@code {
+    //private int depto;
+    //private int empleado;
+    //private bool isMC = false;
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    if (await authService.IsUserInRoleMc())
+    //        isMC = true;
+    //}
 }
