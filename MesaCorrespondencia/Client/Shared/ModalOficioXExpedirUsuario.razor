@@ -5,6 +5,7 @@
 @inject ILocalStorageService LocalStorage
 @inject IFunctionsService FunctionService
 @inject HttpClient Http
+@inject IOficioParametroService oficioParametroService
 <style>
 
     .mud-typography-body1 {
@@ -125,7 +126,6 @@
         <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
     </DialogActions>
 </MudDialog>
-
 @code {
 
     //drop
@@ -144,23 +144,34 @@
     //end drop
     [CascadingParameter]
     MudDialogInstance mudDialog { get; set; }
-    private VwOficiosLista oficio;
+    [Parameter]
+    public bool isNew { get; set; }
+    [Parameter]
+    public VwOficiosLista oficio { get; set; }
     private VsEmpleadosSisco empleadoSelected;
     private VsEmpleadosSisco responsableSelected;
     private OficiosUsuext usuarioExternoSelected;
     private Oficio oficioCreate;
     private MultipartFormDataContent content;
+    private OficiosParametro? oficiosParametro;
 
 
 
     private async Task Submit()
     {
-        oficio.Ejercicio = 2022;
-        oficio.Eor = 3;
-        oficio.Tipo = 1;
-        // oficio.Folio = 403; //GET FROM PARAMETROS OFICIO
-        oficio.Rol = 1;
+        if (isNew)
+        {
 
+            oficio.Ejercicio = 2022;
+            oficio.Eor = 3;
+            oficio.Tipo = 1;
+            oficiosParametro = await oficioParametroService.GetParametros(2022);
+            oficio.Folio = oficiosParametro.NextFXexp;
+            oficiosParametro.NextFXexp += 1;
+            var correcto = await OficioService.UpdateParametros(oficiosParametro);
+            // oficio.Folio = 403; //GET FROM PARAMETROS OFICIO
+            oficio.Rol = 1;
+        }
         oficioCreate = new Oficio
             {
                 Ejercicio = oficio.Ejercicio,
@@ -194,28 +205,57 @@
                     }
                 } //1 responsable 2 Visualizador
             };
-        if (await OficioService.CreateOficio(oficioCreate))
+        if (isNew)
         {
-            mudDialog.Close(DialogResult.Ok(oficioCreate));
+
+            if (await OficioService.CreateOficio(oficioCreate))
+            {
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
+            }
+            else
+            {
+                mudDialog.Close(DialogResult.Cancel());
+
+            }
         }
         else
         {
-            mudDialog.Close(DialogResult.Cancel());
+            if (await OficioService.UpdateOficio(oficioCreate))
+            {
 
+                mudDialog.Close(DialogResult.Ok(oficioCreate));
+            }
+            else
+            {
+                mudDialog.Close(DialogResult.Cancel());
+
+            }
         }
     }
 
     private void Cancel() => mudDialog.Cancel();
 
 
+
     protected override async Task OnInitializedAsync()
     {
-        oficio = new();
+        if (oficio != null)
+        {
+            isNew = false;
+        }
+        else
+        {
+            oficio = new();
+            var folio = new OficiosParametro { NextFXexp = 35 };    //await OficioService.GetOficioParametro(2022);
+            oficio.Folio = folio.NextFXexp;
+        }
         _departamentos = await FunctionService.getDepartamentosF(await LocalStorage.GetItemAsync<int>("depto")); //falta tomar el id correspondiente
-        var folio = await OficioService.GetParametros(2022);
-        oficio.Folio = folio.NextFXexp;
+
+        _departamentoSelected = (oficio.DeptoRespon != 0 ? _departamentos.Find(a => a.id_CEA == oficio.DeptoRespon) : null);
+
         //
     }
+
 
 
     protected async Task ingresarPersonalInterno()
@@ -256,9 +296,9 @@
         return (modal == true ? DialogService.Show<ModalPersonalExterno>("", options) : DialogService.Show<ModalPersonalInterno>("", options));
     }
 
-     /*
-     * Falta actualizar el guardar
-     * Verificar datos
+    /*
+    * Falta actualizar el guardar
+    * Verificar datos
     *
     */
 }

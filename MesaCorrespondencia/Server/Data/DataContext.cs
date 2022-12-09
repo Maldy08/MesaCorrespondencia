@@ -36,6 +36,16 @@ namespace MesaCorrespondencia.Server.Data
             modelBuilder.Entity<GetDepartamentos>(entity =>
             {
                 entity.HasNoKey();
+                entity.Property(e => e.id)
+                    .HasPrecision(3)
+                    .HasColumnName("VAL_1");
+                entity.Property(e => e.id_CEA)
+                    .HasPrecision(3)
+                    .HasColumnName("VAL_2");
+                entity.Property(e => e.descripcion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("VAL_3");
                 entity.ToFunction("GetDeptos");
 
             });
