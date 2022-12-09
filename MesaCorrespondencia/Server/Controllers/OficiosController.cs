@@ -268,5 +268,12 @@ namespace MesaCorrespondencia.Server.Controllers
             var result = _oficiosRepository.GetIndexUserxt();
             return Ok(result);
         }
+
+        [HttpDelete("delete-preoficio/{ejercicio}/{eor}/{folio}")]
+        public async Task<IActionResult> DeleteAsync(int ejercicio, int eor, int folio)
+        {
+            var result = await _oficiosRepository.DeleteOficio(ejercicio, eor, folio);
+            return Ok(result);
+        }
     }
 }

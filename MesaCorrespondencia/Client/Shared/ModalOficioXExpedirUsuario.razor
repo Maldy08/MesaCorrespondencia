@@ -179,7 +179,7 @@
                 Eor = oficio.Eor,
                 Tipo = oficio.Tipo,
                 NoOficio = "0", //falta programar
-                Estatus = 0,
+                Estatus = 1,
                 Fecha = oficio.Fecha,
                 FechaCaptura = oficio.FechaCaptura,
                 FechaAcuse = oficio.Fecha,
@@ -192,6 +192,16 @@
                 DestNombre = oficio.DestNombre,
                 DestCargo = oficio.DestCargo,
                 Tema = oficio.Tema,
+                OficioBitacora = new OficiosBitacora
+                {
+                    Ejercicio = oficio.Ejercicio,
+                    Folio = oficio.Folio,
+                    FechaCaptura = DateTime.Today,
+                    Eor = oficio.Eor,
+                    IdEmpleado = await LocalStorage.GetItemAsync<int>("empleado"),
+                    Comentarios = oficio.Tema
+                },
+
                 Depto = await LocalStorage.GetItemAsync<int>("depto"),
                 DeptoRespon = _departamentoSelected.id_CEA,
                 OficiosResponsables = new List<OficiosResponsable>{

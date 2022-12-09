@@ -423,5 +423,36 @@ namespace MesaCorrespondencia.Server.Repositorios
         }
 
 
+        public async Task<ServiceResponse<bool>> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var oficioD = await _context.Oficios.FirstOrDefaultAsync(x => x.Ejercicio == ejercicio && x.Eor == eor && x.Folio == folio);
+
+            if (oficioD == null)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+                return response;
+            }
+            try
+            {
+                _context.Oficios.Remove(oficioD);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Data = true;
+
+            }
+            catch (DbUpdateException)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+
+            }
+            return response;
+
+        }
+
+
     }
 }

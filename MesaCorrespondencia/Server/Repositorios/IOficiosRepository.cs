@@ -22,6 +22,7 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         Task<ServiceResponse<OficiosUsuext>> CreateOficioUsuext(OficiosUsuext oficiosUsuext);
         ServiceResponse<int> GetIndexUserxt();
+        Task<ServiceResponse<bool>> DeleteOficio(int ejercicio, int eor, int folio);
 
     }
 }
