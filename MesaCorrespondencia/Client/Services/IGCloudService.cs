@@ -7,6 +7,7 @@ namespace MesaCorrespondencia.Client.Services
     {
 
         public Task<byte[]> GetDocumento(VwOficiosLista oficio);
+        public Task<String> GetConsecutivo(String depto);
 
     }
 }

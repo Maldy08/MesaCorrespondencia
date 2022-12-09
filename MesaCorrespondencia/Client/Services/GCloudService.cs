@@ -36,5 +36,11 @@ namespace MesaCorrespondencia.Client.Services
             }
         }
 
+        public async Task<String> GetConsecutivo(String depto)
+        {
+            var respuesta = await _httpClient.GetStringAsync($"ControllerSheets/get-consecutivo/{depto}");
+            return (String)respuesta;
+        }
+
     }
 }

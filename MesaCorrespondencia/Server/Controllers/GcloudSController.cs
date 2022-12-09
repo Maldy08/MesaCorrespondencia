@@ -41,6 +41,24 @@ namespace MesaCorrespondencia.Server.Controllers
             return NotFound();
         }
 
+
+        [HttpGet("get-consecutivo/{dpto}")]
+        public string GetData(String dpto)
+        {
+            if (Int32.TryParse(dpto, out int departamento))
+            {
+                var g = new GSheets(GetCredentials(), departamento);
+                var DATA = g.ReadAsync();
+                return DATA.Result.ToString();
+            }
+            else
+            {
+                return ($"error en el departamento '{dpto}'");
+            }
+
+
+        }
+
         private GoogleCredential GetCredentials()
         {
 
