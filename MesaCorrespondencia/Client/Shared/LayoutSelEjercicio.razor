@@ -1,0 +1,66 @@
+﻿@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthService AuthService
+@inject AppState appState
+
+@inherits LayoutComponentBase
+
+        <MudThemeProvider Theme="@myCustomTheme" />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
+<AuthorizeView>
+    <Authorized>
+            <MudLayout>
+                <MudAppBar Style="background-color: #51152E" Elevation="0">
+                    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                    <MudSpacer />
+                    <MudText Align="Align.Center" Typo="Typo.h5">Sistema de Control de Oficios</MudText>
+                    <MudSpacer />
+
+                    <MudButton Color="Color.Inherit" StartIcon="@Icons.Filled.Person">@context.User.Identity.Name</MudButton>
+                  @*  <MudButton Color="Color.Inherit" StartIcon="@Icons.Filled.Logout" ></MudButton>*@
+                    <MudIconButton Icon="@Icons.Filled.Logout" Color="Color.Inherit" OnClick="@Logout"></MudIconButton>
+                </MudAppBar>
+                <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Dark">
+                    <MudDrawerHeader>
+                        <MudImage Src="images/logoBC.png" Width="179" Height="72"></MudImage>
+                    </MudDrawerHeader>
+                    @*<NavMenu />*@
+                </MudDrawer>
+                <MudMainContent>
+                    <MudContainer MaxWidth="MaxWidth.False" Class="my-16 pt-16">
+                        @Body
+                    </MudContainer>
+                </MudMainContent>
+            </MudLayout>
+    </Authorized>
+          <NotAuthorized>
+             <Login/>
+          </NotAuthorized>
+ </AuthorizeView>
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await LocalStorage.SetItemAsync<int>("MC__ejercicio", 0);
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        await AuthService.ClearUserInfo();
+        NavigationManager.NavigateTo("login");
+    }
+
+    MudTheme myCustomTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = new MudBlazor.Utilities.MudColor("#6a1b31")
+            }
+        };
+}

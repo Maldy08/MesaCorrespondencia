@@ -797,7 +797,9 @@ namespace MesaCorrespondencia.Server.Data
                 //Tabla solamente de Folios de la mesa de correspondencia, no numeros consecutivos de oficio por departamento
                 entity.ToTable("OFICIOS_PARAMETROS");
 
-                entity.HasKey(o => o.Ejercicio);
+                entity.HasKey(o => o.Ejercicio)
+                    .HasName("PK_OFICIOS_PARAMETROS");
+                
 
                 entity.Property(e => e.Ejercicio)
                     .HasPrecision(4)

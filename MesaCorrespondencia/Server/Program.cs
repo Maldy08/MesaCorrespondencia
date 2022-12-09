@@ -89,13 +89,13 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddCors(op =>
-{
-    op.AddDefaultPolicy(b =>
-    {
-        b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
+//builder.Services.AddCors(op =>
+//{
+//    op.AddDefaultPolicy(b =>
+//    {
+//        b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+//    });
+//});
 
 var app = builder.Build();
 app.UseSwaggerUI();
@@ -118,7 +118,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseCors();
+//app.UseCors();
 
 //Authentication Middleware
 app.UseAuthentication();

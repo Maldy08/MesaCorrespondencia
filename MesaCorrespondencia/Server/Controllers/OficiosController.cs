@@ -141,7 +141,7 @@ namespace MesaCorrespondencia.Server.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> UpdateOficio(Oficio oficio)
         {
             var result = await _oficiosRepository.UpdateOficio(oficio);
@@ -205,7 +205,7 @@ namespace MesaCorrespondencia.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-parametros")]
+        [HttpGet("get-parametros/{ejercicio}")]
         public async Task<ActionResult<ServiceResponse<OficiosParametro>>> GetParametros(int ejercicio)
         {
             var result = await _oficiosRepository.GetParametros(ejercicio);

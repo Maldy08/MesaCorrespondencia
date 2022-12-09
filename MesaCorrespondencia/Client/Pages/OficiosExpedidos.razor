@@ -1,8 +1,13 @@
-﻿@page "/oficios-expedidos"
+﻿@page "/oficios-expedidos-mc"
+
+@*@inject ILocalStorageService localStorage
+@inject IAuthService authService*@
 
 <h3>Oficios - Expedidos</h3>
 
-<TableOficios eor="1" ejercicio="2022" isPage="true" />
+<TableOficiosEnviados eor="1" ejercicio="2022" isPage="true"  />
 @code {
+    //private int depto;
+    //private int idempleado;
 
 }

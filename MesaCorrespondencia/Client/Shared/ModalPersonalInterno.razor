@@ -45,6 +45,19 @@
                 <MudTd DataLabel="Nombre del empleado">@context.NombreCompleto</MudTd>
                 <MudTd DataLabel="Departamento">@context.DescripcionDepto</MudTd>
                 <MudTd DataLabel="Puesto">@context.DescripcionPuesto</MudTd>
+@*                <MudTable  T="VsEmpleadosSisco"
+                          Items="@selectedItems"
+                          @bind-SelectedItems="selectedItems"
+                          Dense="true"
+                          Hover="true"
+                          Striped="true">
+                    <HeaderContent>
+                        <MudTh>NOMBRE EMPLEADO</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="empleado">
+                         <MudTd DataLabel="Nombre del empleado">@empleado.NombreCompleto</MudTd>
+                    </RowTemplate>
+                </MudTable>*@
             </RowTemplate>
             <PagerContent>
                 <MudTablePager PageSizeOptions="new int[]{25,50,100}" />

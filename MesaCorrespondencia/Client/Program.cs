@@ -14,9 +14,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddBlazoredLocalStorage();
-var apiURL = builder.Configuration["AppSettings:apiURL"];
-if (string.IsNullOrEmpty(apiURL)) apiURL = builder.HostEnvironment.BaseAddress;
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiURL) });
+//var apiURL = builder.Configuration["AppSettings:apiURL"];
+//if (string.IsNullOrEmpty(apiURL)) apiURL = builder.HostEnvironment.BaseAddress;
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOficioService, OficioService>();

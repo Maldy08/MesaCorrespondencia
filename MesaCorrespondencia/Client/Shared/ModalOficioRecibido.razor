@@ -1,9 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using System.Net.Http.Headers
+
 @inject IDialogService DialogService
-@inject IOficioService OficioService
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
+@inject ISnackbar Snackbar
+
+@inject IOficioService OficioService
+@inject AppState appState
+
 <style>
 
     .mud-typography-body1 {
@@ -184,6 +189,7 @@
     private List<UploadResult> uploadResults = new();
     private MultipartFormDataContent content;
     private IFormFile formFile;
+    private OficiosParametro? oficiosParametro;
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
@@ -221,11 +227,19 @@
 
         if (isNew)
         {
-            oficio.Ejercicio = 2022;
+            oficio.Ejercicio = appState.Ejercicio;
             oficio.Eor = 2;
             oficio.Tipo = 1;
             oficio.Rol = 1;
-            oficio.Folio = 253;
+            // oficio.Folio = 302;
+            oficiosParametro = await OficioService.GetParametros(oficio.Ejercicio);
+            oficio.Folio = oficiosParametro.NextFRec;
+            oficiosParametro.NextFRec+=1;
+            var correcto = await OficioService.UpdateParametros(oficiosParametro);
+            //Snackbar.Add("Ocurrió un error al obtener el folio", Severity.Warning);
+
+
+            // var x = await OficioService.GetParametros(oficio.Ejercicio);
         }
         oficioCreate = new Oficio
             {
@@ -290,9 +304,13 @@
         {
             if (await OficioService.UpdateOficio(oficioCreate))
             {
-                await OficioService.UpdatePdfPath(oficioCreate); //?????? se nesecita actualizar?
+                if( await OficioService.UpdatePdfPath(oficioCreate))
+                {
+                    //Snackbar.Add("Registro actualizado exitosamente!", Severity.Success);
+                    mudDialog.Close(DialogResult.Ok(oficioCreate));
+                } //?????? se nesecita actualizar?
 
-                mudDialog.Close(DialogResult.Ok(oficioCreate));
+               
             }
         }
     }
@@ -356,7 +374,7 @@
     protected async Task ingresarPersonalExterno()
     {
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog = getModalPersonal(destinatario); //ture externos flase internos
+        var dialog = getModalPersonal(destinatario); //true externos false internos
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -382,14 +400,14 @@
 
     private MudBlazor.IDialogReference getModalPersonal(bool modal)
     {
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick= true };
 
         return (modal == true ? DialogService.Show<ModalPersonalExterno>("", options) : DialogService.Show<ModalPersonalInterno>("", options));
     }
 
     protected async Task ingresarResponsable()
     {
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true, DisableBackdropClick= true };
         var dialog = DialogService.Show<ModalPersonalInterno>("", options);
         var result = await dialog.Result;
         if (!result.Cancelled)

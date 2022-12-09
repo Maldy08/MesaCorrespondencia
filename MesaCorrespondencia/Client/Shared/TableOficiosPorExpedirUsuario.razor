@@ -60,27 +60,29 @@
         <MudTextField Style="font-size : .6rem; block-size : 2.5rem " Immediate="true" Variant="Variant.Outlined" @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>ACCIONES</MudTh>
+      
         <MudTh>FECHA</MudTh>
         <MudTh>AREA</MudTh>
         <MudTh>NO.DE OFICIO</MudTh>
         <MudTh>REMITENTE</MudTh>
         <MudTh>DESTINATARIO</MudTh>
         <MudTh>TEMA</MudTh>
+        <MudTh>ACCIONES</MudTh>
 
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd Class="botones" DataLabel="ACCIONES">
-            <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)"></MudIconButton>
-            <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Cancel" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => cancelar(context)"></MudIconButton>
-        </MudTd>
+
         <MudTd DataLabel="FECHA">@context.Fecha.ToString("dd/MM/yyyy")</MudTd>
         <MudTd DataLabel="AREA">@context.RemDepen</MudTd>
         <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
         <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
         <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
         <MudTd DataLabel="TEMA">@context.Tema</MudTd>
+        <MudTd Class="botones" DataLabel="ACCIONES">
+            <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Save" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)"></MudIconButton>
+            <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Cancel" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => cancelar(context)"></MudIconButton>
+        </MudTd>
 
 
         <MudTd><MudButton OnClick="() => Descargar(context)" style="height: 25px; width : 9;padding 15px 11px;" Color="Color.Primary" Variant="Variant.Filled">DESCARGAR</MudButton></MudTd>
@@ -167,7 +169,7 @@
     {
         var parameters = new DialogParameters { ["oficioEdit"] = element, ["isNew"] = false };
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }; // ajustar tamaño en heigh
-        var dialog = DialogService.Show<ModalOficioRecibido>("Ingresar Oficio Recibido", parameters, options);
+        var dialog = DialogService.Show<ModalOficioXExpedirUsuario>("Editar Oficio", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -207,7 +209,7 @@
     {
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
         // var parameters = new DialogParameters { ["oficioEdit"] = vwOficiosLista };
-        var dialog = DialogService.Show<ModalOficioXExpedir>("Ingresar Oficio Por Expedir", options);
+        var dialog = DialogService.Show<ModalOficioXExpedirUsuario>("Ingresar Oficio Por Expedir", options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

@@ -35,7 +35,7 @@
 </style>
 
 
-<MudButton OnClick="ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">Ingresar Oficio Expedido</MudButton>
+<MudButton OnClick="@ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">Ingresar Oficio Expedido</MudButton>
 <br />
 <MudTable id="tabla-oficios" T="VwOficiosLista"
     Loading="@_loading"  
@@ -47,43 +47,34 @@
     Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
     OnRowClick="@RowClickEvent">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <br/> <MudIcon Icon="@Icons.Filled.Download" />
+        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download" />
         <MudSpacer />
         <MudTextField Immediate="true" Variant="Variant.Outlined"  @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-            <MudTh>ACCIONES</MudTh>
-            <MudTh>NO.FOLIO</MudTh>
+            
+            
             <MudTh>FECHA</MudTh>
-            <MudTh>DEPENDENCIA</MudTh>
-            <MudTh>TIPO</MudTh>
+            <MudTh>AREA</MudTh>
             <MudTh>NO.DE OFICIO</MudTh>
             <MudTh>REMITENTE</MudTh>
             <MudTh>DESTINATARIO</MudTh>
-            <MudTh>ESTATUS</MudTh>
+            <MudTh>TEMA</MudTh>
+             <MudTh>ACCIONES</MudTh>
     </HeaderContent>
     
     <RowTemplate>
-        <MudTd Class="botones" DataLabel="ACCIONES">
-            @if(!String.IsNullOrEmpty(context.Pdfpath)){
-                <MudIconButton Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
-            }
-            else{
-                <MudIconButton Disabled="true" Class="color" Icon="@Icons.Material.Filled.RemoveRedEye" Edge="Edge.Start" Size="Size.Small" aria-label="open" OnClick="() => ViewPDF(context)"></MudIconButton>
-            }
-             
-             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)" ></MudIconButton>
-             <MudIconButton Class="color" Icon="@Icons.Material.Outlined.EditNote" Size="Size.Small" Edge="Edge.Start" aria-label="bitacora" OnClick="() => MostrarBitacora(context)"></MudIconButton>
-        </MudTd>
-        <MudTd  DataLabel="NO.FOLIO">@context.Folio</MudTd>
+
         <MudTd DataLabel="FECHA">@context.Fecha.ToString("dd/MM/yyyy")</MudTd>
-        <MudTd DataLabel="DEPENDENCIA">@context.RemDepen</MudTd>
-        <MudTd DataLabel="TIPO">@context.Tipo</MudTd>
+        <MudTd DataLabel="AREA">@context.RemDepen</MudTd>
+       
         <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
         <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
         <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
-        <MudTd DataLabel="ESTATUS" >
-           <TableOficiosEstatus Eor="@context.Eor" Estatus="@context.Estatus"/>
+        <MudTd DataLabel="TEMA">@context.Tema</MudTd>
+        <MudTd Class="botones" DataLabel="ACCIONES">
+            <MudButton OnClick="() => Edit(context)" Color="Color.Primary" Variant="Variant.Filled">DESPACHAR</MudButton>
+            @*<MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)"></MudIconButton>*@
         </MudTd>
     </RowTemplate>
       
@@ -153,9 +144,9 @@
         {
             depto = await LocalStorage.GetItemAsync<int>("depto");
             empleado = await LocalStorage.GetItemAsync<int>("empleado");
-            vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
+            vwOficiosListas = await OficioService.OficiosLista(eor, ejercicio, empleado, depto);
         }
-      
+        
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);

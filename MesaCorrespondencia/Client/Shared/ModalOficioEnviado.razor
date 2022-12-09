@@ -5,6 +5,7 @@
 @inject ILocalStorageService LocalStorage
 @inject IDeptoService DeptoService
 @inject HttpClient Http
+@inject AppState appState
 <style>
 
     .mud-typography-body1 {
@@ -202,6 +203,7 @@
     private MultipartFormDataContent content;
 
     private IFormFile formFile;
+    private OficiosParametro? oficiosParametro;
 
     private void UploadFiles(InputFileChangeEventArgs e)
     {
@@ -237,12 +239,15 @@
     {
         if (isNew)
         {
-            oficio.Ejercicio = 2022;
-            oficio.Eor = 2;
+            oficio.Ejercicio = appState.Ejercicio;
+            oficio.Eor = 1;
             oficio.Tipo = 1;
             oficio.Rol = 1;
-            //obtener folio de MC
-            oficio.Folio = 253;
+            // oficio.Folio = 302;
+            oficiosParametro = await OficioService.GetParametros(oficio.Ejercicio);
+            oficio.Folio = oficiosParametro.NextFEnv;
+            oficiosParametro.NextFEnv += 1;
+            var correcto = await OficioService.UpdateParametros(oficiosParametro);
         }
         oficioCreate = new Oficio
             {
@@ -305,9 +310,15 @@
         }
         else
         {
-            if (await OficioService.UpdatePdfPath(oficioCreate))
+            if (await OficioService.UpdateOficio(oficioCreate))
             {
-                mudDialog.Close(DialogResult.Ok(oficioCreate));
+                if (await OficioService.UpdatePdfPath(oficioCreate))
+                {
+                    //Snackbar.Add("Registro actualizado exitosamente!", Severity.Success);
+                    mudDialog.Close(DialogResult.Ok(oficioCreate));
+                } //?????? se nesecita actualizar?
+
+
             }
         }
     }

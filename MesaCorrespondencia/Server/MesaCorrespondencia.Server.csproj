@@ -21,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Client\MesaCorrespondencia.Client.csproj" />
 		<ProjectReference Include="..\Shared\MesaCorrespondencia.Shared.csproj" />
 	</ItemGroup>
 

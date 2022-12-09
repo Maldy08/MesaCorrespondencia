@@ -91,6 +91,10 @@
         @if(!isPage){
             <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
         }
+        else
+        {
+            <MudTablePager PageSizeOptions="new int[]{15,25,35}" />
+        }
     </PagerContent>
 </MudTable>
 
@@ -117,7 +121,7 @@
     private List<string> clickedEvents = new();
     private int selectedRowNumber = -1;
     private bool _loading = false;
- 
+
     private int rows = 5;
 
     protected override async Task OnInitializedAsync()
@@ -142,7 +146,14 @@
         if(await AuthService.IsUserInRoleMc())
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
+        {
+            depto = await LocalStorage.GetItemAsync<int>("depto");
+            empleado = await LocalStorage.GetItemAsync<int>("empleado");
+
             vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
+        }
+
+            
     }
 
     private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);
@@ -198,7 +209,13 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            StateHasChanged();
+            var oficio = result.Data as Oficio;
+            if (oficio != null)
+            {
+                await LoadData();
+                StateHasChanged();
+                Snackbar.Add($"Oficio {oficio.Folio} actualizado exitosamente!", Severity.Success);
+            }
         }
     }
 

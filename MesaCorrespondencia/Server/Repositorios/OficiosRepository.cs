@@ -302,6 +302,7 @@ namespace MesaCorrespondencia.Server.Repositorios
 
         public async Task<ServiceResponse<OficiosParametro>> UpdateParametros(OficiosParametro oficiosParametro)
         {
+
             var _oficiosParametro = await _context.OficiosParametros.FindAsync(oficiosParametro.Ejercicio);
 
             if (_oficiosParametro != null)
@@ -309,7 +310,7 @@ namespace MesaCorrespondencia.Server.Repositorios
                 _oficiosParametro.Ejercicio = oficiosParametro.Ejercicio;
                 _oficiosParametro.NextFXexp = oficiosParametro.NextFXexp;
                 _oficiosParametro.NextFEnv = oficiosParametro.NextFEnv;
-                _oficiosParametro.NextFRec = oficiosParametro.NextFEnv;
+                _oficiosParametro.NextFRec = oficiosParametro.NextFRec;
                 try
                 {
                     await _context.SaveChangesAsync();
