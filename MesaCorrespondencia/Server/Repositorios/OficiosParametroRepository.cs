@@ -20,23 +20,36 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
-        //public async Task<ServiceResponse<OficiosParametro>> UpdateParametros(OficiosParametro oficiosParametro)
-        //{
-        //    var entity = await _context.OficiosParametros.FindAsync(oficiosParametro.Ejercicio);
-        //    if (entity != null)
-        //    {
-        //        entity.NextFRec = oficiosParametro.NextFRec;
-        //        entity.NextFEnv = oficiosParametro.NextFEnv;
-        //    }
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (Exception)
-        //    {
 
-        //        throw;
-        //    }
-        //}
+        public async Task<ServiceResponse<OficiosParametro>> UpdateParametros(OficiosParametro oficiosParametro)
+        {
+            var entity = await _context.OficiosParametros.FindAsync(oficiosParametro.Ejercicio);
+            if (entity != null)
+            {
+                entity.NextFRec = oficiosParametro.NextFRec;
+                entity.NextFEnv = oficiosParametro.NextFEnv;
+                entity.NextFXexp = oficiosParametro.NextFXexp;
+
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new ServiceResponse<OficiosParametro>
+                {
+                    Data = entity,
+                    Message = "Registro actualizado correctamente"
+                };
+            }
+            catch (Exception e)
+            {
+
+                return new ServiceResponse<OficiosParametro>
+                {
+                    Data = null,
+                    Message = e.Message
+                };
+            }
+   
+        }
     }
 }

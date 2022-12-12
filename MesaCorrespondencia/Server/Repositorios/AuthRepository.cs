@@ -33,7 +33,6 @@ namespace MesaCorrespondencia.Server.Repositorios
             else
                 response.Data = usuario;
             return response;
-
         }
 
         public async Task<ServiceResponse<string>> Login(string user, string password)
@@ -46,6 +45,7 @@ namespace MesaCorrespondencia.Server.Repositorios
             {
                 response.Success = false;
                 response.Message = "Usuario y/o password incorrecto";
+                response.Data = null;
             }
             else
             {
@@ -59,18 +59,21 @@ namespace MesaCorrespondencia.Server.Repositorios
         {
             List<Claim> claims = new List<Claim>
             {
+                //new Claim(JwtRegisteredClaimNames.Sub,_configuration["Jwt:Subject"]),
+                //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                //new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Usuario.ToString()),
                 new Claim(ClaimTypes.Name, user.Login),
                 new Claim(ClaimTypes.Role,user.OficiosNivel == 9 ? "mc": "usuario")
-                //new Claim("deptoId",user.Depto.ToString()),
-                //new Claim("empleadoId",user.NoEmpleado.ToString())
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+                .GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
+                     _configuration["Jwt:Issuer"],
+                     _configuration["Jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddHours(1),
+                    expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;

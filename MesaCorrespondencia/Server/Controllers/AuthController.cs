@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MesaCorrespondencia.Server.Controllers
@@ -14,6 +15,7 @@ namespace MesaCorrespondencia.Server.Controllers
             _authRepository = authRepository;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<string>>> Login(UserLogin request)
         {
@@ -22,6 +24,8 @@ namespace MesaCorrespondencia.Server.Controllers
                 return BadRequest(response);
             return Ok(response);
         }
+
+        [Authorize]
         [HttpGet("get-user-info")]
         public async Task<ActionResult<ServiceResponse<VsUsuario>>> GetUserInfo()
         {

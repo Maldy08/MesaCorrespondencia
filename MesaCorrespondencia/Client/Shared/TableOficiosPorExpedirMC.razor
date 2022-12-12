@@ -1,0 +1,230 @@
+﻿@inject IOficioService OficioService
+@inject ILocalStorageService LocalStorage
+@inject IAuthService AuthService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
+<style>
+    .botones {
+        width: 120px;
+    }
+
+    .mud-table td {
+        font-size: 10px;
+    }
+
+    ..mud-icon-size-small {
+        font-size: 1.25rem;
+    }
+
+    .mud-table-cell {
+        font-size: .7rem;
+    }
+
+    .root {
+        mud-typography-h6-size: 1.225rem;
+    }
+
+    .mud-table-head #tabla-oficios {
+        background-color: aqua;
+    }
+
+    .color {
+        color: #6A1B32;
+    }
+</style>
+
+
+<MudButton OnClick="@ingresar" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">Ingresar Oficio Expedido</MudButton>
+<br />
+<MudTable id="tabla-oficios" T="VwOficiosLista"
+    Loading="@_loading"  
+    Items="@vwOficiosListas" 
+    Hover="true"
+    Dense="true"
+    Striped="true"
+    @ref="mudTable"
+    Filter="new Func<VwOficiosLista, bool>(FilterFunc1)"
+    OnRowClick="@RowClickEvent">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Title</MudText> &nbsp; <MudIcon Icon="@Icons.Filled.Download" />
+        <MudSpacer />
+        <MudTextField Immediate="true" Variant="Variant.Outlined"  @bind-Value="searchString1" Placeholder="Busqueda" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+            
+            
+            <MudTh>FECHA</MudTh>
+            <MudTh>AREA</MudTh>
+            <MudTh>NO.DE OFICIO</MudTh>
+            <MudTh>REMITENTE</MudTh>
+            <MudTh>DESTINATARIO</MudTh>
+            <MudTh>TEMA</MudTh>
+             <MudTh>ACCIONES</MudTh>
+    </HeaderContent>
+    
+    <RowTemplate>
+
+        <MudTd DataLabel="FECHA">@context.Fecha.ToString("dd/MM/yyyy")</MudTd>
+        <MudTd DataLabel="AREA">@context.RemDepen</MudTd>
+       
+        <MudTd DataLabel="NO.DE OFICIO">@context.NoOficio</MudTd>
+        <MudTd DataLabel="REMITENTE">@context.RemNombre</MudTd>
+        <MudTd DataLabel="DESTINATARIO">@context.DestNombre</MudTd>
+        <MudTd DataLabel="TEMA">@context.Tema</MudTd>
+        <MudTd Class="botones" DataLabel="ACCIONES">
+            <MudButton OnClick="() => Edit(context)" Color="Color.Primary" Variant="Variant.Filled">DESPACHAR</MudButton>
+            @*<MudIconButton Class="color" Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" Edge="Edge.Start" aria-label="edit" OnClick="() => Edit(context)"></MudIconButton>*@
+        </MudTd>
+    </RowTemplate>
+      
+    <PagerContent>
+        @if(!isPage){
+            <MudTablePager PageSizeOptions="new int[]{5,10,15}" />
+        }
+        else
+        {
+            <MudTablePager PageSizeOptions="new int[]{15,25,35}" />
+        }
+    </PagerContent>
+</MudTable>
+
+@code {
+    [Parameter]
+    public int eor { get; set; }
+    [Parameter]
+    public int ejercicio { get; set; }
+    [Parameter]
+    public int empleado { get; set; }
+    [Parameter]
+    public int depto { get; set; }
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<VwOficiosLista> selectedEventCallback{ get; set; }
+    [Parameter]
+    public bool isPage { get; set; } = false;
+
+    private List<VwOficiosLista> vwOficiosListas = new();
+    private string searchString1 = "";
+    private VwOficiosLista selectedOficio;
+    private MudTable<VwOficiosLista>? mudTable = new();
+    private List<string> clickedEvents = new();
+    private int selectedRowNumber = -1;
+    private bool _loading = false;
+    private string tituloBoton;
+    private int rows = 5;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await LoadData();
+        _loading = false;
+        if (eor == 1)
+            tituloBoton = "Ingresar oficio expedido";
+        else
+            tituloBoton = "Ingresar oficio recibido";
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if(!isPage){
+                mudTable.SetRowsPerPage(rows); 
+            }
+        }
+    }
+
+    private async Task LoadData()
+    {
+        if(await AuthService.IsUserInRoleMc())
+            vwOficiosListas = await OficioService.OficiosLista(eor);
+        else
+        {
+            depto = await LocalStorage.GetItemAsync<int>("depto");
+            empleado = await LocalStorage.GetItemAsync<int>("empleado");
+            vwOficiosListas = await OficioService.OficiosLista(eor, ejercicio, empleado, depto);
+        }
+        
+    }
+
+    private bool FilterFunc1(VwOficiosLista element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(VwOficiosLista element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.RemNombre.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.DestNombre.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Folio} {element.Fecha} {element.RemDepen} {element.Tipo} {element.NoOficio} {element.RemNombre} {element.DestNombre} {element.Estatus}".Contains(searchString))
+            return true;
+        return false;
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<VwOficiosLista> tableRowClickEventArgs)
+    {
+        OficioSelected(tableRowClickEventArgs.Item);
+    }
+
+    private async void OficioSelected(VwOficiosLista element)
+    {
+        await InvokeAsync(() => selectedEventCallback.InvokeAsync(element));
+    }
+
+    private async Task ViewPDF(VwOficiosLista element)
+    {
+
+        var pdf =  await OficioService.GetPDF(element.Ejercicio, element.Eor, element.Folio);
+        if (pdf.Length == 0) return;
+        string pdfContent = "";
+        pdfContent = "data:application/pdf;base64,";
+        pdfContent += System.Convert.ToBase64String(pdf);
+
+        var parameters = new DialogParameters { ["path"] = pdfContent };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large, DisableBackdropClick = true };
+        DialogService.Show<ModalPDF>($"Oficio con folio: {element.Folio}", parameters, options);
+
+    }
+
+    private async Task Edit(VwOficiosLista element)
+    {
+        var parameters = new DialogParameters { ["oficioEdit"] = element ,["isNew"] = false};
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
+        var dialog = DialogService.Show<ModalOficioEnviado>("Editar Oficio por Enviar", parameters,options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void MostrarBitacora(VwOficiosLista registro)
+    {
+        var parameters = new DialogParameters { ["OficioBit"] = registro };
+        var options = new DialogOptions() { CloseButton = false, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
+        DialogService.Show<ModalBitacoraOficio>("Bitacora de Oficio", parameters,options);
+    }
+    public async void ingresar()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true };
+        var parameters = new DialogParameters { ["isNew"] = true };
+        var dialog = DialogService.Show<ModalOficioEnviado>("Ingresar Oficio por Enviar", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var oficio = result.Data as Oficio;
+            if(oficio!= null){
+                await LoadData();
+                StateHasChanged();
+                Snackbar.Add($"Oficio {oficio.Folio} agregado exitosamente!", Severity.Success);
+            }else{
+
+            }
+        }
+
+    }
+
+}

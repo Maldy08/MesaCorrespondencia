@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using System.Net;
 
 namespace MesaCorrespondencia.Server.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OficiosController : ControllerBase
@@ -139,7 +141,7 @@ namespace MesaCorrespondencia.Server.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update-oficio")]
         public async Task<ActionResult<ServiceResponse<Oficio>>> UpdateOficio(Oficio oficio)
         {
             var result = await _oficiosRepository.UpdateOficio(oficio);
@@ -203,10 +205,17 @@ namespace MesaCorrespondencia.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-parametros")]
+        [HttpGet("get-parametros/{ejercicio}")]
         public async Task<ActionResult<ServiceResponse<OficiosParametro>>> GetParametros(int ejercicio)
         {
             var result = await _oficiosRepository.GetParametros(ejercicio);
+            return Ok(result);
+        }
+
+        [HttpPut("update-parametros")]
+        public async Task<ActionResult<ServiceResponse<OficiosParametro>>> UpdateParametros( OficiosParametro oficiosParametro)
+        {
+            var result = await _oficiosRepository.UpdateParametros(oficiosParametro);
             return Ok(result);
         }
 
@@ -234,6 +243,36 @@ namespace MesaCorrespondencia.Server.Controllers
         public async Task<ActionResult<ServiceResponse<VwOficiosLista>>> GetOficioByFolio(int ejercicio, int eor, int folio)
         {
             var result = await _oficiosRepository.GetOficioByFolio(ejercicio,eor,folio);
+            return Ok(result);
+        }
+
+
+        [HttpPost("add-oficioUsuext")]
+        public async Task<ActionResult<ServiceResponse<OficiosUsuext>>> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            //var file = Request.Form.Files[0];
+            try
+            {
+                var result = await _oficiosRepository.CreateOficioUsuext(oficiosUsuext);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest(new ServiceResponse<OficiosUsuext> { Message = "Ocurrio un error al procesar la información" });
+            }
+        }
+
+        [HttpGet("get-index-userxt")]
+        public ActionResult<ServiceResponse<VwOficiosLista>> GetIndexUserxt()
+        {
+            var result = _oficiosRepository.GetIndexUserxt();
+            return Ok(result);
+        }
+
+        [HttpDelete("delete-preoficio/{ejercicio}/{eor}/{folio}")]
+        public async Task<IActionResult> DeleteAsync(int ejercicio, int eor, int folio)
+        {
+            var result = await _oficiosRepository.DeleteOficio(ejercicio, eor, folio);
             return Ok(result);
         }
     }

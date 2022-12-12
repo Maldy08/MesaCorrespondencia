@@ -45,6 +45,19 @@
                 <MudTd DataLabel="Nombre del empleado">@context.NombreCompleto</MudTd>
                 <MudTd DataLabel="Departamento">@context.DescripcionDepto</MudTd>
                 <MudTd DataLabel="Puesto">@context.DescripcionPuesto</MudTd>
+@*                <MudTable  T="VsEmpleadosSisco"
+                          Items="@selectedItems"
+                          @bind-SelectedItems="selectedItems"
+                          Dense="true"
+                          Hover="true"
+                          Striped="true">
+                    <HeaderContent>
+                        <MudTh>NOMBRE EMPLEADO</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="empleado">
+                         <MudTd DataLabel="Nombre del empleado">@empleado.NombreCompleto</MudTd>
+                    </RowTemplate>
+                </MudTable>*@
             </RowTemplate>
             <PagerContent>
                 <MudTablePager PageSizeOptions="new int[]{25,50,100}" />
@@ -68,7 +81,7 @@
     private IEnumerable<VsEmpleadosSisco> Elements = new List<VsEmpleadosSisco>();
     VsEmpleadosSisco selectedItem = new ();
     private HashSet<VsEmpleadosSisco> selectedItems = new HashSet<VsEmpleadosSisco>();
-    private MudTable<VsEmpleadosSisco> mudTable;
+    private MudTable<VsEmpleadosSisco>? mudTable;
     private int selectedRowNumber = -1;
     private bool _multiSelect = false;
 

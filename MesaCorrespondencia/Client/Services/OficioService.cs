@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using MesaCorrespondencia.Shared;
+using System.Net.Http.Json;
 
 namespace MesaCorrespondencia.Client.Services
 {
@@ -10,6 +11,12 @@ namespace MesaCorrespondencia.Client.Services
         {
             _httpClient = httpClient;
             _authService = authService;
+        }
+
+        public async Task<bool> CreateBicatora(OficiosBitacora oficiosBitacora)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-bitacora", oficiosBitacora);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CreateOficio(Oficio oficio)
@@ -48,6 +55,15 @@ namespace MesaCorrespondencia.Client.Services
             return response.Data;
         }
 
+        public async Task<byte[]> GetPDF(int ejercicio, int eor, int folio)
+        {
+            var file = await _httpClient.GetStreamAsync($"api/oficios/get-pdf/{ejercicio}/{eor}/{folio}");
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
         public async Task<List<VwOficiosLista>> OficiosLista(int eor,int? ejercicio, int? idEmpleado, int? idDepto)
         {
             if (await _authService.IsUserInRoleMc())
@@ -73,6 +89,42 @@ namespace MesaCorrespondencia.Client.Services
             var response = await _httpClient.PostAsync($"api/oficios/file-save/{ejercicio}/{eor}/{folio}", formDataContent);
             var newUploadResults = await response.Content.ReadFromJsonAsync<IList<UploadResult>>();
             return newUploadResults;
+        }
+
+        public async Task<bool> UpdateOficio(Oficio oficio)
+        {
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-oficio", oficio);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/oficios/add-oficioUsuext", oficiosUsuext);
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<int> GetIndexUserxt()
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<int>>("api/oficios/get-index-userxt");
+            return response.Data;
+        }
+
+        public async Task<bool> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+            var response = await _httpClient.DeleteAsync($"api/oficios/delete-preoficio/{ejercicio}/{eor}/{folio}");
+            return response.IsSuccessStatusCode;
+
+        }
+
+        public async Task<OficiosParametro> GetParametros(int ejercicio)
+        {
+            var response = await _httpClient.GetFromJsonAsync<ServiceResponse<OficiosParametro>>($"api/oficios/get-parametros/{ejercicio}");
+            return response.Data;
+        }
+
+        public async Task<bool> UpdateParametros(OficiosParametro oficiosParametro)
+        {
+            var response = await _httpClient.PutAsJsonAsync("api/oficios/update-parametros", oficiosParametro);
+            return response.IsSuccessStatusCode;
         }
     }
 }

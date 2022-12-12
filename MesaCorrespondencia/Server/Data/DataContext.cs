@@ -18,8 +18,7 @@ namespace MesaCorrespondencia.Server.Data
         public  DbSet<OficiosXexpedir> OficiosXexpedirs { get; set; }
         public  DbSet<VwOficiosLista> VwOficiosListas { get; set; }
         public  DbSet<OficiosParametro> OficiosParametros { get; set; }
-
-
+        public virtual DbSet<GetDepartamentos> GetDepartamentos { get; set; } = null!;
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -33,6 +32,23 @@ namespace MesaCorrespondencia.Server.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("CEA");
+
+            modelBuilder.Entity<GetDepartamentos>(entity =>
+            {
+                entity.HasNoKey();
+                entity.Property(e => e.id)
+                    .HasPrecision(3)
+                    .HasColumnName("VAL_1");
+                entity.Property(e => e.id_CEA)
+                    .HasPrecision(3)
+                    .HasColumnName("VAL_2");
+                entity.Property(e => e.descripcion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("VAL_3");
+                entity.ToFunction("GetDeptos");
+
+            });
 
             modelBuilder.Entity<DeptosUe>(entity =>
             {
@@ -787,9 +803,13 @@ namespace MesaCorrespondencia.Server.Data
 
             modelBuilder.Entity<OficiosParametro>(entity =>
             {
-                entity.HasNoKey();
 
+                //Tabla solamente de Folios de la mesa de correspondencia, no numeros consecutivos de oficio por departamento
                 entity.ToTable("OFICIOS_PARAMETROS");
+
+                entity.HasKey(o => o.Ejercicio)
+                    .HasName("PK_OFICIOS_PARAMETROS");
+                
 
                 entity.Property(e => e.Ejercicio)
                     .HasPrecision(4)
@@ -802,6 +822,10 @@ namespace MesaCorrespondencia.Server.Data
                 entity.Property(e => e.NextFRec)
                     .HasPrecision(6)
                     .HasColumnName("NEXT_F_REC");
+
+                entity.Property(e => e.NextFXexp)
+                    .HasPrecision(6)
+                    .HasColumnName("NEXT_F_XEXP");
             });
 
         }

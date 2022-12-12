@@ -300,6 +300,47 @@ namespace MesaCorrespondencia.Server.Repositorios
             return response;
         }
 
+        public async Task<ServiceResponse<OficiosParametro>> UpdateParametros(OficiosParametro oficiosParametro)
+        {
+
+            var _oficiosParametro = await _context.OficiosParametros.FindAsync(oficiosParametro.Ejercicio);
+
+            if (_oficiosParametro != null)
+            {
+                _oficiosParametro.Ejercicio = oficiosParametro.Ejercicio;
+                _oficiosParametro.NextFXexp = oficiosParametro.NextFXexp;
+                _oficiosParametro.NextFEnv = oficiosParametro.NextFEnv;
+                _oficiosParametro.NextFRec = oficiosParametro.NextFRec;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return new ServiceResponse<OficiosParametro>
+                    {
+                        Data = _oficiosParametro,
+                        Message = "Registro actualizado correcamente"
+                    };
+                }
+                catch 
+                {
+                    return new ServiceResponse<OficiosParametro>
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = "Ocurrio un error al actualizar el registro"
+                    };
+                }
+            }
+            else
+            {
+                return new ServiceResponse<OficiosParametro>
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Registro no encontrado"
+                };
+            }
+        }
+
         public async Task<ServiceResponse<Oficio>> UpdatePdfPath(Oficio oficio)
         {
             var oficioUpdate = await _context.Oficios.FindAsync(oficio.Ejercicio, oficio.Folio, oficio.Eor);
@@ -346,5 +387,72 @@ namespace MesaCorrespondencia.Server.Repositorios
 
             return response;
         }
+
+        public async Task<ServiceResponse<OficiosUsuext>> CreateOficioUsuext(OficiosUsuext oficiosUsuext)
+        {
+            try
+            {
+                _context.OficiosUsuexts.Add(oficiosUsuext);
+
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return new ServiceResponse<OficiosUsuext>
+                {
+                    Data = oficiosUsuext,
+                    Message = $"Ocurrio un error al guardar el Folio. {oficiosUsuext.IdExterno}",
+                    Success = false
+                };
+            }
+            return new ServiceResponse<OficiosUsuext>
+            {
+                Data = oficiosUsuext,
+                Message = $"Folio: {oficiosUsuext.Nombre}, ha sido registrado exitosamente!"
+            };
+        }
+
+        public ServiceResponse<int> GetIndexUserxt()
+        {
+            var response = new ServiceResponse<int>
+            {
+                Data = _context.OficiosUsuexts.Max(x => x.IdExterno)
+            };
+
+            return response;
+        }
+
+
+        public async Task<ServiceResponse<bool>> DeleteOficio(int ejercicio, int eor, int folio)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var oficioD = await _context.Oficios.FirstOrDefaultAsync(x => x.Ejercicio == ejercicio && x.Eor == eor && x.Folio == folio);
+
+            if (oficioD == null)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+                return response;
+            }
+            try
+            {
+                _context.Oficios.Remove(oficioD);
+                await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Data = true;
+
+            }
+            catch (DbUpdateException)
+            {
+                response.Success = false;
+                response.Message = "No se encontro esta tarea";
+
+            }
+            return response;
+
+        }
+
+
     }
 }

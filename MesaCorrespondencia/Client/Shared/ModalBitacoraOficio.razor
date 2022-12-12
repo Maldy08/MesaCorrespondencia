@@ -32,15 +32,6 @@
 <MudDialog>    
     <DialogContent>
         <MudGrid Spacing="1" Justify="Justify.Center">
-            @*<MudItem sm="7" />
-            <MudItem sm="3"> 
-                Folio
-                <MudIcon Icon="@Icons.Filled.ConfirmationNumber" Color="Color.Default" Size="Size.Small"/>
-                <MudChip>@OficioBit.Folio</MudChip>
-            </MudItem>
-            <MudItem sm="2"> 
-                <MudText Align="Align.Center" Typo="Typo.h5">CEA</MudText>
-            </MudItem>*@
             <MudItem xs="5">
                 <MudText Align="Align.Start" Typo="Typo.body2">
                     Número de Oficio
@@ -97,17 +88,17 @@
                 </MudCard>
             </MudItem>
             <MudItem xs="10">  
-                <MudTextField T="string" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable/>
+                <MudTextField T="string" @bind-Value="bitacoraText" Label="Capture Bitacora" Variant="Variant.Outlined" Text="" Lines="2" Clearable />
             </MudItem>
             <MudItem xs="2">  
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-2"  Elevation="0">
-                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Filled.LibraryAdd" Style="background-color:rgb(106,28,50); color: white;" Size="Size.Small">
+                    <MudButton OnClick="@IngresarBitacora" Variant="Variant.Filled" EndIcon="@Icons.Filled.LibraryAdd" Style="background-color:rgb(106,28,50); color: white;" Size="Size.Small">
                         Ingresar
                     </MudButton>
                 </MudPaper>  
             </MudItem>
             <MudItem xs="12"> 
-                <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora" Dense="true">
+                <MudTable Items="@oficiosBitacoras" Hover="true" Bordered="false" @ref="mudTable" T="OficiosBitacora" Dense="true" FixedHeader="true" Height="250px">
                     <HeaderContent>
                         <MudTh>Fecha</MudTh>
                         <MudTh>Usuario</MudTh>
@@ -126,25 +117,53 @@
     </DialogContent>
     <DialogActions>
         <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion"  Variant="Variant.Filled" OnClick="@Cancel">Cancelar</MudButton>
-        <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>
+       @* <MudButton Size="Size.Small" ButtonType="ButtonType.Submit" Class="botones-accion" Variant="Variant.Filled" OnClick="@Submit">Guardar</MudButton>*@
     </DialogActions>
 </MudDialog>
 
 @code {
+
     [CascadingParameter]
     MudDialogInstance mudDialog { get; set; }
-    void Cancel() => mudDialog.Cancel();
-    private void Submit() => mudDialog.Close(DialogResult.Ok(true));
     [Parameter]
     public VwOficiosLista OficioBit { get; set; }
+
     private List<OficiosBitacora> oficiosBitacoras = new();
-   
+
+    private MudTable<OficiosBitacora>? mudTable;
+
+    private string bitacoraText = string.Empty;
+
+    void Cancel() => mudDialog.Cancel();
+
     protected override async Task OnInitializedAsync()
     {
+        await LoadData();
+    }
+
+    async Task LoadData(){
         oficiosBitacoras = await OficioService.GetBitacorasList(OficioBit.Ejercicio, OficioBit.Folio, OficioBit.Eor);
     }
 
-    private MudTable<OficiosBitacora> mudTable;
-    
+     async Task IngresarBitacora(){
+        var oficiosBitacora = new OficiosBitacora
+            {
+                Ejercicio = OficioBit.Ejercicio,
+                Folio = OficioBit.Folio,
+                Eor = OficioBit.Eor,
+                FechaCaptura = DateTime.Now,
+                IdEmpleado = OficioBit.IdEmpleado,
+                Estatus = 1,
+                Comentarios = bitacoraText.ToUpperInvariant()
+            };
+        if (await OficioService.CreateBicatora(oficiosBitacora)){
+            await LoadData();
+            StateHasChanged();
+        }
+        else{
+            Console.WriteLine("Error");
+        }
+        // Console.WriteLine($"{OficioBit.Ejercicio.ToString()} + {OficioBit.Folio} + {OficioBit.Eor} + {OficioBit.FechaCaptura} + {OficioBit.IdEmpleado} + {OficioBit.Estatus}");
+    }
 
 }
