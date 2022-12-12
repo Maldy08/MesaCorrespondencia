@@ -148,9 +148,11 @@
     private async Task LoadData()
     {
         if(await AuthService.IsUserInRoleMc())
+            //Mesa de Correspondencia
             vwOficiosListas = await OficioService.OficiosLista(eor);
         else
         {
+            //Usuario
             depto = await LocalStorage.GetItemAsync<int>("depto");
             empleado = await LocalStorage.GetItemAsync<int>("empleado");
             vwOficiosListas = await OficioService.OficiosLista(eor,ejercicio,empleado,depto);
